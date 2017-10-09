@@ -1,8 +1,22 @@
-Sat Feb 05 2006
+Mon Feb 27 2006
+-----------------------------
+V 0.9.4
+
+WPKG-0.9.4-test1 released as 0.9.4 (stable) - no changes.
+
+
+Mon Feb 07 2006
+-----------------------------
+V 0.9.4-test1
+
+- fixed bug 14 (Execute=once packages are not controlled by revision tag)
+
+
+Sun Feb 05 2006
 -----------------------------
 V 0.9.3
 
-WPKG-0.9.3 released as 0.9.3 (stable) - no changes.
+WPKG-0.9.3-test1 released as 0.9.3 (stable) - no changes.
 
 
 Sat Jan 28 2006

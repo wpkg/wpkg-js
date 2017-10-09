@@ -8,4 +8,10 @@
 
     <host name="hostname" profile-id="custom" />
 
+
+<!-- This one will match all hosts that were not matched before.
+     For more info on regexp matching, see the documentation on htp://wpkg.org -->
+
+    <host name=".+" profile-id="other" />
+
 </wpkg>
