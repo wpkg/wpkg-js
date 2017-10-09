@@ -4,7 +4,7 @@
 	* This is the WPKG configuration file.
 	* Place it within the same directory as you place wpkg.js.
 	* All parameters are optional. If not specified WPKG falls back to the default
-	* values. So it's recommended just to uncomment the values you like to change
+	* values. So it's recommended just to uncomment the values you like to change.
 	*******************************************************************************
 -->
 
@@ -12,25 +12,23 @@
 	<!--
 		*******************************************************************************
 		*
-		* If you use wpkg_web, you can set base equal to the base URL of your
-		* wpkg_web installation.  NO TRAILING SLASH (/).  This will allow wpkg to
-		* use the Web generated XML file and not require further XML Exports to the
+		* If you use wpkg_web, you can set wpkg_base to the base URL of your
+		* WPKG_Web installation.  NO TRAILING SLASH (/).  This will allow WPKG to
+		* use the web generated XML file and not require further XML Exports to the
 		* file system.
 		*
 		* Examples:
-		*  <param name='wpkg_base' value='http://wpkg.mydomain.com' />
-		*  <param name='wpkg_base' value='http://www.mydomain.com/wpkg_web' />
-		*  <param name='wpkg_base' value='http://USER:PASS@wpkg.mydomain.com' />
+		*     <param name='wpkg_base' value='http://wpkg.mydomain.com' />
+		*     <param name='wpkg_base' value='http://www.mydomain.com/wpkg_web' />
+		*     <param name='wpkg_base' value='http://USER:PASS@wpkg.mydomain.com' />
 		*
-		*          where USER and PASS are required credentials to access your
-		*          installation.  Configure this user in config.php for
-		*          wpkg_web version 1.1.0 and greater.
+		* NOTE: Replace USER and PASS with the required credentials to access your
+		*       installation. Configure this user in config.php for WPKG_Web
+		*       version 1.1.0 and greater.
 		*
-		*
-		* If would like to use the flat XML file instead of the web based method,
-		* leave the variable declaration as follows:
-		*
-		* <param name='wpkg_base' value='' />
+		* NOTE: If you would like to use the flat XML file instead of the web based
+		*       method, leave the variable declaration as followed:
+		*       <param name='wpkg_base' value='' />
 		*
 		* Default value      : ''
 		* Command-line switch: /base:<base-url>
@@ -46,7 +44,10 @@
 
 	<!--
 		****************************************************************************
-		* When true: doesn't consider wpkg.xml but checks existence of packages.
+		* True : Do not consider wpkg.xml but check existence of packages.
+		* False: Do not force re-detection. Use wpkg.xml to detect current package
+		*        status
+		*
 		* Default value      : false
 		* Command-line switch: /force
 		****************************************************************************
@@ -58,7 +59,9 @@
 
 	<!--
 		****************************************************************************
-		* When true, forces installation over existing packages.
+		* True : Force installation over existing packages.
+		* False: Skip package installation if package is already installed.
+		*
 		* Default value      : false
 		* Command-line switch: /forceinstall
 		****************************************************************************
@@ -70,7 +73,9 @@
 
 	<!--
 		****************************************************************************
-		* When true, forces to quit the script immediately on error.
+		* True : Force the script to immediately quit on error.
+		* False: Errors are logged but WPKG continues processing.
+		*
 		* Default value      : false
 		* Command-line switch: /quitonerror
 		****************************************************************************
@@ -82,7 +87,13 @@
 
 	<!--
 		****************************************************************************
-		* Enables script debugging. Prints lots of ugly debug messages to event log.
+		* True : Enable debug mode. Prints lots of ugly debug messages to event log.
+		* False: Disable debug logging to event log.
+		*
+		* NOTE: This flag is independent from the log level setting. So you can even
+		*       enable debug logging to log files without setting this flag to true
+		*       which prevents your event log to be flooded.
+		*
 		* Default value      : false
 		* Command-line switch: /debug
 		****************************************************************************
@@ -94,8 +105,10 @@
 
 	<!--
 		****************************************************************************
-		* Enables running without actually applying changes to the system.
-		* Enables debug output and disables reboot.
+		* True : Enable dryrun mode. Does not apply any changes to the system.
+		*        Enables debug output and disables reboot.
+		* False: Apply changes to the system.
+		*
 		* Default value      : false
 		* Command-line switch: /dryrun
 		****************************************************************************
@@ -107,8 +120,12 @@
 
 	<!--
 		****************************************************************************
-		* If set to true disables all alert messages (dialog boxes).
-		* Should be set to true in case of unattended run (WPKG service)
+		* Should be set to true in case of unattended run (WPKG service).
+		*
+		* True : Disable all log messages printed to the console (cscript) or
+		*        displayed as dialog boxes (wscript).
+		* False: Alerts the user about ongoing activity using windows messaging.
+		*
 		* Default value      : false
 		* Command-line switch: /quiet
 		****************************************************************************
@@ -120,8 +137,10 @@
 
 	<!--
 		****************************************************************************
-		* Disables user notification about WPKG actions using windows messaging.
-		* Should be set to true in case of unattended run (WPKG service)
+		* True : Disable user notification about WPKG actions using windows messaging.
+		*        Should be set to true in case of unattended run (WPKG service)
+		* False: Alerts the user about ongoing activity using windows messaging.
+		*
 		* Default value      : false
 		* Command-line switch: /nonotify
 		****************************************************************************
@@ -133,7 +152,9 @@
 
 	<!--
 		****************************************************************************
-		* Disables reboot actions.
+		* True : System does not reboot regardless of need.
+		* False: Reboot the system as specified by packages.
+		*
 		* Default value      : false
 		* Command-line switch: /noreboot
 		****************************************************************************
@@ -145,8 +166,10 @@
 
 	<!--
 		****************************************************************************
-		* Disables exporting of running state to Windows registry at
-		* HKCU\Software\WPKG\running
+		* True : Disable export of running state to Windows registry at
+		*        HKCU\Software\WPKG\running
+		* False: Export running state to Windows registry at HKCU\Software\WPKG\running
+		*
 		* Default value      : false
 		* Command-line switch: /norunningstate
 		****************************************************************************
@@ -158,9 +181,11 @@
 
 	<!--
 		****************************************************************************
-		* Allows to disable case sensitivity for package and profile IDs.
-		* If set to false or /ignoreCase switch is set WPKG will match
-		* package-id="SomePackage" to the package with an ID of "SoMePaCkAgE".
+		* True : Matching of package and profile IDs is case sensitive.
+		* False: Disable case sensitivity for package and profile IDs.
+		*        WPKG will consider the package ID "SomePackage" and "SoMePaCkAgE"
+		*        the same.
+		*
 		* Default value      : true
 		* Command-line switch: /ignoreCase
 		****************************************************************************
@@ -172,7 +197,13 @@
 
 	<!--
 		****************************************************************************
-		* Defines a custom command to reboot the machine
+		* Use the specified command for rebooting, either with full path or relative
+		* to the location of wpkg.js.
+		* Setting rebootCmd to "special" will use tools\psshutdown.exe from
+		* from www.sysinternals.com - if it exists
+		* Any other value will make WPKG to try executing the command specified as
+		* <command> and then exit with code 3010.
+		*
 		* Default value      : "standard"
 		* Command-line switch: /rebootcmd:<command>
 		****************************************************************************
@@ -184,8 +215,9 @@
 
 	<!--
 		****************************************************************************
-		* Name of local package database (client-side) stored at
+		* Filename of the local package database (client-side) stored at
 		* %SystemRoot%\system32 by default (see settings_file_path)
+		*
 		* Default value      : "wpkg.xml"
 		* Command-line switch: -
 		****************************************************************************
@@ -197,9 +229,10 @@
 
 	<!--
 		****************************************************************************
-		* Path to local package database (client-side). It is strongly suggestet
-		* NOT to set this parameter at all  if not required. Only change this
-		* parameter if you really know what you're doing.		
+		* Path to the local package database (client-side). It is strongly suggested
+		* to NOT set this parameter at all if not required.
+		* Only change this parameter if you really know what you're doing.
+		*
 		* Default value      : "%SystemRoot%\\system32"
 		* Command-line switch: -
 		****************************************************************************
@@ -211,10 +244,12 @@
 
 	<!--
 		****************************************************************************
-		* Allows to disable forcing packages to be removed if they are removed
-		* from the profile AND the package database.
-		* NOTE that in such case a client might continuously try to uninstall a
-		* package if an uninstall command fails.
+		* True : Disable forced removal of packages if they are removed from the
+		*        profile AND the package database.
+		*  NOTE: A client might continuously try to uninstall a package if an
+		*        uninstall command fails.
+		* False: 
+		*
 		* Default value      : false
 		* Command-line switch: /noforcedremove
 		****************************************************************************
@@ -226,18 +261,22 @@
 
 	<!--
 		****************************************************************************
-		* Allows to disable removing of packages. If used in conjunction with the
-		* /synchronize parameter it will just add packages but never remove them.
-		* Instead of removing a list of packages which would have been removed
-		* during that session is printed on exit. Packages are not removed from
-		* the local settings database (wpkg.xml). Therefore it will contain a list
-		* of all packages ever installed.
-		* Note that each package which is requested to be removed (manually or by
-		* a synchronization request) will be checked for its state by executing its
-		* included package checks. If the package has been removed manually it will
-		* also be removed from the settings database. Due to the fact that packages
-		* whithout checks always return 'false' for during the install-status check
-		* these packages will disappear from the local wpkg.xml.
+		* True : Allows to disable removing of packages. If used in conjunction with
+		*        the /synchronize parameter it will just add packages but never remove
+		*        them. Instead of removing a list of packages which would have been
+		*        removed during that session is printed on exit. Packages are not
+		*        removed from the local settings database (wpkg.xml). Therefore it
+		*        will contain a list of all packages ever installed.
+		*  NOTE: Each package which is requested to be removed (manually or by
+		*        a synchronization request) will be checked for its state by executing
+		*        its included package checks. If the package has been removed manually
+		*        it will also be removed from the settings database. Due to the fact
+		*        that packages whithout checks always return 'false' for during the
+		*        install-status check these packages will disappear from the local
+		*        wpkg.xml.
+		* False: Remove packages from the system if they are not listed within the
+		*        profile any more.
+		*
 		* Default value      : false
 		* Command-line switch: /noremove
 		****************************************************************************
@@ -258,19 +297,20 @@
 	-->
 	<!--
 		****************************************************************************
-		* Log level is defined as a bitmask. Just add sum up the values of each log
+		* Log level is defined as a bitmask. Just sum up the values of each log
 		* severity you would like to include within the log file and add this value
 		* to your config.xml or specify it at /logLevel:<num>.
 		* Specify 0 to disable logging.
-		* 1 : log errors only
-		* 2 : log warnings
-		* 4 : log information
-		* 8 : log audit success
+		*  1: log errors only
+		*  2: log warnings
+		*  4: log information
+		*  8: log audit success
 		* 16: log audit failure
-		* Example:
+		*
+		* Examples:
 		*     31 log everything (1+2+4+8+16=31)
-		*     13 logs errors, information and audit success (1+4+8=13)
-		*      3 logs errors and warnings only (1+2=3)
+		*     13 log errors, information and audit success (1+4+8=13)
+		*      3 log errors and warnings only (1+2=3)
 		*
 		* Default value      : "0xFF"
 		* Command-line switch: /logLevel:<level>
@@ -285,11 +325,13 @@
 		****************************************************************************
 		* Path where the logfiles are written to. This might be an UNC path on the
 		* network as well as a local path. Environment variables are expanded.
+		*
+		* Examples:
+		*     <param name='log_file_path' value='%TEMP%' />
+		*     <param name='log_file_path' value='\\\\server\\share\\dir' />
+		*
 		* Default value      : "%TEMP%"
 		* Command-line switch: -
-		* Examples:
-		* <param name='log_file_path' value='%TEMP%' />
-		* <param name='log_file_path' value='\\\\server\\share\\dir' />
 		****************************************************************************
 	-->
 	<!--
@@ -307,21 +349,23 @@
 		* [MM]       replaced by month number (2 digits)
 		* [DD]       replaced by the day of the month (2 digits)
 		* [hh]       replaced by hour of the day (24h format, 2 digits)
-		* [mm]       replaced by minute (2 digits)
-		* [ss]       replaced by second (2 digits)
+		* [mm]       replaced by minutes (2 digits)
+		* [ss]       replaced by seconds (2 digits)
 		*
 		* Examples:
-		* "wpkg-[YYYY]-[MM]-[DD]-[HOSTNAME].log"
-		* 		results in a name like "wpkg-2007-11-04-myhost.log"
-		* NOTE: Using [PROFILE] causes all messages before reading or profiles.xml
-		*       to be temporarily written to local %TEMP% folder. So they might
-		*       appear on the final log file with some delay.
+		*     "wpkg-[YYYY]-[MM]-[DD]-[HOSTNAME].log" results in a name like
+		*         "wpkg-2007-11-04-myhost.log"
+		*
+		* NOTE: Using [PROFILE] causes all log messages from before reading
+		*       profiles.xml to be temporarily written to the local %TEMP% folder.
+		*       So they might appear on the final log file with some delay.
+		*
+		* NOTE: The default pattern allows tracing of last execution without polluting
+		*       the log directory. Subsequent executions will overwrite the same log
+		*       file.
+		*
 		* Default value      : "wpkg-[HOSTNAME].log"
 		* Command-line switch: /logfilePattern:<pattern>
-		*
-		* Note:
-		* The default pattern allows tracing of last execution without polluting
-		* the log directory. Subsequent executions will overwrite the same log file.
 		****************************************************************************
 	-->
 	<!--
@@ -333,7 +377,7 @@
 		****************************************************************************
 		****************************************************************************
 		*
-		*  Path properties properties
+		*  Path properties
 		*
 		****************************************************************************
 		****************************************************************************

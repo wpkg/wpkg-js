@@ -1,6 +1,56 @@
 ===============================================================================
 = CHANGES FOR 1.0 release
 ===============================================================================
+Changes 2009-03-29, v1.0.4 by Rainer Meier <r.meier (at) wpkg.org>
+NEW: Released v1.0.4
+
+
+Changes 2009-03-29, v1.0.4-RC5 by Rainer Meier <r.meier (at) wpkg.org>
+MOD: Changed behavior of wpkg.js again in case reboot is overridden.
+     Previously it was exiting with exit code 3010 but this caused WPKG client
+     to initiate a reboot immediately after wpkg.js terminated.
+     Now WPKG returns code 3010 << 8 (3010 bit-shifted by 8 bits to the left)
+     which evaluates to a decimal value of 770560. This allows an external
+     tool to verify if a reboot was initiated but overridden.
+     If you would like WPKG to exit with code 3010 without issuing a reboot
+     consider to specify a reboot command within the configuration
+     (see rebootCmd in config.xml or /rebootcmd: switch) which points to a
+     script which does not do anything. In this case WPKG executes the script
+     (e.g. reboot.cmd) and then exits with code 3010.
+     This was discussed in Bug 132.
+NEW: Shows usage if executed without parameter (instead of just throwing an
+     error and exiting).
+MOD: Improved documentation.
+
+
+Changes 2009-03-12, v1.0.4-RC4 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: In case a command is executed which does not exist (WScript.Shell.exec()
+     throws exception) WPKG does not immediately terminate.
+
+Changes 2009-02-15, v1.0.4-RC3 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Removed unnecessary check for undefined checks in getPackageChecks()
+     method. It seems that selectNodes(String) never returns null but instead
+     returns empty collection.
+
+
+Changes 2008-11-16, v1.0.4-RC1 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Updated help and config.xml with grammar and consistency fixes as proposed
+     by Jens Geile. Thanks Jens. Fixes Bug 116.
+
+
+FIX: If a reboot is initiated but overridden WPKG was returning exit code 0.
+     This behavior has been changed to return code 3010 in this case which
+     allows external tools to detect that a reboot should be executed.
+     Fixes Bug 132.
+
+
+Changes 2008-05-08, v1.0.3 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Fixed missing quote in debug output. Changed
+     Found package node "'Package name (PackageID) in package database "
+     to
+     Found package node "'Package name' (PackageID) in package database."
+     Thanks to Jens Geile for reporting it. Fixes Bug 115.
+
 
 Changes 2008-04-21, v1.0.2 by Rainer Meier <r.meier (at) wpkg.org>
 NEW: Improved handling of event log system errors. In case writing to event log

@@ -1,5 +1,5 @@
 /** Version as it appears within the log file */
-var WPKG_VERSION = "1.0.2";
+var WPKG_VERSION = "1.0.4";
 /*******************************************************************************
  *
  * WPKG - Windows Packager
@@ -21,8 +21,8 @@ execute 'cscript wpkg.js /help' on the command line. This will print all \n\
 messages to the console. \n\n\
 Command Line Switches \n\
 ===================== \n\
-Note: This Comand-Line switches overwrite parameters within config.xml. For \n\
-example the /quiet flag overwrites an eventually present quiet param within \n\
+Note: These command line switches overwrite parameters within config.xml. For \n\
+example the /quiet flag overwrites an eventually present quiet parameter within \n\
 config.xml. \n\
 Usually you should specify as few parameters as possible since changing \n\
 config.xml on the server might be much easier than changing all client-side \n\
@@ -30,61 +30,61 @@ stored parameters. Typically you would use the following command-line in \n\
 production: \n\
 	wpkg.js /synchronize \n\
 \n\
-Frequently used parameters (package operations, you need to chose one): \n\
-======================================================================= \n\
+Frequently used parameters (package operations, you need to choose one): \n\
+======================================================================== \n\
 \n\
 /install:<package> \n\
-	Installs the specified package on the system. \n\
+	Install the specified package on the system. \n\
 \n\
 /query:<option> \n\
-	Displays a list of packages matching the specified criteria. Valid \n\
+	Display a list of packages matching the specified criteria. Valid \n\
 	options are: \n\
 \n\
 	a - all packages \n\
 	i - packages that are currently installed on the system \n\
-	x - packages that are not currently installed on the system \n\
+	x - packages that are currently not installed on the system \n\
 	u - packages that can be upgraded \n\
 \n\
 /remove:<package> \n\
-	Removes the specified package from the system. \n\
+	Remove the specified package from the system. \n\
 \n\
 /show:<package> \n\
-	Displays a summary of the specified package, including it's state. \n\
+	Display a summary of the specified package, including it's state. \n\
 \n\
 /upgrade:<package> \n\
-	Upgrades the already installed package on the system. \n\
+	Upgrade the already installed package on the system. \n\
 \n\
 /synchronize \n\
-	Synchronizes the current program state with the suggested program state \n\
+	Synchronize the current program state with the suggested program state \n\
 	of the specified profile. This is the action that should be called at \n\
 	system boot time for this program to be useful. \n\
 \n\
 /help \n\
-	Shows this message. \n\
+	Show this message. \n\
 \n\
 \n\
 Optional parameters (usually defined within config.xml): \n\
 ======================================================== \n\
 \n\
 /base:<path> \n\
-	Sets the local or remote path to find the xml input files. \n\
+	Set the local or remote path to find the xml input files. \n\
 	Can also be set to a web URL for direct XML retrieval from wpkg_web. \n\
 \n\
 /dryrun \n\
-	Does not execute any action. Implicites /debug. \n\
+	Do not execute any actions. Implicites /debug. \n\
 \n\
 /quiet \n\
-	Uses the event log to record all error/status output. Use this when \n\
+	Use the event log to record all error/status messages. Use this when \n\
 	running unattended. \n\
 \n\
 /nonotify \n\
-	Logged on users are not notified about impending updates. \n\
+	Logged in users are not notified about impending updates. \n\
 \n\
 /noreboot \n\
 	System does not reboot regardless of need. \n\
 \n\
 /quitonerror \n\
-	Quits execution if installation of any package was unsuccessful \n\
+	Quit execution if the installation of any package was unsuccessful \n\
 	(default: install next package and show the error summary). \n\
 \n\
 \n\
@@ -102,29 +102,34 @@ Rarely used parameters (mainly for testing): \n\
 		e.g. 'directory\\config.xml'. \n\
 \n\
 /debug or /verbose \n\
-	Enables debug output. Please note that this parameter only influences \n\
+	Enable debug output. Please note that this parameter only influences \n\
 	notification and event log output. It does not affect the logging level. \n\
 	It is possible to get debug-level output even without using this \n\
 	switch. \n\
 \n\
 /force \n\
-	Uses force when performing actions (does not honour wpkg.xml). \n\
+	When used in conjunction with /synchronize WPKG will ignore the local \n\
+	settings file (wpkg.xml) and re-build the database with installed \n\
+	packages. \n\
+	When used in conjunction with /remove forces removal of the specified \n\
+	package even if not all packages which depend on the one to be removed \n\
+	could be removed. \n\
 \n\
 /forceinstall \n\
-	Forces installation over existing packages. \n\
+	Force installation over existing packages. \n\
 \n\
 /host:<hostname> \n\
-	Use the specified hostname. This option is for testing puropses \n\
+	Use the specified hostname. This option is for testing purposes \n\
 	to test if a given hostname gets the correct profile assigned. \n\
 \n\
 /ignoreCase\n\
-	disable case sensitivity of packages and profiles. Therefore you can\n\
+	Disable case sensitivity of packages and profiles. Therefore you can\n\
 	assign the package 'myapp' to a profile while only a package 'MyApp' is\n\
 	defined within the packages.\n\
-	Note that this change requires modifying of the package/profile/host nodes\n\
+	Note that this change requires modification of the package/profile/host nodes\n\
 	read from the XML files. All IDs are converted to lowercase.\n\
 	Note: This requires converting all profile/package IDs to lowercase.\n\
-		  Therefore you will see only lowercase entries within the log files\n\
+		  Therefore you will only see lowercase entries within the log files\n\
 		  and also within the local package database.\n\
 \n\
 /logfilePattern:<pattern> \n\
@@ -132,43 +137,43 @@ Rarely used parameters (mainly for testing): \n\
 	Recognized patterns: \n\
 	 [HOSTNAME]  replaced by the executing hostname \n\
 	 [PROFILE]   replaced by the  name \n\
-	 [YYYY]		replaced by year (4 digits) \n\
+	 [YYYY]      replaced by year (4 digits) \n\
 	 [MM]        replaced by month number (2 digits) \n\
 	 [DD]        replaced by the day of the month (2 digits) \n\
 	 [hh]        replaced by hour of the day (24h format, 2 digits) \n\
-	 [mm]        replaced by minute (2 digits) \n\
+	 [mm]        replaced by minutes (2 digits) \n\
 	 [ss]        replaced by seconds (2 digits) \n\
 \n\
 	 Examples: \n\
 	 'wpkg-[YYYY]-[MM]-[DD]-[HOSTNAME].log' \n\
 			 results in a name like 'wpkg-2007-11-04-myhost.log' \n\
-	NOTE: Using [PROFILE] causes all messages before reading or profiles.xml \n\
+	NOTE: Using [PROFILE] causes all log messages before reading profiles.xml \n\
 			to be temporarily written to local %TEMP% folder. So they might \n\
 			appear on the final log file with some delay. \n\
 \n\
 /logLevel:[0-31] \n\
 	Level of detail for log file: \n\
 	use the following values: \n\
-	Log level is defined as a bitmask. Just add sum up the values of each log \n\
+	Log level is defined as a bitmask. Just sum up the values of each log \n\
 	severity you would like to include within the log file and add this value \n\
-	to your config.xml or specify it at /logLevel:<num>. \n\
+	to your config.xml or specify it at /logLevel:<#>. \n\
 	Specify 0 to disable logging. \n\
-	 1 : log errors only \n\
-	 2 : log warnings \n\
-	 4 : log information \n\
-	 8 : log audit success \n\
+	  1: log errors only \n\
+	  2: log warnings \n\
+	  4: log information \n\
+	  8: log audit success \n\
 	 16: log audit failure \n\
 	Example: \n\
 	 31 log everything (1+2+4+8+16=31) \n\
-	 13 logs errors, information and audit success (1+4+8=13) \n\
-		3 logs errors and warnings only (1+2=3) \n\
+	 13 log errors, information and audit success (1+4+8=13) \n\
+	  3 log errors and warnings only (1+2=3) \n\
 	Default is 0 which will suppress all messages printed before log level is \n\
 	properly initialized by config.xml or by /logLevel:<#> parameter. \n\
 \n\
 /log_file_path:<path> \n\
 	Path where the log files will be stored. Also allows specifying an UNC \n\
 	path (e.g. '\\server\share\directory'). Make sure the path exists and \n\
-	allows write for the executing user. \n\
+	that the executing user has write access to it. \n\
 	NOTE: If you set this parameter within config.xml please note that you \n\
 			need to escape backslashes: \n\
 			e.g. '\\\\server\\share\\directory'. \n\
@@ -176,9 +181,9 @@ Rarely used parameters (mainly for testing): \n\
 /noforcedremove \n\
 	Do not remove packages from local package database if remove fails even \n\
 	if the package does not exist in the package database on the server and \n\
-	is not referenced within the . \n\
+	is not referenced within the profile. \n\
 	By default packages which have been removed from the server package \n\
-	database and the  will be uninstalled and then removed \n\
+	database and the profile will be uninstalled and then removed \n\
 	from the local package database even if uninstall failed. \n\
 	This has been introduced to prevent a package whose uninstall script \n\
 	fails to repeat its uninstall procedure on each execution without the \n\
@@ -189,7 +194,7 @@ Rarely used parameters (mainly for testing): \n\
 	completely delete it from the package database. \n\
 \n\
 /noremove \n\
-	Allows to disable removing of packages. If used in conjunction with the \n\
+	Disable the removal of all packages. If used in conjunction with the \n\
 	/synchronize parameter it will just add packages but never remove them. \n\
 	Instead of removing a list of packages which would have been removed \n\
 	during that session is printed on exit. Packages are not removed from \n\
@@ -206,12 +211,12 @@ Rarely used parameters (mainly for testing): \n\
 	Do not export the running state to the registry. \n\
 \n\
 /profile:<profile> \n\
-	Forces the name of the current profile. If not specified, the profile is \n\
-	looked up using hosts.xml. \n\
+	Force the name of the profile to use. If not specified, the profile to use \n\
+	is looked up in hosts.xml. \n\
 \n\
 /rebootcmd:<option> \n\
 	Use the specified boot command, either with full path or \n\
-	relative to location of wpkg.js \n\
+	relative to the location of wpkg.js \n\
 	Specifying 'special' as option uses tools\psshutdown.exe \n\
 	from www.sysinternals.com - if it exists - and a notification loop \n\
 ";
@@ -341,7 +346,7 @@ var caseSensitivity = true;
  ******************************************************************************/
 
 // Save the old environment.
-var oldEnv=new ActiveXObject("Scripting.Dictionary");
+var oldEnv = new ActiveXObject("Scripting.Dictionary");
 
 /** file to which the log is written to */
 var logfileHandler = null;
@@ -494,6 +499,7 @@ function main() {
 		synchronizeProfile();
 		exit(0);
 	} else {
+		showUsage();
 		throw new Error("No action specified.");
 	}
 }
@@ -665,7 +671,7 @@ function checkCondition(checkNode) {
 			// try treating the value as array
 			var val = "";
 			try {
-				var readArray = readValue.toArray();;
+				var readArray = readValue.toArray();
 				dinfo("The registry value received is an array, concatenating values for comparison.");
 				for (var i=0; i<readArray.length; i++) {
 					val = val + readArray[i] + "";
@@ -1518,11 +1524,7 @@ function getLocalizedString(stringID) {
  *         returns emtpy array if no checks are defined
  */
 function getPackageChecks(packageNode) {
-	var checks = packageNode.selectNodes("check");
-	if (checks == null) {
-		checks = new Aarray();
-	}
-	return checks;
+	return packageNode.selectNodes("check");;
 }
 
 /**
@@ -1658,8 +1660,8 @@ function getPackageNodeFromAnywhere(packageID) {
 	// check if node exists; if not then try to get the node from the settings
 	if(packageDBNode != null) {
 		// package found in package database, mark for installation/upgrade
-		dinfo("Found package node '" + getPackageName(packageDBNode) + ' (' +
-				getPackageID(packageDBNode) + ") in package database ");
+		dinfo("Found package node '" + getPackageName(packageDBNode) + "' (" +
+				getPackageID(packageDBNode) + ") in package database.");
 		packageNode = packageDBNode;
 	} else {
 		// error package not in package database
@@ -1978,6 +1980,8 @@ function getProfileNodes() {
  * If you like to get a list of full package nodes have a look at
  * getProfilePackageNodes() but note that it cannot return full nodes for
  * packages referenced within profiles.xml but missing in the package database.
+ *
+ * @return array of package IDs applying to this profile (empty array if no packages are assigned).
  */
 function getProfilePackageIDs() {
 	// Get array of all profiles that apply to the base profile.
@@ -2074,7 +2078,8 @@ function getProfilePackageNodes() {
 		var packageIDs = getProfilePackageIDs();
 
 		// get package definitions and all dependencies
-		for (var i=0; i < packageIDs.length; i++) {
+		var i=0;
+		while (i < packageIDs.length) {
 			var packageID = packageIDs[i];
 			dinfo("Adding package with ID '" + packageID + "' to profile packages.");
 			var packageNode = getPackageNodeFromAnywhere(packageID);
@@ -2087,6 +2092,7 @@ function getProfilePackageNodes() {
 					profilePackageNodes.push(packageNode);
 				}
 			}
+			i++;
 		}
 	}
 	return profilePackageNodes;
@@ -2439,7 +2445,7 @@ function installPackage(packageNode) {
 					} else {
 						// in case the no execution attribute is defined
 						// ckeck real package state
-						if (isInstalled(packageNode)) {
+						if (isInstalled(installedPackage)) {
 							dinfo(packageMessage + "Already installed. Skipping.");
 							bypass = true;
 							success = true;
@@ -4860,6 +4866,7 @@ function exec(cmd, timeout, workdir) {
 			throw new Error(message);
 		} else {
 			error(message);
+			return -1;
 		}
 	}
 }
@@ -5401,7 +5408,10 @@ function reboot() {
 		info("System reboot was initiated but overridden.");
 	}
 
-	exit(0);
+	// exit with code "3010 << 8" (770560) which means 3010 shifted by 8 bits.
+	// exiting with code 3010 will make WPKG client to initiate a reboot
+	// which is unlikely to be expected because reboot command is overridden.
+	exit(3010 << 8);
 }
 
 /**

@@ -4,6 +4,73 @@
 
 Change notes
 ============
+WPKG Version: 1.0.4
+Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
+Date        : 2009-03-29
+Status      : Released
+
+Changes/fixes visible to the user:
+
+Summary:
+- Unnecessary null-reference check removed from getPackageChecks() method.
+- Updated help and config.xml (grammar and consistency fixes). Fixes Bug 116.
+- Returns 3010 if reboot is scheduled but overrridden. Fixes Bug 132.
+- When executing non-existing command returns "-1" instead of throwing error.
+- Changed exit behavior in case of overridden reboot (exits with 3010 << 8)
+- Show usage when no parameter is given
+- improved documentation
+
+FIX: In case a command is executed which does not exist (WScript.Shell.exec()
+     throws exception) WPKG does not immediately terminate.
+FIX: In case a command is executed which does not exist (WScript.Shell.exec()
+     throws exception) WPKG does not immediately terminate.
+FIX: Removed unnecessary check for undefined checks in getPackageChecks()
+     method. It seems that selectNodes(String) never returns null but instead
+     returns empty collection.
+FIX: Updated help and config.xml with grammar and consistency fixes as proposed
+     by Jens Geile. Thanks Jens. Fixes Bug 116.
+FIX: If a reboot is initiated but overridden WPKG was returning exit code 0.
+     This behavior has been changed to return code 3010 in this case which
+     allows external tools to detect that a reboot should be executed.
+     Fixes Bug 132.
+MOD: Changed behavior of wpkg.js again in case reboot is overridden.
+     Previously it was exiting with exit code 3010 but this caused WPKG client
+     to initiate a reboot immediately after wpkg.js terminated.
+     Now WPKG returns code 3010 << 8 (3010 bit-shifted by 8 bits to the left)
+     which evaluates to a decimal value of 770560. This allows an external
+     tool to verify if a reboot was initiated but overridden.
+     If you would like WPKG to exit with code 3010 without issuing a reboot
+     consider to specify a reboot command within the configuration
+     (see rebootCmd in config.xml or /rebootcmd: switch) which points to a
+     script which does not do anything. In this case WPKG executes the script
+     (e.g. reboot.cmd) and then exits with code 3010.
+     This was discussed in Bug 132.
+NEW: Shows usage if executed without parameter (instead of just throwing an
+     error and exiting).
+MOD: Improved documentation.
+
+
+Change notes
+============
+WPKG Version: 1.0.3
+Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
+Date        : 2008-05-08
+Status      : Released
+
+Changes/fixes visible to the user:
+
+Summary:
+- Fixed missing quote in debug output. Fixes Bug 115.
+
+FIX: Fixed missing quote in debug output. Changed
+     Found package node "'Package name (PackageID) in package database "
+     to
+     Found package node "'Package name' (PackageID) in package database."
+     Thanks to Jens Geile for reporting it. Fixes Bug 115.
+
+
+Change notes
+============
 WPKG Version: 1.0.2
 Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
 Date        : 2008-04-21
@@ -18,6 +85,7 @@ NEW: Improved handling of event log system errors. In case writing to event log
      write to STDOUT and log to the log file as appropriate (depending on log
      level). Thanks to Brian May for reporting and debugging.
      This fixes Bug 109.
+
 
 Change notes
 ============
