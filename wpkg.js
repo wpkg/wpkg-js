@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- * WPKG 0.9.4 - Windows Packager
+ * WPKG 0.9.5 - Windows Packager
  * Copyright 2003 Jerry Haltom
  * Copyright 2005 Tomasz Chmielewski <tch (at) wpkg . org>
  * Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>
@@ -347,7 +347,7 @@ function main(argv) {
  */
 function showUsage() {
     var message = "";
-    message += "WPKG 0.9.4 - Windows Packager\n";
+    message += "WPKG 0.9.5 - Windows Packager\n";
     message += "Copyright 2004 Jerry Haltom\n";
     message += "Copyright 2005 Tomasz Chmielewski <tch (at) wpkg . org>\n";
     message += "Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>\n";
@@ -947,6 +947,8 @@ function checkCondition(checkType, checkCond, checkPath) {
                 "for type registry.");
         }
     } else if (checkType == "file") {
+        var shell = new ActiveXObject("WScript.Shell");
+        checkPath=shell.ExpandEnvironmentStrings(checkPath);
         if (checkCond == "exists") {
             var fso = new ActiveXObject("Scripting.FileSystemObject");
             if (fso.FileExists(checkPath)) {
