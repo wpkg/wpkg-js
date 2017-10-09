@@ -1,14 +1,6 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<!--
-	*******************************************************************************
-	* This is the WPKG configuration file.
-	* Place it within the same directory as you place wpkg.js.
-	* All parameters are optional. If not specified WPKG falls back to the default
-	* values. So it's recommended just to uncomment the values you like to change.
-	*******************************************************************************
--->
-
-<config>
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns="http://www.wpkg.org/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.wpkg.org/config xsd/config.xsd">
 	<!--
 		*******************************************************************************
 		*
@@ -326,7 +318,7 @@
 		*        a synchronization request) will be checked for its state by executing
 		*        its included package checks. If the package has been removed manually
 		*        it will also be removed from the settings database. Due to the fact
-		*        that packages whithout checks always return 'false' for during the
+		*        that packages without checks always return 'false' for during the
 		*        install-status check these packages will disappear from the local
 		*        wpkg.xml.
 		* False: Remove packages from the system if they are not listed within the
@@ -428,6 +420,44 @@
 		<param name='volatileReleaseMarker' value='gamma' />
 		<param name='volatileReleaseMarker' value='delta' />
 		<param name='volatileReleaseMarker' value='testing' />
+	-->
+
+	<!--
+		****************************************************************************
+		* Allows to switch to remote mode where package verification is skipped.
+		* remote: Disable package checks and assume that packages in settings
+		*         database are still correctly installed. In remote mode also the
+		*         host information is read from the local settings database.
+		* local:  Default setting. Query verifies package status using all checks.
+		* Note: Query mode can only be used with the query switch. It is ignored
+		* if no /query: command line parameter is used.
+		*
+		* Details: If you intend to copy the local wpkg.xml file to a remote system
+		* and execute WPKG queries based on this settings database (wpkg.xml) then
+		* WPKG might print some packages as "required for installation" since the
+		* package checks fail on the remote host as the package might not be
+		* installed on the remote host. If remote mode is enabled, then WPKG assumes
+		* that the packages are properly installed on the executing host without
+		* actually verifying it.
+		* Of course it might happen in this case that a package query on the remote
+		* system says that a package does not need any change but on the real system
+		* the user might have removed the software meanwhile which will trigger an
+		* installation if WPKG is run on the client.
+		*
+		* Also note that in remote query mode WPKG will read all host attributes
+		* from the settings file (wpkg.xml) if these attributes are available. This
+		* includes hostname, architecture, OS, IP addresses, domainname, groups,
+		* LCID of the executing user and LCID of the operating system.
+		* This is required in order to allow evaluation of all conditional
+		* attributes in exactly the same way as it will evaluate on the client.
+		*
+		* Default value      : local
+		* Command-line switch: /queryMode:<local|remote>
+		****************************************************************************
+	-->
+	<!--
+		<param name='queryMode' value='local' />
+		<param name='queryMode' value='remote' />
 	-->
 
 	<!--
@@ -592,7 +622,7 @@
 		* http://www.microsoft.com/globaldev/reference/lcid-all.mspx
 		*
 		* This is entirely optional. If a message is not defined here the script
-		* will just print a built-in english message.
+		* will just print a built-in English message.
 		*
 		* Please note that the message has a maximum of 256 characters on Windows
 		* Vista and newer operating systems due to limitation of the messaging
@@ -602,16 +632,16 @@
 		****************************************************************************
 	-->
 	<languages>
-		<!-- english LCIDs -->
+		<!-- English LCIDs -->
 		<language lcid="409,809,c09,2809,1009,2409,3c09,4009,3c09,4009,3809,1809,2009,4409,1409,3409,4809,1c09,2c09,3009">
 			<!-- <string id="notifyUserStart">The automated software installation utility has or is currently applying software updates to your system. Please check the time shown at the beginning of this message to determine if it is out of date. If not, please save all your open documents, as the system might require a reboot. If so, the system will be rebooted with no warning when installation is complete. Thank you.</string> -->
-			<string id="notifyUserStart">Automatic software deployment is currently updating your system. Plase safe all your documents as the the system might reboot without further notice. Thank you.</string>
+			<string id="notifyUserStart">Automatic software deployment is currently updating your system. Please save all your documents as the the system might reboot without further notice. Thank you.</string>
 			<string id="notifyUserStop">The automated software installation utility has completed installing or updating software on your system. No reboot was necessary. All updates are complete.</string>
 			<string id="notifyUserFail">The software installation has failed.</string>
 			<string id="notifyUserReboot">Rebooting to complete software installation. Please note that some software might not work until the machine is rebooted.</string>
 		</language>
 
-		<!-- french LCIDs -->
+		<!-- French LCIDs -->
 		<language lcid="40c,80c,2c0c,c0c,240c,300c,3c0c,140c,340c,180c,380c,e40c,200c,280c,100c,1c0c">
 			<string id="notifyUserStart">WPKG, l'utilitaire d'installation automatique des programmes a appliqué ou applique en ce moment des mises à jour à votre système. Veuillez consulter l'heure au début de ce message afin de vérifier que cette information ne soit pas obsolète. Veuillez sauvegarder tous vos documents ouverts, car un redémarrage peut être nécessaire et, dans ce cas, le système redémarrera sans avertissement à la fin de l'installation ou de la mise à jour. Merci.</string>
 			<string id="notifyUserStop">WPKG, l'utilitaire d'installation automatique de logiciels a terminé l'installation ou l'actualisation des logiciels sur votre système. Aucun redémarrage n'était requis. Toutes les mises à jour sont achevées.</string>
@@ -619,16 +649,16 @@
 			<string id="notifyUserReboot">Un rédémarrage est nécessaire pour compléter l'installation ou la mise à jour. Veuillez noter que les programmes nouveaux/actualisées peuvent ne pas fonctionner avant redémarrage du système.</string>
 		</language>
 
-		<!-- german LCIDs -->
+		<!-- German LCIDs -->
 		<language lcid="407,c07,1407,1007,807">
 			<!-- <string id="notifyUserStart">Das WPKG Software-Installationstool installiert oder aktualisiert gerade Software auf Ihrem System. Bitte die Zeit am Anfang der Nachricht kontrollieren, ggf. ist dieser Hinweis veraltet. Wenn nicht: Speichern Sie bitte alle Ihre offenen Dokumente, da ein Neustart notwendig werden kann. Das System wird ohne weitere Warnung neu starten, wenn die Installation oder Aktualisierung beendet wurde. Danke.</string> -->
-			<string id="notifyUserStart">Die automatische Software-Verteilung läuft gerade. Bitte speichern sie ihre offenen Dokuemnte weil das System unter Umständen ohne weitere Warnung neu startet. Danke.</string>
+			<string id="notifyUserStart">Die automatische Software-Verteilung läuft gerade. Bitte speichern Sie ihre offenen Dokumente, weil das System unter Umständen ohne weitere Warnung neu startet. Danke.</string>
 			<string id="notifyUserStop">Das WPKG Software-Installationstool hat die Installation oder Aktualisierung von Software auf Ihrem System beendet. Es war kein Neustart notwendig. Alle Updates sind komplett.</string>
 			<string id="notifyUserFail">Die Software-Installation ist fehlgeschlagen.</string>
-			<string id="notifyUserReboot">Neustart zum Abschliessen der Installation. Bitte beachten: Die neu installierte/aktualisierte Software funktioniert ggf. erst nach einem Neustart.</string>
+			<string id="notifyUserReboot">Neustart zum Abschließen der Installation. Bitte beachten: Die neu installierte/aktualisierte Software funktioniert ggf. erst nach einem Neustart.</string>
 		</language>
 
-		<!-- italian LCIDs -->
+		<!-- Italian LCIDs -->
 		<language lcid="410,810">
 			<string id="notifyUserStart">L'utilità di installazione automatica del software sta aggiornando il sistema. Verifica la marcatura temporale di questa segnalazione per capire se c'è qualche problema. Se tutto è a posto, salva e chiudi tutte le applicazioni aperte, perchè potrebbe essere necessario un riavvio. Se necessario, il sistema verrà infatti riavviato senza alcun preavviso. Grazie.</string>
 			<string id="notifyUserStop">L'utilità di installazione automatica del software ha terminato di aggiornare il sistema. Non si è reso necessario un riavvio. Tutti gli aggiornamenti sono andati a buon fine.</string>

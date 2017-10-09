@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<profiles:profiles xmlns:profiles="http://www.wpkg.org/profiles" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.wpkg.org/profiles ../xsd/profiles.xsd">
 
-<profiles>
+	<profile id="room2">
+		<package package-id="firefox" />
+		<package package-id="thunderbird" />
+		<package package-id="acrobat7" />
+	</profile>
 
-    <profile id="room2">
-        <package package-id="firefox" />
-        <package package-id="thunderbird" />
-	<package package-id="acrobat7" />
-    </profile>
-
-</profiles>
+</profiles:profiles>

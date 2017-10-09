@@ -1,11 +1,10 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
-
-<packages
-        xmlns:xsi="http://www.wpkg.org/packages"
-        xsi:noNamespaceSchemaLocation="../xsd/packages.xsd" >
+<packages:packages
+        xmlns:packages="http://www.wpkg.org/packages" xmlns:wpkg="http://www.wpkg.org/wpkg" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.wpkg.org/packages ../xsd/packages.xsd" >
 
     <package
-            id="Firefox"
+            id="firefox"
             name="Mozilla Firefox"
             revision="%PKG_VERSION%"
             reboot="false"
@@ -61,7 +60,7 @@
             reboot="false"
             priority="10">
 
-        <depends package-id="Firefox"/>
+        <depends package-id="firefox"/>
 
         <variable name="PKG_NAME"        value="SQLiteManager" />
         <variable name="PKG_SIZE"        value="254358" />
@@ -109,7 +108,7 @@
             reboot="false"
             priority="10">
 
-        <depends package-id="Firefox"/>
+        <depends package-id="firefox"/>
 
         <variable name="PKG_NAME"        value="PDFDownload" />
         <variable name="PKG_SIZE"        value="164871" />
@@ -133,7 +132,7 @@
             reboot="false"
             priority="10">
 
-        <depends package-id="Firefox"/>
+        <depends package-id="firefox"/>
 
         <variable name="PKG_NAME"        value="Firebug" />
         <variable name="PKG_SIZE"        value="1347982" />
@@ -205,7 +204,7 @@
             reboot="false"
             priority="10">
 
-        <depends package-id="Firefox"/>
+        <depends package-id="firefox"/>
 
         <variable name="PKG_NAME"        value="Brief" />
         <variable name="PKG_SIZE"        value="241511" />
@@ -229,7 +228,7 @@
             reboot="false"
             priority="10">
 
-        <depends package-id="Firefox"/>
+        <depends package-id="firefox"/>
 
         <variable name="PKG_NAME"        value="AddblockPlus" />
         <variable name="PKG_SIZE"        value="608840" />
@@ -246,4 +245,4 @@
 
         <remove cmd='%ComSpec% /c del /f /q "%PKG_DESTINATION%\%PKG_FILE%"' />
     </package>
-</packages>
+</packages:packages>

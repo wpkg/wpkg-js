@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<hosts:wpkg xmlns:hosts="http://www.wpkg.org/hosts"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.wpkg.org/hosts ../xsd/hosts.xsd">
 
-<wpkg>
+	<!-- Will match all hosts with hostnames beginning with room1-pc -->
+	<host name="room1-pc.+" profile-id="room1" />
 
-<!-- Will match all hosts with hostnames beginning with room1-pc -->
-    <host name="room1-pc.+" profile-id="room1" />
-
-</wpkg>
+</hosts:wpkg>

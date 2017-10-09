@@ -1,4 +1,4 @@
-var WPKG_VERSION = "1.2";
+var WPKG_VERSION = "1.3.0";
 /*******************************************************************************
  * 
  * WPKG - Windows Packager
@@ -6,7 +6,7 @@ var WPKG_VERSION = "1.2";
  * Copyright 2003 Jerry Haltom<br>
  * Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl><br>
  * Copyright 2005-2006 Tomasz Chmielewski <mangoo (at) wpkg . org><br>
- * Copyright 2007-2009 Rainer Meier <r.meier (at) wpkg.org><br>
+ * Copyright 2007-2011 Rainer Meier <r.meier (at) wpkg.org><br>
  * 
  * Please report your issues to the list on http://wpkg.org/
  */
@@ -40,10 +40,19 @@ var message = "" +
 "	Display a list of packages matching the specified criteria. Valid \n" +
 "	options are: \n" +
 "\n" +
-"	a - all packages \n" +
-"	i - packages that are currently installed on the system \n" +
-"	x - packages that are currently not installed on the system \n" +
-"	u - packages that can be upgraded \n" +
+"	a - Query all packages (includes installed packages and package database). \n" +
+"	x - List packages which are not installed but in package database. \n" +
+"	i - List all packages which are currently installed. \n" +
+"	I - List packages which are about to be installed during synchronization. \n" +
+"	u - List packages which are about to be upgraded during synchronization. \n" +
+"	d - List packages which are about to be downgraded during synchronization. \n" +
+"	r - List packages which are about to be removed during synchronization. \n" +
+"	m - List all modifications which would apply during synchronization \n" +
+"	    (equal to Iudr) \n" +
+"	n - List packages which belong to the profile but are not modified during \n" +
+"	    synchronization. \n" +
+"	s - List host attributes from settings (wpkg.xml). \n" +
+"	l - List host attributes read from local host. \n" +
 "\n" +
 "/remove:<package>[,package2[,package3,[...]]] \n" +
 "	Remove the specified package(s) from the system. \n" +
@@ -70,33 +79,33 @@ var message = "" +
 "	Set the local or remote path to find the xml input files. \n" +
 "	Can also be set to a web URL for direct XML retrieval from wpkg_web. \n" +
 "\n" +
-"/dryrun \n" +
-"	Do not execute any actions. Implies /debug. \n" +
+"/dryrun[:<true>|<false>] \n" +
+"	Do not execute any actions. Implies debug mode. \n" +
 "\n" +
-"/quiet \n" +
+"/quiet[:<true>|<false>] \n" +
 "	Use the event log to record all error/status messages. Use this when \n" +
 "	running unattended. \n" +
 "\n" +
-"/nonotify \n" +
+"/nonotify[:<true>|<false>] \n" +
 "	Logged in users are not notified about impending updates. \n" +
 "\n" +
-"/noreboot \n" +
+"/noreboot[:<true>|<false>] \n" +
 "	System does not reboot regardless of need. \n" +
 "\n" +
-"/quitonerror \n" +
+"/quitonerror[:<true>|<false>] \n" +
 "	Quit execution if the installation of any package was unsuccessful \n" +
 "	(default: install next package and show the error summary). \n" +
 "\n" +
-"/sendStatus \n" +
+"/sendStatus[:<true>|<false>] \n" +
 "	Send status messages on STDOUT which can be parsed by calling program to \n" +
 "	display status information to the user. \n" +
 "\n" +
-"/noUpgradeBeforeRemove \n" +
+"/noUpgradeBeforeRemove[:<true>|<false>] \n" +
 "	Usually WPKG upgrades a package to the latest available version before it \n" +
 "	removes the package. This allows administrators to fix bugs in the package \n" +
 "	and assure proper removal.\n" +
 "\n" +
-"/applymultiple \n" +
+"/applymultiple[:<true>|<false>] \n" +
 "	Apply profiles of all host nodes with matching attributes. \n" +
 "	Only first matching host node is returned if not switched on. \n" +
 "	This parameter must be used with caution, it can break existing setup. \n" +
@@ -113,18 +122,42 @@ var message = "" +
 "	where <script-path> is the directory from which the script is executed. \n" +
 "		e.g. '\\\\server\\share\\directory\\config.xml'. \n" +
 "		e.g. 'directory\\config.xml'. \n" +
+"	You can use environment variables as well as the following expressions: \n" +
+"	 [HOSTNAME]  Replaced by the executing hostname. \n" +
+"	 [PROFILE]   Replaced by the concatenated list of profiles applied. \n" +
+"\n" +
+"/settings:<path> \n" +
+"	Path to the settings (local WPKG database) file to be used. The path might \n" +
+"	be absolute or relative but including the XML file name. This parameter is \n" +
+"	entirely OPTIONAL and should normally not be specified at all. \n" +
+"	If not specified the settings file will be searched at: \n" +
+"	%SystemRoot%\\system32\\wpkg.xml \n" +
+"		e.g. '%SystemRoot%\\system32\\wpkg-custom.xml'. \n" +
+"		e.g. '\\\\server\share\directory\\[HOSTNAME].xml'. \n" +
+"	If you store the settings file on a share make sure the names is unique! \n" +
+"	You can use environment variables as well as the following expressions: \n" +
+"	 [HOSTNAME]  Replaced by the executing hostname. \n" +
+"	 [PROFILE]   Replaced by the concatenated list of profiles applied. \n" +
+"\n" +
+"/queryMode:<mode> \n" +
+"	Allows to switch to remote mode where package verification is skipped. \n" +
+"	 remote: Disable package checks and assume that packages in settings \n" +
+"	         database are still correctly installed. In remote mode also the \n" +
+"	         host information is read from the local settings database. \n" +
+"	 local:  Default setting. Query verifies package status using all checks. \n" +
+"	Note: Query mode can only be used with the query switch. \n" +
 "\n" +
 "/profile:<profile> \n" +
 "	Force the name of the profile to use. If not specified, the profile to use \n" +
 "	is looked up in hosts.xml. \n" +
 "\n" +
-"/debug or /verbose \n" +
+"/debug[:<true>|<false>] or /verbose[:<true>|<false>] \n" +
 "	Enable debug output. Please note that this parameter only influences \n" +
 "	notification and event log output. It does not affect the logging level. \n" +
 "	It is possible to get debug-level output even without using this \n" +
 "	switch. \n" +
 "\n" +
-"/force \n" +
+"/force[:<true>|<false>] \n" +
 "	When used in conjunction with /synchronize WPKG will ignore the local \n" +
 "	settings file (wpkg.xml) and re-build the database with installed \n" +
 "	packages. \n" +
@@ -132,7 +165,7 @@ var message = "" +
 "	package even if not all packages which depend on the one to be removed \n" +
 "	could be removed. \n" +
 "\n" +
-"/forceinstall \n" +
+"/forceinstall[:<true>|<false>] \n" +
 "	Force installation over existing packages. \n" +
 "\n" +
 "/host:<hostname> \n" +
@@ -153,7 +186,7 @@ var message = "" +
 "	Name of the group the computer must belongs to instead of reading it from \n" +
 "	the executing host. \n" +
 "\n" +
-"/ignoreCase\n" +
+"/ignoreCase[:<true>|<false>] \n" +
 "	Disable case sensitivity of packages and profiles. Therefore you can \n" +
 "	assign the package 'myapp' to a profile while only a package 'MyApp' is \n" +
 "	defined within the packages. \n" +
@@ -163,7 +196,7 @@ var message = "" +
 "		  Therefore you will only see lowercase entries within the log files \n" +
 "		  and also within the local package database. \n" +
 "\n" +
-"/logAppend \n" +
+"/logAppend[:<true>|<false>] \n" +
 "	Append log files instead of overwriting existing files. \n" +
 "	NOTE: You can specify a log file pattern which will create a new file on \n" +
 "	each run. Appending logs might cause problems with some log rotation \n" +
@@ -172,14 +205,14 @@ var message = "" +
 "/logfilePattern:<pattern> \n" +
 "	Pattern for log file naming: \n" +
 "	Recognized patterns: \n" +
-"	 [HOSTNAME]  replaced by the executing hostname \n" +
-"	 [PROFILE]   replaced by the  name \n" +
-"	 [YYYY]      replaced by year (4 digits) \n" +
-"	 [MM]        replaced by month number (2 digits) \n" +
-"	 [DD]        replaced by the day of the month (2 digits) \n" +
-"	 [hh]        replaced by hour of the day (24h format, 2 digits) \n" +
-"	 [mm]        replaced by minutes (2 digits) \n" +
-"	 [ss]        replaced by seconds (2 digits) \n" +
+"	 [HOSTNAME]  Replaced by the executing hostname. \n" +
+"	 [PROFILE]   Replaced by the concatenated list of profiles applied. \n" +
+"	 [YYYY]      Replaced by year (4 digits). \n" +
+"	 [MM]        Replaced by month number (2 digits). \n" +
+"	 [DD]        Replaced by the day of the month (2 digits). \n" +
+"	 [hh]        Replaced by hour of the day (24h format, 2 digits). \n" +
+"	 [mm]        Replaced by minutes (2 digits). \n" +
+"	 [ss]        Replaced by seconds (2 digits). \n" +
 "\n" +
 "	 Examples: \n" +
 "		'wpkg-[YYYY]-[MM]-[DD]-[HOSTNAME].log' \n" +
@@ -215,7 +248,7 @@ var message = "" +
 "			need to escape backslashes: \n" +
 "			e.g. '\\\\server\\share\\directory'. \n" +
 "\n" +
-"/noforcedremove \n" +
+"/noforcedremove[:<true>|<false>] \n" +
 "	Do not remove packages from local package database if remove fails even \n" +
 "	if the package does not exist in the package database on the server and \n" +
 "	is not referenced within the profile. \n" +
@@ -230,7 +263,7 @@ var message = "" +
 "	uninstall-retry on next boot) just remove it from the profile but do not \n" +
 "	completely delete it from the package database. \n" +
 "\n" +
-"/noremove \n" +
+"/noremove[:<true>|<false>] \n" +
 "	Disable the removal of all packages. If used in conjunction with the \n" +
 "	/synchronize parameter it will just add packages but never remove them. \n" +
 "	Instead of removing a list of packages which would have been removed \n" +
@@ -244,11 +277,11 @@ var message = "" +
 "	which do not specify any checks. Such packages will remain in the local \n" +
 "	settings database even if the software has been removed manually. \n" +
 "\n" +
-"/noDownload \n" +
+"/noDownload[:<true>|<false>] \n" +
 "	Ignore all download nodes in packages. \n" +
 "	Useful for testing and in case your download targets already exist. \n" +
 "\n" +
-"/norunningstate \n" +
+"/norunningstate[:<true>|<false>] \n" +
 "	Do not export the running state to the registry. \n" +
 "\n" +
 "/rebootcmd:<option> \n" +
@@ -313,7 +346,7 @@ var quietDefault = false;
 /** registry path where WPKG stores its running state */
 var sRegWPKG_Running = "HKLM\\Software\\WPKG\\running";
 
-/** config file to hold the settings for the script */
+/** configuration file to hold the settings for the script */
 var config_file_name = "config.xml";
 
 /** name of package database file */
@@ -437,20 +470,37 @@ var noDownload = false;
  */
 var settingsHostInfo = true;
 
+/**
+ * Query mode. In order to "simulate" the result of a query on a system on
+ * anohter (remote-) system you can set queryMode to "remote". This will
+ * disable package checks because they will not return the same results on a
+ * remote system.
+ */
+var queryMode = "local";
+
+/**
+ * XML namespaces.
+ */
+var namespaceSettings = "http://www.wpkg.org/settings";
+var namespaceHosts = "http://www.wpkg.org/hosts";
+var namespaceProfiles = "http://www.wpkg.org/profiles";
+var namespacePackages = "http://www.wpkg.org/packages";
+var namespaceConfig = "http://www.wpkg.org/config";
+
 /*******************************************************************************
  * 
  * Caching variables - used by internal functions.
  * 
  ******************************************************************************/
 
-// Save the old environment.
-var oldEnv = new ActiveXObject("Scripting.Dictionary");
-
 /** file to which the log is written to */
 var logfileHandler = null;
 
 /** path to the log file (corresponds to logfileHandler) */
 var logfilePath = null;
+
+/** store whether log file was opened in append mode */
+var logfileAppendMode = logAppend;
 
 /** stores if the user was notified about start of actions */
 var was_notified = false;
@@ -476,10 +526,14 @@ var hostOs = null;
 var domainName = null;
 var ipAddresses = null;
 var hostGroups = null;
+var hostArchitecture = null;
 var hostAttributes = null;
 
-/** FS object where the settings are stored */
+/** String representing path where the settings are stored */
 var settings_file = null;
+
+/** Flag whether settings path was processed to replace parameters */
+var settings_file_processed = false;
 
 /** declare variables for data storage */
 var packages = null;
@@ -488,14 +542,23 @@ var hosts = null;
 var settings = null;
 var config = null;
 
-/** profiles applying to the current host */
-var applyingProfiles = null;
+/** List of profiles assigned directly to current host */
+var applyingProfilesDirect = null;
+
+/** profiles applying to the current host (including dependencies) */
+var applyingProfilesAll = null;
 
 /** caches the host node entries applying to the current host */
 var applyingHostNodes = null;
 
-/** stores the locale ID (LCID) which applies for the local machine */
+/** Packages belonging to current host (package nodes) */
+var profilePackageNodes = null;
+
+/** stores the locale ID (LCID) which applies for the local executing user */
 var LCID = null;
+
+/** stores the locale ID (LCID) which applies for the local machine */
+var LCIDOS = null;
 
 /** caches the language node applying to the current system locale */
 var languageNode = null;
@@ -506,14 +569,20 @@ var logLevel = null;
 /** actual value for log level */
 var logLevelValue = 0x03;
 
+/** buffer to store log entries while no real log file is available */
+var logBuffer = null;
+
+/** flag which is true if log is ready to be initialize */
+var logInitReady = false;
+
+/** flag which is set to true internally during log initialization */
+var logInitializing = false;
+
 /** declare quiet mode variable */
 var quiet = null;
 
-/** holds name of profiles applying to current host */
-var profilesApplying = null;
-
 /** current value of quiet operation flag */
-var quietMode = false;
+var quietMode = quietDefault;
 
 /** stores if a postponed reboot is scheduled */
 var postponedReboot = false;
@@ -524,6 +593,9 @@ var rebooting = false;
 /** set to true to skip write attempts to event log */
 var skipEventLog = false;
 
+/** set to true to log event log entries to STDOUT (fallback mode) */
+var eventLogFallback = false;
+
 /** holds an array of packages which were not removed due to the /noremove flag */
 var skippedRemoveNodes = null;
 
@@ -533,6 +605,11 @@ var skippedRemoveNodes = null;
  * (yet)
  */
 var systemChanged = false;
+
+/**
+ * Holds a list of packages which have been manually installed.
+ */
+var manuallyInstalled = null;
 
 /**
  * Marks volatile releases and "inverts" the algorithm that a longer version
@@ -551,6 +628,12 @@ var volatileReleaseMarkers = ["rc", "i", "m", "alpha", "beta", "pre", "prereleas
 /** stores if system is running on a 64-bit OS */
 var x64 = null;
 
+/** Stores variables assigned to host definitions applying to current host */
+var hostsVariables = null;
+
+/** Stores variables from profiles assigned to current hsot */
+var profilesVariables = null;
+
 /***********************************************************************************************************************
  * 
  * Program execution
@@ -564,6 +647,7 @@ var x64 = null;
 try {
 	main();
 } catch (e) {
+	// Log error message.
 	error("Message:      " + e.message + "\n" +
 			"Description:  " + e.description + "\n" +
 			"Error number: " + hex(e.number) + "\n" +
@@ -571,6 +655,10 @@ try {
 			"Line:         " + e.lineNumber + "\n"
 			);
 	notifyUserFail();
+	// Make sure log is initialized to write the output.
+	if (logBuffer != null) {
+		initializeLog();
+	}
 	exit(2);
 }
 
@@ -578,70 +666,222 @@ try {
  * Main execution method. Actually runs the script
  */
 function main() {
-	// do not open pop-up window while initializing
+	// Do not open pop-up window while initializing.
 	setQuiet(true);
 
-	// initialize configuration (read and set values)
-	initializeConfig();
-
-	// parse command-line parameters
-	parseArguments(getArgv());
-
-	// print version number
-	dinfo("WPKG " + WPKG_VERSION + " starting...");
-
-	if (!isNoRunningState()) {
-		setRunningState("true");
-	}
+	// Initialize WPKG internals.
 	initialize();
-
-	// Save a snapshot of the current environment
-	saveEnv();
 
 	// Process command line arguments to determine course of action.
 	// Get special purpose argument lists.
 	var argv = getArgv();
 	var argn = argv.Named;
-	var argu = argv.Unnamed;
-	if (argn("query") != null) {
-		var arg = argn("query").slice(0,1);
-		if (arg == "a") {
-			queryAllPackages();
-		} else if (arg == "i") {
-			queryInstalledPackages();
-		} else if (arg == "x") {
-			queryUninstalledPackages();
-		} else if (arg == "u") {
-			queryUpgradablePackages();
+	// var argu = argv.Unnamed;
+	if (argn.Item("query") != null) {
+		// Do not log to event log during query.
+		var eventLogStatus = isSkipEventLog();
+		setSkipEventLog(true);
+
+		if (getQueryMode() == "remote") {
+			getSettingHostAttributes();
 		}
-	} else if (argn("show") != null) {
-		var requestedPackageName = argn("show");
-		// if case sensitive mode is disabled convert package name to lower case
-		if (!isCaseSensitive()) {
-			requestedPackageName = requestedPackageName.toLowerCase();
+		
+		// Now all parameters are set to build the final log file name
+		// even if [PROFILE] is used.
+		// WScript.Echo("Initializing Log");
+		// WScript.Echo("Buffer: " + logBuffer);
+		// Flag log file ready for initialization.
+		logInitReady = true;
+
+		// Do not log to log file during query.
+		var logValue = getLogLevel();
+		// setLogLevel(0);
+
+		// Read query argument characters.
+		var queryRequest = argn.Item("query").split("");
+		
+		// Supported arguments:
+		// a Query all packages.
+		// x List packages which are not installed but in package database.
+		// i List all packages which are currently installed.
+		// I List packages which are about to be installed during synchronization.
+		// u List packages which are about to be upgraded during synchronization.
+		// d List packages which are about to be downgraded during synchronization.
+		// r List packages which are about to be removed during synchronization.
+		// m List all modifications which would apply during synchronization (equal to Iudr)
+		// n List packages which belong to the profile but are not modified during synchronization.
+		// s List host attributes from settings (wpkg.xml).
+		// l List host attributes read from local host.
+		var listSyncInstall = false;
+		var listSyncUpgrade = false;
+		var listSyncDowngrade = false;
+		var listSyncRemove = false;
+		var listSyncUnmodified = false;
+		for (var i=0; i<queryRequest.length; i++) {
+			var requestCharacter = queryRequest[i];
+			switch (requestCharacter) {
+			case "a":
+				queryAllPackages();
+				break;
+
+			case "x":
+				queryUninstalledPackages();
+				break;
+
+			case "i":
+				queryInstalledPackages();
+				break;
+
+			case "I":
+				listSyncInstall = true;
+				break;
+
+			case "u":
+				listSyncUpgrade = true;
+				break;
+
+			case "d":
+				listSyncDowngrade = true;
+				break;
+
+			case "r":
+				listSyncRemove = true;
+				break;
+
+			case "n":
+				listSyncUnmodified = true;
+				break;
+
+			case "m":
+				listSyncInstall = true;
+				listSyncUpgrade = true;
+				listSyncDowngrade = true;
+				listSyncRemove = true;
+				break;
+
+			case "s":
+				queryHostInformationFromSettings();
+				break;
+
+			case "l":
+				queryHostInformation();
+				break;
+
+			default:
+				break;
+			}
 		}
-		var message = queryPackage(getPackageNodeFromAnywhere(requestedPackageName));
-		info(message);
-	} else if (argn("install") != null) {
-		var packageList = argn("install").split(",");
-		for (var iPackage=0; iPackage < packageList.length; iPackage++) {
-			installPackageName(packageList[iPackage]);
+		// Print requested output.
+		if (listSyncInstall || listSyncUpgrade || listSyncDowngrade || listSyncRemove || listSyncUnmodified) {
+			queryProfilePackages(listSyncInstall, listSyncUpgrade, listSyncDowngrade, listSyncRemove, listSyncUnmodified);
 		}
-	} else if (argn("remove") != null) {
-		var packageList = argn("remove").split(",");
-		for (var iPackage=0; iPackage < packageList.length; iPackage++) {
-			removePackageName(packageList[iPackage]);
-		}
-	} else if (argn("upgrade") != null) {
-		var packageList = argn("upgrade").split(",");
-		for (var iPackage=0; iPackage < packageList.length; iPackage++) {
-			installPackageName(packageList[iPackage]);
-		}
-	} else if (isArgSet(argv, "/synchronize")) {
-		synchronizeProfile();
+
+		setSkipEventLog(eventLogStatus);
+		setLogLevel(logValue);
 	} else {
-		showUsage();
-		throw new Error("No action specified.");
+
+		// set profile-based log level (if available)
+		var profileLogLevel = getProfilesLogLevel();
+		if (profileLogLevel != null) {
+			setLogLevel(profileLogLevel);
+		}
+
+		// Now all parameters are set to build the final log file name
+		// even if [PROFILE] is used.
+		// WScript.Echo("Initializing Log");
+		// WScript.Echo("Buffer: " + logBuffer);
+		// Flag log file ready for initialization.
+		logInitReady = true;
+
+		var message;
+		if(isDebug()) {
+			var hst = getHostNodes();
+			message = "Hosts file contains " + hst.length + " hosts:";
+			for (var iHost = 0; iHost < hst.length; iHost++ ) {
+				message += "\n'" + getHostNodeDescription(hst[iHost]) + "'";
+			}
+			dinfo(message);
+
+			var settingsPkg = getSettingNodes();
+			message = "Settings file contains " + settingsPkg.length + " packages:";
+			for (var iSettings = 0; iSettings < settingsPkg.length; iSettings++) {
+				if (settingsPkg[iSettings] != null) {
+					 message += "\n'" + getPackageID(settingsPkg[iSettings]) + "'";
+				}
+			}
+			dinfo(message);
+
+			var packageNodes = getPackageNodes();
+			message = "Packages file contains " + packageNodes.length + " packages:";
+			for (var iPackage = 0; iPackage < packageNodes.length; iPackage++) {
+				if (packageNodes[iPackage] != null) {
+					 message += "\n'" + getPackageID(packageNodes[iPackage]) + "'";
+				}
+			}
+			dinfo(message);
+
+			var profileNodes = getProfileNodes();
+			message = "Profile file contains " + profileNodes.length + " profiles:";
+			for (var iProfile = 0; iProfile < profileNodes.length; iProfile++) {
+				if (profileNodes[iProfile] != null) {
+					 message += "\n'" + getProfileID(profileNodes[iProfile]) + "'";
+				}
+			}
+			dinfo(message);
+
+			// Get list of profiles directly assigned to host.
+			var profiles = getProfileList();
+			message = "Using profile(s): ";
+			for (var i=0; i < profiles.length; i++) {
+				message += "\n'" + profiles[i] + "'";
+			}
+			dinfo(message);
+		}
+
+		// Check if all referenced profiles are available.
+		var profileList = getProfileList();
+		var error = false;
+		message = "Could not locate referenced profile(s):\n";
+		for (var iProf = 0; iProf < profileList.length; iProf++) {
+			var currentProfile = getProfileNode(profileList[iProf]);
+			if (currentProfile == null) {
+				error = true;
+				message += profileList[iProf] + "\n";
+			}
+		}
+		if (error) {
+			throw new Error(message);
+		}
+		
+		if (argn.Item("show") != null) {
+			var requestedPackageName = argn.Item("show");
+			// if case sensitive mode is disabled convert package name to lower case
+			if (!isCaseSensitive()) {
+				requestedPackageName = requestedPackageName.toLowerCase();
+			}
+			var message = queryPackage(getPackageNodeFromAnywhere(requestedPackageName), null);
+			info(message);
+		} else if (argn.Item("install") != null) {
+			var packageList = argn.Item("install").split(",");
+			for (var iPackage=0; iPackage < packageList.length; iPackage++) {
+				installPackageName(packageList[iPackage], true);
+			}
+		} else if (argn.Item("remove") != null) {
+			var packageList = argn.Item("remove").split(",");
+			for (var iPackage=0; iPackage < packageList.length; iPackage++) {
+				removePackageName(packageList[iPackage]);
+			}
+		} else if (argn.Item("upgrade") != null) {
+			var packageList = argn.Item("upgrade").split(",");
+			for (var iPackage=0; iPackage < packageList.length; iPackage++) {
+				installPackageName(packageList[iPackage], false);
+			}
+		} else if (isArgSet(argv, "/synchronize")) {
+			synchronizeProfile();
+		} else {
+			showUsage();
+			throw new Error("No action specified.");
+		}
 	}
 	exit(0);
 }
@@ -689,18 +929,18 @@ function addSettingsNode(packageNode, saveImmediately) {
 	if (settingsNode != null) {
 		dinfo("Removing currently existing settings node first: '" +
 				getPackageName(settingsNode) + "' (" + getPackageID(settingsNode) +
-				"), Revision " + getPackageRevision(settingsNode));
+				"), Revision " + getPackageRevision(settingsNode) + ".");
 		removeSettingsNode(settingsNode, false);
 	}
 
 	dinfo("Adding settings node: '" +
 			 getPackageName(packageNode) + "' (" + getPackageID(packageNode) +
-			 "), Revision " + getPackageRevision(packageNode));
+			 "), Revision " + getPackageRevision(packageNode) + ".");
 
 	var success = addNode(getSettings(), packageNode);
 	// save settings if remove was successful
 	if (success && saveImmediately) {
-		saveSettings();
+		saveSettings(true);
 	}
 	return success;
 }
@@ -743,6 +983,47 @@ function appendProfileDependencies(profileArray, profileNode) {
 }
 
 /**
+ * Evaluates all checks in the check nodes array and returns its result.
+ * @param checkNodes Array of XML <check /> nodes to be evaluated.
+ * @returns {Boolean} true if all checks are true. False if at least one failed.
+ */
+function checkAll(checkNodes) {
+	if (checkNodes == null) {
+		return true;
+	}
+
+	// Initialize return value.
+	var result = true;
+
+	// Save environment.
+	var previousEnv = getEnv();
+	
+	// Loop over every condition check.
+	// If all are successful, we consider package as installed.
+	for (var i = 0; i < checkNodes.length; i++) {
+		try {
+			if (!checkCondition(checkNodes[i])) {
+				result = false;
+				break;
+			}
+		} catch (err) {
+			message = "Error evaluating check: " + err.description;
+			if (isQuitOnError()) {
+				throw new Error(message);
+			} else {
+				error(message);
+				result = false;
+				break;
+			}
+		} finally {
+			// Restore environment.
+			loadEnv(previousEnv);
+		}
+	}
+	return result;
+}
+
+/**
  * Checks for the success of a check condition for a package.
  * 
  * @param checkNode
@@ -759,13 +1040,35 @@ function checkCondition(checkNode) {
 	var checkPath = checkNode.getAttribute("path");
 	var checkValue = checkNode.getAttribute("value");
 
+	// In remote mode try to verify the check using cached check results in
+	// settings database.
+	if (getQueryMode() == "remote") {
+		// Logical checks shall be evaluated as usual.
+		// Only look for previous check results for other types of checks.
+		if (checkType != "logical") {
+			var result = getSettingsCheckResult(checkNode);
+			if (result == null) {
+				error("Result of check of type '" + checkType + "' with condition '" +
+						checkCond + "', path '" + checkPath + "' and value '" +
+						checkValue + "' is missing in settings database. " +
+						"Trying to evaluate locally. Results might be inaccurate");
+			} else {
+				return result;
+			}
+		}
+	}
+	
 	// Sanity check: must have Type set here.
 	if (checkType == null) {
 		throw new Error("Check Type is null - this is not permitted. Perhaps a typo? " +
 						"To help find it, here are the other pieces of information: " +
 						"condition='" + checkCond + "', path='" + checkPath +
-						"', value='" + checkValue + "'");
+						"', value='" + checkValue + "'.");
 	}
+
+	// Initialize return value;
+	var returnValue = false;
+	
 	// get expanded values for path and value used by some checks
 	var checkPathExpanded = null;
 	if (checkPath != null) {
@@ -784,7 +1087,7 @@ function checkCondition(checkNode) {
 			throw new Error("Condition and / or path is null for a registry check. Perhaps " +
 							"a typo? To help find it, here are the other pieces of information: " +
 							"condition='" + checkCond + "', path='" + checkPath +
-							"', value='" + checkValue + "'");
+							"', value='" + checkValue + "'.");
 		}
 
 		// branch on check condition
@@ -792,18 +1095,19 @@ function checkCondition(checkNode) {
 		case "exists":
 			if (getRegistryValue(checkPath) != null) {
 				// Some debugging information.
-				dinfo("The registry path '" + checkPath + "' exists: the check was successful");
-				return true;
-			} else if(getRegistryValue(checkPathExpanded) != null) {
-				dinfo("The expanded registry path '" + checkPathExpanded + "' exists: the check was successful");
-				return true;
+				dinfo("The registry path '" + checkPath + "' exists: the check was successful.");
+				returnValue = true;
+			} else if (getRegistryValue(checkPathExpanded) != null) {
+				dinfo("The expanded registry path '" + checkPathExpanded + "' exists: the check was successful.");
+				returnValue = true;
 			} else {
 				// path does not exist
 				dinfo("Neither the registry path '" + checkPath + "' nor its expanded value of '" +
-						checkPathExpanded + "' exist: the check failed");
-				return false;
+						checkPathExpanded + "' exist: the check failed.");
+				returnValue = false;
 			}
-            break;
+			break;
+
 		case "equals":
 			// read registry value and convert it to string in order to compare
 			// to supplied
@@ -816,10 +1120,10 @@ function checkCondition(checkNode) {
 				readValue = getRegistryValue(checkPathExpanded);
 				if (readValue == null) {
 					dinfo("The registry path '" + checkPath + "' did not exist. Check failed.");
-					return false;
-				} else {
-					dinfo("The expanded registry path '" + checkPathExpanded + "' could be read.");
+					returnValue = false;
+					break;
 				}
+				dinfo("The expanded registry path '" + checkPathExpanded + "' could be read.");
 			} else {
 				dinfo("The registry path '" + checkPath+ "' could be read.");
 			}
@@ -836,33 +1140,39 @@ function checkCondition(checkNode) {
 					}
 				}
 			} catch(notAnArray) {
-				dinfo("The registry value received is a scalar value");
+				dinfo("The registry value received is a scalar value.");
 				registyValue = readValue + "";
 			}
 
 			if (registyValue == checkValue) {
 				// Some debugging information.
 				dinfo("The registry path '" + checkPath + "' contained the correct value: '" +
-						checkValue + "'. The check was successful");
-				return true;
+						checkValue + "'. The check was successful.");
+				returnValue = true;
 			} else {
-				// try if expanded value matches (case-insensitive)
+				// Try if expanded value matches (case-insensitive).
 				if (registyValue.toLowerCase() == checkValueExpanded.toLowerCase()) {
 					dinfo("The registry path '" + checkPath + "' contained the expanded value: '" +
-							checkValueExpanded + "'. The check was successful");
-					  return true;
+							checkValueExpanded + "'. The check was successful.");
+					returnValue = true;
 				} else {
 					dinfo("The registry path '" + checkPath + "' did not contain the value: '" +
-							 checkValue + "'. Instead it contained '" + registyValue + "'. the check failed");
-					return false;
+							 checkValue + "'. Instead it contained '" + registyValue + "'. the check failed.");
+					returnValue = false;
 				}
 			}
-            break;
+			break;
+
 		default:
 			throw new Error("Check condition " + checkCond + " unknown " +
 							"for type registry.");
 			break;
 		}
+		
+		// The result of Registry checks shall be stored in local settings node.
+		addSettingsCheckResult(checkNode, returnValue);
+		
+		break;
 
 	// check type: file
 	case "file":
@@ -883,16 +1193,16 @@ function checkCondition(checkNode) {
 			var fso = new ActiveXObject("Scripting.FileSystemObject");
 			if (fso.FileExists(checkPath)) {
 				// Some debugging information.
-				dinfo("The path '" + checkPath + "' exists and is a file: the test was successful");
-				return true;
+				dinfo("The path '" + checkPath + "' exists and is a file: the test was successful.");
+				returnValue = true;
 			} else if (fso.FolderExists(checkPath)) {
 				// Some debugging information.
-				dinfo("The path '" + checkPath + "' exists and is a folder: the test was successful");
-				return true;
+				dinfo("The path '" + checkPath + "' exists and is a folder: the test was successful.");
+				returnValue = true;
 			} else {
 				// Some debugging information.
-				dinfo("The path '" + checkPath + "' does not exist: the test failed");
-				return false;
+				dinfo("The path '" + checkPath + "' does not exist: the test failed.");
+				returnValue = false;
 			}
 
 		} else if (checkCond == "sizeequals") {
@@ -902,16 +1212,17 @@ function checkCondition(checkNode) {
 								"a typo? To help find it, here are the other pieces of information: " +
 								"condition='" + checkCond +
 								"', path='" + checkPath +
-								"', value='" + checkValue + "'");
+								"', value='" + checkValue + "'.");
 			}
 
 			var filesize = getFileSize(checkPath);
 			if (filesize == checkValueExpanded) {
-				dinfo("The file '" + checkPath + "' has size " + filesize + ": the test was successful");
-				return true;
+				dinfo("The file '" + checkPath + "' has size " + filesize + ": the test was successful.");
+				returnValue = true;
 			} else {
 				dinfo("The file '" + checkPath + "' has size " + filesize + " - wanted " +
-						checkValueExpanded + ": the test fails");
+						checkValueExpanded + ": the test fails.");
+				returnValue = false;
 			}
 		} else if (checkCond.substring(0,7) == "version") {
 			// Sanity check: Must have a value set for version check.
@@ -919,63 +1230,234 @@ function checkCondition(checkNode) {
 				throw new Error("Value is null for a file version check. Perhaps " +
 								"a type? To help find it, here are the other pieces of information: " +
 								"condition='" + checkCond + "', path='" + checkPath +
-								"', value='" + checkValue + "'");
+								"', value='" + checkValue + "'.");
 			} // if checkValue == null
 
 			var fileVersion = getFileVersion(checkPath);
 
 			if (fileVersion == null || fileVersion == "") {
 				 // no file version could be obtained
-				 dinfo("Unable to find the file version for " + checkPath);
-				 return false;
+				 dinfo("Unable to find the file version for '" + checkPath + "'.");
+				 returnValue = false;
+			} else {
+
+				var fileVersionCompare = versionCompare(fileVersion, checkValueExpanded);
+				dinfo ("Checking file version " + fileVersion + " is " + checkCond +
+						 " (than) " + checkValueExpanded + " - got result " + fileVersionCompare + ".");
+	
+				var fileVersionCompResult = false;
+				switch (checkCond) {
+					case "versionsmallerthan":
+						if (fileVersionCompare < 0) {
+							fileVersionCompResult = true;
+						}
+						break;
+					case "versionlessorequal":
+						if (fileVersionCompare <= 0) {
+							fileVersionCompResult = true;
+						}
+						break;
+					case "versionequalto":
+						if (fileVersionCompare == 0) {
+							fileVersionCompResult = true;
+						}
+						break;
+					case "versiongreaterorequal":
+						if (fileVersionCompare >= 0) {
+							fileVersionCompResult = true;
+						}
+						break;
+					case "versiongreaterthan":
+						if (fileVersionCompare > 0) {
+							fileVersionCompResult = true;
+						}
+						break;
+					default:
+						error("Unknown operation on file versions : " + checkCond);
+						fileVersionCompResult = false;
+						break;
+				}
+	
+				dinfo("File version check for file '" + checkPath + "' returned " +
+					fileVersionCompResult + " for operation type " + checkCond + ".");
+				returnValue = fileVersionCompResult;
 			}
 
-			var fileVersionCompare = versionCompare(fileVersion, checkValueExpanded);
-			dinfo ("Checking file version " + fileVersion + " is " + checkCond +
-					 " (than) " + checkValueExpanded + " - got result " + fileVersionCompare);
+		} else if (checkCond.substring(0,4) == "date") {
+			var fileDate = null;
+			var comparisonDesc = "";
+			var dateType = checkCond.substring(4,10);
+			// Evaluate if modification date shall be checked.
+			if (dateType == "modify") {
+				dinfo("Checking file modification date.");
+				// Evaluate file modification date.
+				fileDate = getFileDateModification(checkPath);
+				comparisonDesc = "Modification";
+			} else if (dateType == "create") {
+				dinfo("Checking file creation date.");
+				// Evaluate file creation date.
+				fileDate = getFileDateCreation(checkPath);
+				comparisonDesc = "Creation";
+			} else if (dateType == "access") {
+				dinfo("Checking file access date.");
+				// Evaluate file access date.
+				fileDate = getFileDateLastAccess(checkPath);
+				comparisonDesc = "Access";
+			} else {
+				throw new Error ("Invalid file date comparison type: " + checkCond + ".");
+			}
 
-			var fileVersionCompResult = false;
-			switch (checkCond) {
-				case "versionsmallerthan":
-					if (fileVersionCompare < 0) {
-						fileVersionCompResult = true;
-					}
+			// If file date could not be read: Comparison failed.
+			if (fileDate == null) {
+				dinfo("File modification date could not be read, check failed.");
+				returnValue = false;
+				break;
+			}
+			// Make sure file date is in Date() format.
+			fileDate = new Date(fileDate);
+			
+			// Parse comparison date.
+			var firstChar = checkValueExpanded.substring(0,1);
+			var comparisonDate = null;
+			var comparisonType = "string";
+			if (firstChar == "+" || firstChar == "-") {
+				// Relative date. Create time offset in minutes.
+				dinfo("Reading relative comparison date: " + checkValueExpanded + " minutes.");
+				var timeOffset = parseInt(checkValueExpanded) * 1000 * 60;
+				var now = new Date();
+				comparisonDate = new Date(now.getTime() + timeOffset);
+			} else if (firstChar == "@" ) {
+				// Remember type of comparison.
+				comparisonType = "file";
+				// Evaluate date of reference file.
+				var filePath = checkValueExpanded.substring(1);
+				if (dateType == "modify") {
+					dinfo("Reading file modification date of reference file '" + filePath + "'.");
+					// Evaluate file modification date.
+					comparisonDate = getFileDateModification(filePath);
+				} else if (dateType == "create") {
+					dinfo("Reading file creation date of reference file '" + filePath + "'.");
+					// Evaluate file creation date.
+					comparisonDate = getFileDateCreation(filePath);
+				} else if (dateType == "access") {
+					dinfo("Reading file access date of reference file '" + filePath + "'.");
+					// Evaluate file access date.
+					comparisonDate = getFileDateLastAccess(filePath);
+				}
+				// If comparison date could not be read then comparison failed.
+				if (comparisonDate == null) {
+					dinfo("File comparison date could not be read, check failed.");
+					returnValue = false;
 					break;
-				case "versionlessorequal":
-					if (fileVersionCompare <= 0) {
-						fileVersionCompResult = true;
-					}
+				}
+				// Make sure comparison date is in Date() format.
+				comparisonDate = new Date(comparisonDate);
+
+			} else {
+				dinfo("Reading comparison date: " + checkValueExpanded + ".");
+				switch (checkValueExpanded) {
+				case "yesterday":
+					// Relative date. Create time offset of one day.
+					var timeOffset = -1000 * 60 * 60 * 24;
+					var now = new Date();
+					comparisonDate = new Date(now.getTime() + timeOffset);
 					break;
-				case "versionequalto":
-					if (fileVersionCompare == 0) {
-						fileVersionCompResult = true;
-					}
+
+				case "last-week":
+					// Relative date. Create time offset of one week ago.
+					var timeOffset = -1000 * 60 * 60 * 24 * 7;
+					var now = new Date();
+					comparisonDate = new Date(now.getTime() + timeOffset);
 					break;
-				case "versiongreaterorequal":
-					if (fileVersionCompare >= 0) {
-						fileVersionCompResult = true;
-					}
+
+				case "last-month":
+					// Relative date. Create time offset of one month ago.
+					var timeOffset = -1000 * 60 * 60 * 24 * 30;
+					var now = new Date();
+					comparisonDate = new Date(now.getTime() + timeOffset);
 					break;
-				case "versiongreaterthan":
-					if (fileVersionCompare > 0) {
-						fileVersionCompResult = true;
-					}
+
+				case "last-year":
+					// Relative date. Create time offset of one year ago.
+					var timeOffset = -1000 * 60 * 60 * 24 * 365;
+					var now = new Date();
+					comparisonDate = new Date(now.getTime() + timeOffset);
 					break;
+
 				default:
-					error("Unknown operation on file versions : " + checkCond);
-					fileVersionCompResult = false;
+					// Date is supposed to be in ISO format.
+					comparisonDate = parseISODate(checkValueExpanded, false);
 					break;
+				}
+			}
+			// Check whether comparison date has been evaluated properly.
+			if (comparisonDate == null) {
+				throw new Error ("Unable to evaluate date from value '" + checkValueExpanded + "'.");
 			}
 
-			dinfo("File version check for file '" + checkPath + "' returned " +
-				fileVersionCompResult + " for operation type " + checkCond);
-			return fileVersionCompResult;
+			var success = false;
 
+			// Get file date of file specified in path.
+			var comparison = checkCond.substring(10);
 
+			var comparisonCond = "";
+			switch (comparison) {
+			case "olderthan":
+				comparisonCond = "older than";
+				if (fileDate.getTime() < comparisonDate.getTime()) {
+					success =  true;
+				} else {
+					success = false;
+				}
+				break;
+
+			case "equalto":
+				var fileDateCompare = new Date(fileDate);
+				// Reduce accuracy to milliseconds for equal comparison when comparing to user string.
+				if (comparisonType != "file") {
+					fileDateCompare.setMilliseconds(0);
+					comparisonDate.setMilliseconds(0);
+				}
+				comparisonCond = "equal to";
+				if (fileDateCompare.getTime() == comparisonDate.getTime()) {
+					success =  true;
+				} else {
+					success = false;
+				}
+				break;
+
+			case "newerthan":
+				comparisonCond = "newer than";
+				if (fileDate.getTime() > comparisonDate.getTime()) {
+					success =  true;
+				} else {
+					success = false;
+				}
+				break;
+				
+			default:
+				throw new Error ("Invalid file date comparison parameter: '" + checkCond + "'.");
+				break;
+			}
+
+			if (success) {
+				dinfo(comparisonDesc + " date of file '" + checkPath + "' is " + fileDate +
+						" which is " + comparisonCond + " the comparison date " +
+						comparisonDate + " check succeeded.");
+			} else {
+				dinfo(comparisonDesc + " date of file '" + checkPath + "' is " + fileDate +
+						" which isn't " + comparisonCond + " the comparison date " +
+						comparisonDate + " check failed.");
+			}
+			returnValue = success;
 		} else {
 			throw new Error("Check condition " + checkCond + " unknown for " +
 							"type file.");
 		}
+
+		// The result of Registry checks shall be stored in local settings node.
+		addSettingsCheckResult(checkNode, returnValue);
+		
 		break;
 
 	// check type: uninstall
@@ -986,10 +1468,10 @@ function checkCondition(checkNode) {
 			throw new Error("Condition and / or path is null for an uninstall check. Perhaps " +
 							"a typo? To help find it, here are the other pieces of information: " +
 							"condition='" + checkCond +
-							"', path='" + checkPath + "'");
+							"', path='" + checkPath + "'.");
 		}
 		var uninstallLocations = scanUninstallKeys(checkPath);
-		// if expanded path is different to path read these keys too
+		// If expanded path is different to path read these keys too.
 		if (checkPath != checkPathExpanded) {
 			var uninstallLocationsExpanded = scanUninstallKeys(checkPathExpanded);
 			for (var i=0; i < uninstallLocationsExpanded.length; i++) {
@@ -999,11 +1481,11 @@ function checkCondition(checkNode) {
 
 		if (checkCond == "exists") {
 			if (uninstallLocations.length > 0) {
-				dinfo("Uninstall entry for " + checkPath + " was found: test successful");
-				return true;
+				dinfo("Uninstall entry for " + checkPath + " was found: test successful.");
+				returnValue = true;
 			} else {
-				dinfo("Uninstall entry for " + checkPath + " missing: test failed");
-				return false;
+				dinfo("Uninstall entry for " + checkPath + " missing: test failed.");
+				returnValue = false;
 			}
 		} else if (checkCond.substring(0,7) == "version") {
 			// check versions of all installed instances
@@ -1016,77 +1498,87 @@ function checkCondition(checkNode) {
 			if (uninstallLocations.length <= 0) {
 				dinfo("No uninstall entry for '" + checkPath + "' found. " +
 						"Version comparison check failed.");
-				return false;
+				returnValue = false;
+			} else {
+	
+				var uninstallCheckResult = true;
+				for (var iUninstKey=0; iUninstKey < uninstallLocations.length; iUninstKey++) {
+					var uninstallValue = getRegistryValue(uninstallLocations[iUninstKey] + "\\DisplayVersion");
+	
+					dinfo("Found version of '" + checkPath + "' at " + uninstallLocations[iUninstKey] +
+						": " + uninstallValue + "\n" + "Comparing to expected version: " + checkValue + ".");
+	
+					// check if valid version value was returned
+					if (uninstallValue == null || uninstallValue == "") {
+						error("Check condition '" + checkCond + "' cannot be executed" +
+							" since no version information is available for '" + checkPath + "'" +
+							" at " + uninstallLocations[iUninstKey] + ".");
+						uninstallCheckResult = false;
+						break;
+					} else {
+	
+						var uninstallVersionCompare = versionCompare(uninstallValue, checkValueExpanded);
+						dinfo ("Comparing uninstall version '" + uninstallValue + "' to expected version '" +
+								checkValueExpanded + "' using condition '" + checkCond  + "' returned " + uninstallVersionCompare + ".");
+		
+						var uninstallVersionCompResult = false;
+						switch (checkCond) {
+							case "versionsmallerthan":
+								if (uninstallVersionCompare < 0) {
+									uninstallVersionCompResult = true;
+								}
+								break;
+							case "versionlessorequal":
+								if (uninstallVersionCompare <= 0) {
+									uninstallVersionCompResult = true;
+								}
+								break;
+							 case "versionequalto":
+								if (uninstallVersionCompare == 0) {
+									uninstallVersionCompResult = true;
+								}
+								break;
+							case "versiongreaterorequal":
+								if (uninstallVersionCompare >= 0) {
+									uninstallVersionCompResult = true;
+								}
+								break;
+							 case "versiongreaterthan":
+								if (uninstallVersionCompare > 0) {
+									uninstallVersionCompResult = true;
+								}
+								break;
+							default:
+								error("Unknown operation on uninstall version check: " + checkCond + ".");
+								uninstallVersionCompResult = false;
+								break;
+						}
+		
+						dinfo("Uninstall version check for package '" + checkPath + "' returned " +
+							uninstallVersionCompResult + " for operation type " + checkCond + ".");
+		
+						// in case the current entry does not match the condition,
+						// immediately return
+						// else the next uninstall entry might be checked
+						if (uninstallVersionCompResult == false) {
+							uninstallCheckResult = false;
+							break;
+						}
+					}
+				}
+				// If all checks succeeded, set return value to true.
+				if (uninstallCheckResult) {
+					returnValue = true;
+				}
 			}
-
-			for (var iUninstKey=0; iUninstKey < uninstallLocations.length; iUninstKey++) {
-				var uninstallValue = getRegistryValue(uninstallLocations[iUninstKey] + "\\DisplayVersion");
-
-				dinfo("Found version of '" + checkPath + "' at " + uninstallLocations[iUninstKey] +
-					": " + uninstallValue + "\n" + "Comparing to expected version: " + checkValue);
-
-				// check if valid version value was returned
-				if (uninstallValue == null || uninstallValue == "") {
-					error("Check condition '" + checkCond + "' cannot be executed" +
-						" since no version information is available for '" + checkPath + "'" +
-						" at " + uninstallLocations[iUninstKey]);
-					return false;
-				}
-
-				var uninstallVersionCompare = versionCompare(uninstallValue, checkValueExpanded);
-				dinfo ("Comparing uninstall version '" + uninstallValue + "' to expected version '" +
-						checkValueExpanded + "' using condition '" + checkCond  + "' returned " + uninstallVersionCompare);
-
-				var uninstallVersionCompResult = false;
-				switch (checkCond) {
-					case "versionsmallerthan":
-						if (uninstallVersionCompare < 0) {
-							uninstallVersionCompResult = true;
-						}
-						break;
-					case "versionlessorequal":
-						if (uninstallVersionCompare <= 0) {
-							uninstallVersionCompResult = true;
-						}
-						break;
-					 case "versionequalto":
-						if (uninstallVersionCompare == 0) {
-							uninstallVersionCompResult = true;
-						}
-						break;
-					case "versiongreaterorequal":
-						if (uninstallVersionCompare >= 0) {
-							uninstallVersionCompResult = true;
-						}
-						break;
-					 case "versiongreaterthan":
-						if (uninstallVersionCompare > 0) {
-							uninstallVersionCompResult = true;
-						}
-						break;
-					default:
-						error("Unknown operation on uninstall version check: " + checkCond);
-						uninstallVersionCompResult = false;
-						break;
-				}
-
-				dinfo("Uninstall version check for package '" + checkPath + "' returned " +
-					uninstallVersionCompResult + " for operation type " + checkCond);
-
-				// in case the current entry does not match the condition,
-				// immediately return
-				// else the next uninstall entry might be checked
-				if (uninstallVersionCompResult == false) {
-					return uninstallVersionCompResult;
-				}
-			}
-
-			// it looks like all entries evaluated true
-			return true;
 		} else {
 			throw new Error("Check condition " + checkCond + " unknown for " +
 							"type uninstall.");
 		}
+
+		// The result of Registry checks shall be stored in local settings node.
+		addSettingsCheckResult(checkNode, returnValue);
+		
 		break;
 
 	// check type: execution
@@ -1096,7 +1588,7 @@ function checkCondition(checkNode) {
 			throw new Error("No path is specified for execute check!");
 		}
 		if (checkCond == null) {
-			dinfo("No execute condition specified, assuming 'exitcodeequalto'");
+			dinfo("No execute condition specified, assuming 'exitcodeequalto'.");
 			checkCond = "exitcodeequalto";
 		}
 		if (checkValueExpanded == null || checkValueExpanded == "") {
@@ -1104,7 +1596,7 @@ function checkCondition(checkNode) {
 			checkValueExpanded = 0;
 		} else {
 			checkValueExpanded = parseInt(checkValueExpanded);
-			if(isNaN(checkValueExpanded)) {
+			if(isNaN(checkValueExpanded) == true) {
 				checkValueExpanded = 0;
 			}
 		}
@@ -1151,8 +1643,9 @@ function checkCondition(checkNode) {
 		dinfo("Execute check for program '" + checkPath + "' returned '" +
 				exitCode + "'. Evaluating condition '" + checkCond +
 				"' revealed " + executeResult + " when comparing to expected" +
-				" value of '" + checkValueExpanded + "'");
-		return executeResult;
+				" value of '" + checkValueExpanded + "'.");
+		returnValue = executeResult;
+		break;
 
 	// check type: logical
 	case "logical":
@@ -1162,84 +1655,333 @@ function checkCondition(checkNode) {
 			throw new Error("Condition is null for a logical check.");
 		}
 
-		var subcheckNodes = checkNode.selectNodes("check");
+		var subcheckNodes = getChecks(checkNode);
 
 		switch (checkCond) {
 		case "not":
-			if (subcheckNodes.length == 1) {
-				retval = !checkCondition(subcheckNodes[0]);
-				dinfo("Result of logical 'NOT' check therefore " + retval);
-				return retval;
-			} else {
-				throw new Error("Check condition 'not' requires one and only " +
-						 "one child check condition. Instead " + checkNodes.length + " childs have been found");
+			var checkResult = false;
+			for (var iNotNodes=0; iNotNodes < subcheckNodes.length; iNotNodes++) {
+				// check if one of the subchecks return false
+				if (!checkCondition(subcheckNodes[iNotNodes])) {
+					checkResult = true;
+					break;
+				}
 			}
+			if (checkResult) {
+				dinfo("Result of logical 'NOT' check is true.");
+			} else {
+				dinfo("Result of logical 'NOT' check is false.");
+			}
+			returnValue = checkResult;
+			break;
+
 		case "and":
+			var checkResult = true;
 			for (var iAndNodes = 0; iAndNodes < subcheckNodes.length; iAndNodes++) {
 				// check if one of the subchecks return false
 				if (!checkCondition(subcheckNodes[iAndNodes])) {
-					dinfo("Result of logical 'AND' check is false");
-					return false;
+					checkResult = false;
+					break;
 				}
 			}
-			dinfo("Result of logical 'AND' check is true");
-			return true;
+			if (checkResult) {
+				dinfo("Result of logical 'AND' check is true.");
+			} else {
+				dinfo("Result of logical 'AND' check is false.");
+			}
+			returnValue = checkResult;
+			break;
+
 		case "or":
 			// check if one of the sub-checks returns true
+			var checkResult = false;
 			for (var iOrNodes = 0; iOrNodes < subcheckNodes.length; iOrNodes++) {
 				if (checkCondition(subcheckNodes[iOrNodes])) {
-					dinfo("Result of logical 'OR' check is true");
-					return true;
+					checkResult = true;
+					break;
 				}
 			}
-			dinfo("Result of logical 'OR' check is false");
-			return false;
+			if (checkResult) {
+				dinfo("Result of logical 'OR' check is true.");
+			} else {
+				dinfo("Result of logical 'OR' check is false");
+			}
+			returnValue = checkResult;
+			break;
+
 		case "atleast":
 			if (checkValue == null) {
-				throw new Error("Check condition logical 'atleast' requires a value ");
+				throw new Error("Check condition logical 'atleast' requires a value.");
 			}
 
 			// count number of checks which return true
 			var numAtLeastNodes=0;
+			var checkResult = false;
 			for (var iAtLeastNodes = 0; iAtLeastNodes < subcheckNodes.length; iAtLeastNodes++) {
 				if (checkCondition(subcheckNodes[iAtLeastNodes])) {
 					numAtLeastNodes++;
 				}
 				// check if at least x checks revealed true
 				if (numAtLeastNodes >= checkValue) {
-					dinfo("Result of logical 'AT LEAST' check is true");
-					return true;
+					checkResult = true;
+					break;
 				}
 			}
-			dinfo("Result of logical 'AT LEAST' check is false");
-			return false;
+			if (checkResult) {
+				dinfo("Result of logical 'AT LEAST' check is true.");
+			} else {
+				dinfo("Result of logical 'AT LEAST' check is false.");
+			}
+			returnValue = checkResult;
+			break;
+
 		case "atmost":
 			// check if maximum x checks return true
+			var checkResult = true;
 			var numAtMostNodes = 0;
 			for (var iAtMostNodes = 0; iAtMostNodes < subcheckNodes.length; iAtMostNodes++) {
 				if (checkCondition(subcheckNodes[iAtMostNodes])) {
 					numAtMostNodes++;
 				}
 				if (numAtMostNodes > checkValue) {
-					dinfo("Result of logical 'AT MOST' check is false");
-					return false;
+					checkResult = false;
+					break;
 				}
 			}
-			// Result will be true now.
-			dinfo("Result of logical 'AT MOST' check is true");
-			return true;
+			if (checkResult) {
+				dinfo("Result of logical 'AT MOST' check is true.");
+			} else {
+				dinfo("Result of logical 'AT MOST' check is false.");
+			}
+			returnValue = checkResult;
+			break;
+
 		default:
 			throw new Error("Check condition " + checkCond + " unknown for " +
 			"type logical.");
+			break;
 		}
+		
+		// Logical checks shall not be added to local settings node.
+		break;
+
+	// Check type: host
+	case "host":
+		// check if logical condition is set
+		if (checkCond == null) {
+			throw new Error("Condition is null for a host check.");
+		}
+		if (checkValueExpanded == null) {
+			throw new Error("Value is null for a host check.");
+		}
+
+		// Verify if the host check matches current host.
+		returnValue = checkHostAttribute(checkCond, checkValueExpanded);
+
+		// The result of Registry checks shall be stored in local settings node.
+		addSettingsCheckResult(checkNode, returnValue);
+
+		break;
 
 	// no such check type
 	default:
 		throw new Error("Check condition type " + checkType + " unknown.");
+		break;
 	}
 
-	return false;
+	return returnValue;
 }
+
+/**
+ * Checks whether the specified host attribute matches the expression passed as
+ * argument.
+ * 
+ * @param attributeName
+ *              Name of host attribute to match. See getHostInformation()
+ *              function for valid host attributes.
+ * @param expression
+ *              Regular expression (or list for certain attributes) to use for
+ *              matching.
+ * @returns {Boolean} True if attribute matches the expression.
+ */
+function checkHostAttribute(attributeName, expression) {
+	// Terminate if attribute name is not specified.
+	if (attributeName == null) {
+		error("Host attribute matching failed. No attribute name specified.");
+		return false;
+	}
+	var hostAttribute = attributeName;
+
+	// Terminate if expression is not specified.
+	if (expression == null) {
+		error("Host attribute matching for attribute '" + hostAttribute + "' failed. No expression specified.");
+		return false;
+	}
+	// Expand environment variables in expressions.
+	var checkExpression = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(expression);
+
+	// Initialize return value.
+	var returnValue = false;
+
+	// Fetch current host attributes.
+	var globalHostInformation = getHostInformation();
+
+	// Add "environment" key since we want to support environment matching too.
+	var hostInformation = new ActiveXObject("Scripting.Dictionary");
+	var keys = globalHostInformation.keys().toArray();
+	for (var i=0; i<keys.length; i++) {
+		hostInformation.Add(keys[i], globalHostInformation.Item(keys[i]));
+	}
+	hostInformation.Add("environment", "");
+
+	// First verify if the requested host information attribute exists.
+	var hostInfoValue = hostInformation.Item(hostAttribute);
+	if (hostInfoValue == null || (typeof(hostInfoValue) == "object" && hostInfoValue.length <= 0) ) {
+		dinfo("Host match requires attribute '" + hostAttribute + "' "
+				+ "which is not defined for current host. No match found."); 
+		return false;
+	}
+	
+	var attrMatchExpression = new RegExp(checkExpression, "i");
+	// First try to match array objects.
+	if (typeof(hostInfoValue) == "object" && hostInfoValue.length > 0) {
+		for (var iHostInfo=0; iHostInfo < hostInfoValue.length; iHostInfo++) {
+			// Get value from attribute array
+			var hostInfoElement = hostInfoValue[iHostInfo];
+			dinfo("Comparing multi-valued attribute '" + hostAttribute + "' with value '" +
+					hostInfoElement + "' using expression '" + checkExpression + "'.");
+
+			// Compare attribute array element with expected
+			// value.
+			if (attrMatchExpression.test(hostInfoElement) == true) {
+				dinfo("Match for attribute '" + hostAttribute + "' with value '" + hostInfoElement + "' found.");
+				returnValue = true;
+				break;
+			}
+		}
+	// } else if (typeof(host[hostNodeAttrName]) != "object") {
+	} else {
+		// Match simple attributes.
+		switch (hostAttribute) {
+			case "environment":
+				// Match environment condition to actual environment variable.
+
+				// Get condition value from from parameter, could be multiple, separated by '|'.
+				var environmentConditions = checkExpression.split('|');
+				returnValue = true;
+				for (var iEnv=0; iEnv < environmentConditions.length; iEnv++) {
+					var environmentCondition = environmentConditions[iEnv];
+					// Split environment conditions into key and value pairs.
+					var envConditionSplit = environmentCondition.split("=");
+					// Need at least the key and value. If there are less components, then skip it.
+					if (envConditionSplit.length >= 2) {
+						// The first value is the key.
+						var envKey = envConditionSplit[0];
+						if (envKey == "") {
+							dinfo("Invalid empty environment variable name.");
+							returnValue = false;
+							break;
+						}
+
+						// Fetch environment value.
+						var expandString = "%" + envKey + "%";
+						var envValueRead = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(expandString);
+						
+						if (envValueRead == expandString) {
+							// Environment variable is not defined, match failed.
+							dinfo("Required environment not matched. Environment variable '" + envKey + "' not defined.");
+							returnValue = false;
+							break;
+						}
+
+						// All following values are belonging to the value.
+						/*
+						var valueParts = new Array();
+						for (var iValues=1; iValues < envConditionSplit.length; iValues++) {
+							valueParts.push(envConditionSplit[iValues]);
+						}
+						// Join values to re-assemble the value specified.
+						var envValue = valueParts.join("");
+						*/
+
+						// Re-assemble value.
+						var valueStartOffset = envKey.length + 1;
+						var envValue = environmentCondition.substr(valueStartOffset);
+
+						// Check environment using regular expression match.
+						var envMatchExpression = new RegExp(envValue, "i");
+						if (envMatchExpression.test(envValueRead) == true) {
+							dinfo("Required environment matched. Environment variable '" + envKey +
+									"' with value '" + envValueRead + "' matches '" + envValue + "'.");
+							// Check next value. All of them need to be true.
+							continue;
+						} else {
+							dinfo("Required environment dit not match. Environment variable '" + envKey +
+									"' with value '" + envValueRead + "' does not match '" + envValue + "'.");
+							returnValue = false;
+							break;
+						}
+					} else {
+						error("Invalid environment match expression '" + environmentCondition + "'. Match skipped.");
+					}
+				}
+				break;
+
+			case "lcid":
+				// Check whether any LCID matches the current host executing user LCID.
+				var attributeLCIDs = checkExpression.split(",");
+				for (var iLCID=0; iLCID < attributeLCIDs.length; iLCID++) {
+					// check if it corresponds to the system LCID
+					var currentLcid = trimLeadingZeroes(trim(attributeLCIDs[iLCID]));
+					if (currentLcid == hostInfoValue) {
+						dinfo("Required LCID match found. LCID '" + currentLcid + "' matches current user LCID.");
+						returnValue = true;
+						break;
+					}
+				}
+				if (!returnValue) {
+					dinfo("None of the required LCID values (" + checkExpression +
+							") matched the current host LCID of '" + hostInfoValue + "'.");
+				}
+				break;
+
+			case "lcidOS":
+				// Check whether any LCID matches the current host OS LCID.
+				var attributeLCIDs = checkExpression.split(",");
+				for (var iLCIDOS=0; iLCIDOS < attributeLCIDs.length; iLCIDOS++) {
+					// check if it corresponds to the system LCID
+					var currentLcid = trimLeadingZeroes(trim(attributeLCIDs[iLCIDOS]));
+					if (currentLcid == hostInfoValue) {
+						dinfo("Required OS LCID match found. LCID '" + currentLcid + "' matches current host LCID.");
+						returnValue = true;
+						break;
+					}
+				}
+				if (!returnValue) {
+					// Check if any LCID matched the current host.
+					dinfo("None of the required LCID values (" + checkExpression +
+							") matched the current host LCID of '" + hostInfoValue + "'.");
+				}
+				break;
+				
+			default:
+				// perform simple regular expression match of
+				// attribute
+				if (attrMatchExpression.test(hostInfoValue) == true) {
+					dinfo("Host attribute '" + hostAttribute + "' with value '" +
+							hostInfoValue + "' matches expression '" + checkExpression + "'.");
+					returnValue = true;
+				} else {
+					dinfo("Host attribute '" + hostAttribute + "' with value '" +
+							hostInfoValue + "' does not match expression '" + checkExpression + "'.");
+					returnValue = false;
+				}
+				break;
+		}
+	}
+	return returnValue;
+}
+
 
 /**
  * Creates a new hosts XML root-node and returns it
@@ -1247,7 +1989,7 @@ function checkCondition(checkNode) {
  * @return new hosts node
  */
 function createHosts() {
-	var newHosts = createXml("wpkg");
+	var newHosts = createXml("wpkg:wpkg", namespaceHosts);
 	return newHosts;
 }
 
@@ -1257,7 +1999,7 @@ function createHosts() {
  * @return new profiles node
  */
 function createPackages() {
-	var newPackages = createXml("packages");
+	var newPackages = createXml("packages:package", namespacePackages);
 	return newPackages;
 }
 
@@ -1267,7 +2009,7 @@ function createPackages() {
  * @return new profiles node
  */
 function createProfiles() {
-	var newProfiles = createXml("profiles");
+	var newProfiles = createXml("profiles:profiles", namespaceProfiles);
 	return newProfiles;
 }
 
@@ -1277,7 +2019,7 @@ function createProfiles() {
  * @return new settings node
  */
 function createSettings() {
-	var newSettings = createXml("wpkg");
+	var newSettings = createXml("wpkg:wpkg", namespaceSettings);
 	if (settingsHostInfo) {
 		// Add host attributes.
 		// NOTE: These attributes are currently not used by WPKG but might be
@@ -1296,10 +2038,12 @@ function createSettings() {
 /**
  * Create a new settings XML root-node by reading a file and returns it
  * 
+ * @param fileName String pointing to the settings file to be created
+ *                 (full path).
  * @return settings root node as stored within the file
  */
 function createSettingsFromFile(fileName) {
-	var newSettings = loadXml(settings_file, null, null);
+	var newSettings = loadXml(fileName, null, "settings");
 	return newSettings;
 }
 
@@ -1315,9 +2059,10 @@ function download(downloadNode) {
 	var url = getDownloadUrl(downloadNode);
 	var target = getDownloadTarget(downloadNode);
 	var timeout = getDownloadTimeout(downloadNode);
+	var expandURL = getDownloadExandURL(downloadNode);
 
 	// initiate download
-	return downloadFile(url, target, timeout);
+	return downloadFile(url, target, timeout, expandURL);
 }
 
 /**
@@ -1361,8 +2106,8 @@ function downloadClean(downloadNode) {
 	target = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(target);
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
 	// delete temporary file if it already exists
-	if (fso.fileExists(target)) {
-		fso.deleteFile(target);
+	if (fso.FileExists(target)) {
+		fso.DeleteFile(target);
 	}
 }
 
@@ -1404,7 +2149,7 @@ function fillSettingsWithInstalled() {
 		}
 	}
 	if (foundPackage) {
-		saveSettings();
+		saveSettings(true);
 	}
 }
 
@@ -1414,15 +2159,11 @@ function fillSettingsWithInstalled() {
  * 
  * @param cmdNode
  *            cmd XML node to read from
- * @return command defined within the given cmd XML node, returns empty string
+ * @return command defined within the given cmd XML node, returns null
  *         if no command is defined.
  */
 function getCommandCmd(cmdNode) {
-	var cmd = cmdNode.getAttribute("cmd");
-	if (cmd == null) {
-		cmd = "";
-	}
-	return cmd;
+	return cmdNode.getAttribute("cmd");
 }
 
 /**
@@ -1447,6 +2188,9 @@ function getCommandExitCodeAction(cmdNode, exitCode) {
 	if (exitNode == null) {
 		exitNode = cmdNode.selectSingleNode("exit[@code='any']");
 	}
+	if (exitNode == null) {
+		exitNode = cmdNode.selectSingleNode("exit[@code='*']");
+	}
 	if (exitNode != null) {
 		if (exitNode.getAttribute("reboot") == "true") {
 			// This exit code forces a reboot.
@@ -1468,12 +2212,27 @@ function getCommandExitCodeAction(cmdNode, exitCode) {
 			// This exit code is successful.
 			info("Command '" + getCommandCmd(cmdNode) + "' returned " +
 				" exit code [" + exitCode + "]. This exit code " +
-				"is not an error.");
+				"indicates success.");
 			returnValue = "success";
 		}
 	}
 	return returnValue;
 }
+
+
+/**
+ * Return value of include attribute of the given cmd node.
+ * Returns null if include attribute is not set.
+ * 
+ * @param cmdNode
+ * 		The command node to read the include attribute from.
+ * 
+ * @returns Value of include attribute, returns null if attribute is undefined.
+ */
+function getCommandInclude(cmdNode) {
+	return cmdNode.getAttribute("include");
+}
+
 
 /**
  * Returns the timeout value for this command node. A command node can be an
@@ -1503,6 +2262,37 @@ function getCommandTimeout(cmdNode) {
 function getCommandWorkdir(cmdNode) {
 	var workdir = cmdNode.getAttribute("workdir");
 	return workdir;
+}
+
+/**
+ * Returns condition node of a given XML node. Returns null if there is no
+ * condition node specified.
+ * 
+ * @param xmlNode XML node which is supposed to have a <condition /> sub-node.
+ * @returns Array of condition XML-nodes, might be null if no condition is specified
+ */
+function getConditions(xmlNode) {
+	// Read condition nodes (might be 0, 1 or any number)
+	var conditionNodes = xmlNode.selectNodes("condition");
+
+	/*
+	var conditionNodes = xmlNode.selectNodes("wpkg:condition");
+	if (conditionNodes.length <= 0) {
+		// Maybe namespace has not been specified correctly.
+		// Try reading from default namespace.
+		conditionNodes = xmlNode.selectNodes("condition");
+	}
+	*/
+
+	// Per specification only one single condition node shall be specified
+	/*
+	if (conditionNodes != null && conditionNodes.length > 1) {
+		error("More than one condition node specified. Ignoring all but the first condition.");
+	}
+	*/
+
+	// Return condition node.
+	return conditionNodes;
 }
 
 /**
@@ -1544,10 +2334,10 @@ function getConfig() {
 			exitIfNotFound = false;
 		}
 
-		if (fso.fileExists(config_file)) {
+		if (fso.FileExists(config_file)) {
 			try {
 				// Read in config.xml.
-				config = loadXml(config_file, null);
+				config = loadXml(config_file, null, "config");
 				if (config == null) {
 					throw new Error("Unable to parse config file!");
 				}
@@ -1596,20 +2386,22 @@ function getConfigParamArray() {
  *         downloads. returns empty array if no downloads are defined
  */
 function getDownloads(xmlNode, downloadsArray) {
-	if (downloadsArray == null) {
-		downloadsArray = new Array();
+	var downloadsArrayRef = downloadsArray;
+	if (downloadsArrayRef == null) {
+		downloadsArrayRef = new Array();
 	}
 	// Only fetch download nodes if downloads are not disabled.
 	// Just hide download nodes in case downloads are disabled.
 	if (!isNoDownload()) {
 		var downloads = xmlNode.selectNodes("download");
-		if (downloads != null && downloads.length > 0) {
-			for(var i=0; i<downloads.length; i++) {
-				downloadsArray.push(downloads[i]);
+		if (downloads != null) {
+			var filteredDownloads = filterConditionalNodes(downloads, true);
+			for(var i=0; i<filteredDownloads.length; i++) {
+				downloadsArrayRef.push(filteredDownloads[i]);
 			}
 		}
 	}
-	return downloadsArray;
+	return downloadsArrayRef;
 }
 
 /**
@@ -1628,7 +2420,7 @@ function getDownloadTarget(downloadNode){
  * 
  * @param downloadNode
  *            download XML node
- * @return value of 'timeout' attribute, returns value of downloadTimeout if no
+ * @return {Number} Value of 'timeout' attribute, returns value of downloadTimeout if no
  *         timeout value exists or it cannot be parsed. Returns integer.
  */
 function getDownloadTimeout(downloadNode) {
@@ -1642,6 +2434,21 @@ function getDownloadTimeout(downloadNode) {
 		}
 	}
 
+	return returnValue;
+}
+
+/**
+ * Returns value of expandURL attribute from a download node.
+ * @param downloadNode The download XML node.
+ * @returns true if variables shall be expanded in URL attribute,
+ * 		false if they should not be expanded. Defaults to true if attribute is undefined.
+ */
+function getDownloadExandURL(downloadNode) {
+	var returnValue = true;
+	var attributeValue = downloadNode.getAttribute("expandURL");
+	if (attributeValue != null && attributeValue == "false") {
+		returnValue = false;
+	}
 	return returnValue;
 }
 
@@ -1660,26 +2467,98 @@ function getDownloadUrl(downloadNode) {
  * Gets the size of a file (in Bytes). The path is allowed to contain
  * environment variables like "%TEMP%\somefile.txt".
  * 
- * @param path
- *            to the file whose size has to be returned
+ * @param file
+ *          path to the file whose size has to be returned
  * @return size of the file (in Bytes), returns -1 if file size could not be
  *         determined
  */
 function getFileSize (file) {
 	var size = -1;
 	try {
-		dinfo ("Finding size of " + file + "\n");
+		dinfo ("Finding size of '" + file + "'\n");
 		var expandedPath = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(file);
 		var FSO = new ActiveXObject("Scripting.FileSystemObject");
 		var fsof = FSO.GetFile(expandedPath);
 		size = fsof.Size;
 	} catch (e) {
 		size = -1;
-		dinfo("Unable to get file size for " + file + " : " +
+		dinfo("Unable to get file size for '" + file + "': " +
 				 e.description);
 	}
 	dinfo ("Leaving getFileSize with size " + size);
 	return size;
+}
+
+/**
+ * Gets the creation date of a file.
+ * 
+ * @param file
+ *          Path to the file from which to read the creation date.
+ * @returns Date when the file has been created.
+ * Returns null if file date could not be read.
+ */
+function getFileDateCreation(file) {
+	var fileDate = null; // new Date();
+	try {
+		dinfo ("Reading creation date of '" + file + "'.");
+		var expandedPath = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(file);
+		var FSO = new ActiveXObject("Scripting.FileSystemObject");
+		var fsof = FSO.GetFile(expandedPath);
+		fileDate = fsof.DateCreated;
+	} catch (e) {
+		fileDate = null;
+		dinfo("Unable to get file creation date for '" + file + "': " +
+				 e.description);
+	}
+	return fileDate;
+}
+
+/**
+ * Gets the last modified date of a file.
+ * 
+ * @param file
+ *          Path to the file from which to read the last modification date.
+ * @returns Date when the file has been last modified.
+ * Returns null if file date could not be read.
+ */
+function getFileDateModification(file) {
+	var fileDate = null; // new Date();
+	try {
+		dinfo ("Reading last modification date of '" + file + "'.");
+		var expandedPath = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(file);
+		var FSO = new ActiveXObject("Scripting.FileSystemObject");
+		var fsof = FSO.GetFile(expandedPath);
+		fileDate = fsof.DateLastModified;
+	} catch (e) {
+		fileDate = null;
+		dinfo("Unable to get file last modification date for '" + file + "': " +
+				 e.description);
+	}
+	return fileDate;
+}
+
+/**
+ * Gets the last access date of a file.
+ * 
+ * @param file
+ *          Path to the file from which to read the last access date.
+ * @returns Date when the file has been last accessed.
+ * Returns null if file date could not be read.
+ */
+function getFileDateLastAccess(file) {
+	var fileDate = null; // new Date();
+	try {
+		dinfo ("Reading last access date of '" + file + "'.");
+		var expandedPath = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(file);
+		var FSO = new ActiveXObject("Scripting.FileSystemObject");
+		var fsof = FSO.GetFile(expandedPath);
+		fileDate = fsof.DateLastAccessed;
+	} catch (e) {
+		fileDate = null;
+		dinfo("Unable to get file last accessed date for '" + file + "': " +
+				 e.description);
+	}
+	return fileDate;
 }
 
 /**
@@ -1716,7 +2595,7 @@ function getHostname() {
 }
 
 /**
- * Returns a string representing the regular expresion associated to the host
+ * Returns a string representing the regular expression associated to the host
  * definition in hosts.xml.
  */
 function getHostNameAttribute(hostNode) {
@@ -1792,7 +2671,7 @@ function getDomainName() {
 			var QueryRes = objWMIService.ExecQuery("Select * from Win32_ComputerSystem where PartOfDomain=True ");
 			var items=new Enumerator(QueryRes);
 			items.moveFirst();
-			if (items.atEnd() ) {
+			if (items.atEnd() == true) {
 				// Not a domain member
 				dinfo("Not a domain member.");
 				// set
@@ -1818,7 +2697,6 @@ function getHostGroups() {
 	if (hostGroups == null) {
 		hostGroups = new Array();
 		try {
-			hostGroups = new Array();
 			var hostName = getHostname();
 			var domainName = getDomainName();
 			var obj = GetObject("WinNT://" + domainName + "/" + hostName + "$,user") ;
@@ -1829,7 +2707,7 @@ function getHostGroups() {
 				hostGroups.push(group.Name);
 			}
 		} catch (e) {
-			dinfo("Message: Error fetching computer groups.");
+			dinfo("Message: Unable to fetch computer membership groups. Probably not a domain member.");
 		}
 	}
 	return hostGroups;
@@ -1846,7 +2724,7 @@ function getHostAttributes(hostNode) {
 	var hostAttributes = new  ActiveXObject("Scripting.Dictionary");
 
 	if(hostNode.attributes != null) {
-		for (i=0; i<hostNode.attributes.length; i++) {
+		for (var i=0; i<hostNode.attributes.length; i++) {
 			if (hostNode.attributes[i].value != null) {
 				hostAttributes.Add(hostNode.attributes[i].name, hostNode.attributes[i].value);
 			}
@@ -1872,11 +2750,11 @@ function getHostNodeDescription(hostNode) {
 	for (var i=0; i<attrsKeys.length; i++) {
 		var attrName = attrsKeys[i];
 		var attrValue = hostNodeAttrs.Item(attrName);
-		attrDesc.push(attrName + "=" + attrValue);
+		attrDesc.push(attrName + "='" + attrValue + "'");
 	}
 	// Convert array to comma-separated list
-	// 'attr1=value1','attr2=value2'
-	return attrDesc.join("','");
+	// attr1='value1',attr2='value2'
+	return attrDesc.join(",");
 }
 
 
@@ -1884,8 +2762,8 @@ function getHostNodeDescription(hostNode) {
  * Collects information from local host and stores it into a scripting
  * dictionary object.
  * 
- * @returns host attibutes stored within a dictionary object. This currently
- *          includes the following attribues: name, architecture, os,
+ * @returns host attributes stored within a dictionary object. This currently
+ *          includes the following attributes: name, architecture, os,
  *          ipaddresses, domainname, groups, lcid
  */
 function getHostInformation() {
@@ -1901,6 +2779,7 @@ function getHostInformation() {
 		hostAttributes.Add("domainname", getDomainName());
 		hostAttributes.Add("groups", getHostGroups());
 		hostAttributes.Add("lcid", getLocale());
+		hostAttributes.Add("lcidOS", getLocaleOS());
 
 		// Print information found for debug purposes.
 		dinfo("Host properties: "
@@ -1910,7 +2789,8 @@ function getHostInformation() {
 			+ "ipaddresses='" + hostAttributes.Item("ipaddresses").join(",") + "'\n"
 			+ "domain name='" + hostAttributes.Item("domainname") + "'\n"
 			+ "groups='" + hostAttributes.Item("groups").join(",") + "'\n"
-			+ "lcid='" + hostAttributes.Item("lcid") + "'"
+			+ "lcid='" + hostAttributes.Item("lcid") + "'\n"
+			+ "lcidOS='" + hostAttributes.Item("lcidOS") + "'"
 		);
 	}
 	return hostAttributes;
@@ -1942,7 +2822,7 @@ function getHostInformation() {
  *            If set to true returns all matches. If set to false just returns the first matching node from xmlNodes. In this case the return array will contain only one element (or 0 if no match was found).
  * @returns Array of XML nodes which match the current host.
  */
-function getHostMatches(xmlNodes, getAllMatches) {
+function filterConditionalNodes(xmlNodes, getAllMatches) {
 	// Create array to store the XML nodes which match this host.
 	var applyingNodes = new Array();
 
@@ -1954,7 +2834,7 @@ function getHostMatches(xmlNodes, getAllMatches) {
 	if (xmlNodes == null || xmlNodes.length <= 0) {
 		return applyingNodes;
 	}
-	
+
 	// Fetch current host attributes.
 	var globalHostInformation = getHostInformation();
 
@@ -1990,120 +2870,10 @@ function getHostMatches(xmlNodes, getAllMatches) {
 		for (var iAttr=0; iAttr<attrsKeys.length; iAttr++) {
 			var xmlNodeAttrName = attrsKeys[iAttr];
 			var xmlNodeAttrValue = xmlNodeAttrs.Item(xmlNodeAttrName);
-			// Set to true if attribute matches to current host.
-			var attributeMatchFound = false;
 
-			// If host specification requires an attribute which does
-			// not exist on current host, then continue with next host specification and
-			// state that this XML node does not match the current host.
-			if (hostInformation.Item(xmlNodeAttrName) == null
-				|| (typeof(hostInformation.Item(xmlNodeAttrName)) == "object" && hostInformation.Item(xmlNodeAttrName).length <= 0) ) {
-				dinfo("Host match requires attribute '" + xmlNodeAttrName + "' "
-						+ "which is not defined for current host. No match found."); 
-				attributeMatchFound = false;
-				hostMatchFound = false;
-				break;
-			}
-
-			var attrMatchExpression = new RegExp(xmlNodeAttrValue, "i");
-			// First try to match array objects.
-			if (typeof(hostInformation.Item(xmlNodeAttrName)) == "object" && hostInformation.Item(xmlNodeAttrName).length > 0) {
-				var attributeObject = hostInformation.Item(xmlNodeAttrName);
-				for (var iHostAttribute=0; iHostAttribute < attributeObject.length; iHostAttribute++) {
-					// Get value from attribute array
-					var attributeElement = attributeObject[iHostAttribute];
-					dinfo("Comparing multi-valued attribute '" + xmlNodeAttrName + "' to value '" + attributeElement + "'.");
-
-					// Compare attribute array element with expected
-					// value.
-					if ( attrMatchExpression.test(attributeElement)) {
-						dinfo("Match for attribute '" + xmlNodeAttrName + "' with value '" + xmlNodeAttrValue + "' found.");
-						// Found match in host.xml definition with local
-						// host attribute.
-						attributeMatchFound = true;
-						break;
-					}
-				}
-			// } else if (typeof(host[hostNodeAttrName]) != "object") {
-			} else {
-				// Match simple attributes.
-				var hostAttributeValue = hostInformation.Item(xmlNodeAttrName);
-				switch (xmlNodeAttrName) {
-					case "environment":
-						// Match environment condition to actual environment variable.
-						// Get condition value from from XML, could be multiple, separated by '|'.
-						var environmentConditions = xmlNodeAttrValue.split('|');
-						for (var iEnv=0; iEnv < environmentConditions.length; iEnv++) {
-							var environmentCondition = environmentConditions[iEnv];
-							// Split environment conditions into key and value pairs.
-							var envConditionSplit = environmentCondition.split("=");
-							// Need at least the key and value. If there are less components, then skip it.
-							if (envConditionSplit.length >= 2) {
-								// The first value is the key.
-								var envKey = envConditionSplit[0];
-
-								// Fetch environment value.
-								var expandString = "%" + envKey + "%";
-								var envValueRead = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(expandString);
-								
-								if (envValueRead == expandString) {
-									// Environment variable is not defined, match failed.
-									dinfo("Required environment not matched. Environment variable '" + envKey + "' not defined.");
-									attributeMatchFound = false;
-									break;
-								}
-
-								// All following values are belonging to the value.
-								var valueParts = new Array();
-								for (var iValues=1; iValues < envConditionSplit.length; iValues++) {
-									valueParts.push(envConditionSplit[iValues]);
-								}
-								// Join values to re-assemble the value specified.
-								var envValue = valueParts.join("");
-
-								// Check environment using regular expression match.
-								var envMatchExpression = new RegExp(envValue, "i");
-								if (envMatchExpression.test(envValueRead)) {
-									attributeMatchFound = true;
-									continue;
-								}
-							}
-						}
-						break;
-
-					case "lcid":
-						// Check whether any LCID matches the current host.
-						if (xmlNodeAttrValue != null) {
-							attributeMatchFound = false;
-							var attributeLCIDs = xmlNodeAttrValue.split(",");
-							for (var iLCID=0; iLCID < attributeLCIDs.length; iLCID++) {
-								// check if it corresponds to the system LCID
-								var currentLcid = trimLeadingZeroes(trim(attributeLCIDs[iLCID]));
-								if (currentLcid == hostInformation.Item("lcid")) {
-									dinfo("Required LCID match found. LCID '" + currentLcid + "' matches current host.");
-									attributeMatchFound = true;
-									break;
-								}
-							}
-							// Check if any LCID matched the current host.
-							if (!attributeMatchFound) {
-								dinfo("None of the required LCID values (" + xmlNodeAttrValue +
-										") matched the current host LCID of '" + hostInformation.Item("lcid") + "'.");
-							}
-						}
-						break;
-
-						
-					default:
-						// perform simple regular expression match of
-						// attribute
-						if (attrMatchExpression.test(hostInformation.Item(xmlNodeAttrName))) {
-							attributeMatchFound = true;
-							break;
-						}
-						break;
-				}
-			}
+			// Check whether the attribute matches the current host.
+			var attributeMatchFound = checkHostAttribute(xmlNodeAttrName, xmlNodeAttrValue);
+			
 			// Verify if the attribute does match to current host.
 			if (attributeMatchFound != true) {
 				// No match found. Advance to next host.
@@ -2120,6 +2890,8 @@ function getHostMatches(xmlNodes, getAllMatches) {
 		// All nodes which do not specify advanced host match attributes are included too.
 		if (hostMatchFound) {
 			// All attributes matched
+
+			// Print some debug information about which extended host attributes matched.
 			if (xmlNodeAttrs.count > 0) {
 				var attrsKeys = xmlNodeAttrs.keys().toArray();
 				var attrDesc = new Array();
@@ -2128,11 +2900,32 @@ function getHostMatches(xmlNodes, getAllMatches) {
 				}
 				dinfo("XML node with special host attribute match found: " + attrDesc.join(", "));
 			}
+
+			// Verify if the XML node has a <condition /> sub-node
+			var conditionMatched = true;
+			var conditionNode = getConditions(xmlNode);
+			if (conditionNode != null) {
+				for (var iCond=0; iCond < conditionNode.length; iCond++) {
+					var condition = conditionNode[iCond];
+					// Run all checks
+					conditionMatched = checkAll(getChecks(condition));
+					if (conditionMatched) {
+						dinfo("Additional conditions matched successfully.");
+					} else {
+						conditionMatched = false;
+						dinfo("Additional conditions did not match.");
+						break;
+					}
+				}
+			}
+
 			// Insert node to list of matched nodes.
-			applyingNodes.push(xmlNode);
-			if (!getAllMatches) {
-				dinfo("Single-match mode. Host match finished.");
-				break;
+			if (conditionMatched) {
+				applyingNodes.push(xmlNode);
+				if (!getAllMatches) {
+					dinfo("Single-match mode. Host match finished.");
+					break;
+				}
 			}
 		} else {
 			dinfo("Could not match all attributes of XML node to current host. Skipping to next definition.");
@@ -2156,14 +2949,41 @@ function getHostMatches(xmlNodes, getAllMatches) {
 function getHostsApplying() {
 	if (applyingHostNodes == null) {
 		// Create new array to store matching hosts.
-		applyingHostNodes = new Array();
+		hostNodesApplying = new Array();
 
 		// Get available host definitions.
 		var hostNodes = getHostNodes();
 
 		// Check each node independently.
-		for (var iHost=0; iHost < hostNodes.length; iHost++){
+		for (var iHost=0; iHost < hostNodes.length; iHost++) {
 			var hostNode = hostNodes[iHost];
+
+			// Check conditions to determine whether the host definition is
+			// applied.
+			var previousEnv = getEnv();
+			var variables = getVariables(hostNode, null);
+
+			// Apply variables to environment.
+			for (var iVariable=0; iVariable < variables.length; iVariable++) {
+				var varDefinition = variables[iVariable];
+				var variableKeys = varDefinition.keys().toArray();
+				for (var iVarKey = 0; iVarKey < variableKeys.length; iVarKey++) {
+					var key = variableKeys[iVarKey];
+					var value = varDefinition.Item(key);
+					setEnv(key, value);
+				}
+			}
+			
+			// Checkthis host node for special conditions.
+			var hostList = new Array();
+			hostList.push(hostNode);
+			hostList = filterConditionalNodes(hostList, true);
+			if (hostList.length < 1) {
+				// Restore environment.
+				loadEnv(previousEnv);
+				// Skipt to next host node.
+				continue;
+			}
 			
 			// Get host name attribute.
 			var hostNameAttribute = getHostNameAttribute(hostNode);
@@ -2172,7 +2992,7 @@ function getHostsApplying() {
 				// Try direct match first (non-regular-expression matching).
 				if (hostNameAttribute.toUpperCase() == getHostname().toUpperCase()) {
 					// Append host to applying hosts.
-					applyingHostNodes.push(hostNode);
+					hostNodesApplying.push(hostNode);
 
 				} else {
 					
@@ -2190,7 +3010,7 @@ function getHostsApplying() {
 	
 							// splitvalues
 							// dinfo("Trying to match IP '" + ipAddress + "' to " +
-							// 	  "'" + matchPattern + "'");
+							// "'" + matchPattern + "'");
 							var splitIP = ipAddress.split(".");
 							var splitPattern = hostNameAttribute.split(".");
 							// check if format was correct
@@ -2232,7 +3052,7 @@ function getHostsApplying() {
 									dinfo("Found host '" + hostNameAttribute +
 											"' matching IP '" + ipAddress + "'");
 									// Append host to applying hosts.
-									applyingHostNodes.push(hostNode);
+									hostNodesApplying.push(hostNode);
 									ipMatchSuccess = true;
 									break;
 								}
@@ -2245,10 +3065,15 @@ function getHostsApplying() {
 
 					// If we still got no match with, then try regular expression matching.
 					if (!ipMatchSuccess) {
-						var hostNameAttributeMatcher = new RegExp("^" + hostNameAttribute + "$", "i");
-
-						if (hostNameAttributeMatcher.test(getHostname())) {
-							applyingHostNodes.push(hostNode);
+						try {
+							var hostNameAttributeMatcher = new RegExp("^" + hostNameAttribute + "$", "i");
+	
+							if (hostNameAttributeMatcher.test(getHostname()) == true) {
+								hostNodesApplying.push(hostNode);
+							}
+						} catch (e) {
+							warning("Invalid regular expression for host name matching: '" +
+									hostNameAttribute + "'.");
 						}
 					}
 				}
@@ -2257,22 +3082,30 @@ function getHostsApplying() {
 
 				// Host "name" attribute is missing or empty. Include host as potential match.
 				// This allows to filter this host later using extended host matching
-				applyingHostNodes.push(hostNode);
+				hostNodesApplying.push(hostNode);
 			}
 			
+			// Restore environment.
+			loadEnv(previousEnv);
 		}
 		
 		// Filter host nodes by matching them to the local host.
-		applyingHostNodes = getHostMatches(applyingHostNodes, isApplyMultiple());
+		// hostNodesApplying = filterConditionalNodes(hostNodesApplying, isApplyMultiple());
 
 		// Matches might have returned multiple matching results. In case of
 		// single-matching mode (default) only the first result shall be
 		// returned
-		if (!isApplyMultiple && applyingHostNodes.length > 1) {
-			var applyingHostNode = applyingHostNodes[0];
-			applyingHostNodes = new Array();
-			applyingHostNodes.push(applyingHostNode);
+		if (!isApplyMultiple() && hostNodesApplying.length > 1) {
+			var applyingHostNode = hostNodesApplying[0];
+			hostNodesApplying = new Array();
+			hostNodesApplying.push(applyingHostNode);
 		}
+
+		if (hostNodesApplying.length <= 0) {
+			hostNodesApplying = null;
+			throw new Error("Unable to find any matching host definition!");
+		}
+		applyingHostNodes = hostNodesApplying;
 	}
 
 	return applyingHostNodes;
@@ -2313,10 +3146,28 @@ function getHostProfiles(hostNode) {
 		}
 	}
 
+	// Load host definition environment (environment might be used in condition
+	// checks.
+	var previousEnv = getEnv();
+	var variables = getVariables(hostNode, null);
+
+	// Apply variables to environment.
+	for (var iVariable=0; iVariable < variables.length; iVariable++) {
+		var varDefinition = variables[iVariable];
+		var variableKeys = varDefinition.keys().toArray();
+		for (var iVarKey = 0; iVarKey < variableKeys.length; iVarKey++) {
+			var key = variableKeys[iVarKey];
+			var value = varDefinition.Item(key);
+			setEnv(key, value);
+		}
+	}
+	
 	var profileNodes = hostNode.selectNodes("profile");
 	if (profileNodes != null) {
-		for (var iProfile=0; iProfile<profileNodes.length; iProfile++) {
-			var profileNode = profileNodes[iProfile];
+		// Get only dependencies which match the current host.
+		var matchingProfileNodes = filterConditionalNodes(profileNodes, true);
+		for (var iProfile=0; iProfile<matchingProfileNodes.length; iProfile++) {
+			var profileNode = matchingProfileNodes[iProfile];
 			// get id attribute
 			var profileId = profileNode.getAttribute("id");
 
@@ -2329,6 +3180,9 @@ function getHostProfiles(hostNode) {
 		}
 	}
 
+	// Restore environment.
+	loadEnv(previousEnv);
+	
 	if (profileList.length > 0) {
 		var message = "Profiles applying to the current host:\n";
 		for (var iProfileIndex=0; iProfileIndex<profileList.length; iProfileIndex++) {
@@ -2356,32 +3210,36 @@ function getHosts() {
 /**
  * Returns a list of variables from the applying hosts definition.
  * 
- * @param dictionary
- *            Dictionary of type Scripting.Dictionary to which the the variables
- *            are written to (existing values are overwritten). In case null is
- *            supplied it returns a new dictionary object.
+ * @param array
+ *            Object of type Array to which the the variables appended.
+ *            In case null is supplied it returns a new Array object.
  * @return Object of type Scripting.Dictionary which contains all key/value
  *         pairs from the applying hosts.
  */
-function getHostsVariables(dictionary) {
-	var hostNodes = getHostsApplying() ;
+function getHostsVariables(array) {
+	dinfo("Reading variables from hosts[s]");
 
-	for (var iHostNode=0; iHostNode < hostNodes.length; iHostNode++) {
-		var hostNode = hostNodes[iHostNode];
-		var hostNodeDescr = getHostNodeDescription(hostNode);
-		dinfo("Reading variables from host: '" + hostNodeDescr) + "'.";
-		// make sure variables is either assigned or created
-		var variables;
-		if (dictionary == null) {
-			variables = new ActiveXObject("Scripting.Dictionary");
-		} else {
-			variables = dictionary;
+	// Fetch host definitions which apply to current host.
+	if (hostsVariables == null) {
+		hostsVariables = new Array();
+		var hostNodes = getHostsApplying() ;
+		for (var iHostNode=0; iHostNode < hostNodes.length; iHostNode++) {
+			var hostNode = hostNodes[iHostNode];
+			dinfo("Reading variables from host: " + getHostNodeDescription(hostNode));
+
+			// Add variables from host XML node.
+			hostsVariables = getVariables(hostNode, hostsVariables);
 		}
-
-		// Add variables from host XML node
-		variables = getVariables(hostNodes[iHostNode], variables);
 	}
-	return variables;
+
+	// Concatenate variable list if list was passed as parameter.
+	var concatenatedVariables = hostsVariables;
+	if (array != null) {
+		// concatenatedVariables = concatenateDictionary(dictionary, hostsVariables);
+		concatenatedVariables = hostsVariables.concat(array);
+	}
+
+	return concatenatedVariables;
 }
 
 /**
@@ -2464,8 +3322,9 @@ function getPackageChained(packageNode, packageList) {
 	if(packageNode != null) {
 		var includeNodes = packageNode.selectNodes("chain");
 		if (includeNodes != null) {
-			for (var i=0; i < includeNodes.length; i++) {
-				var dependId = includeNodes[i].getAttribute("package-id");
+			matchingChainNodes = filterConditionalNodes(includeNodes, true);
+			for (var i=0; i < matchingChainNodes.length; i++) {
+				var dependId = matchingChainNodes[i].getAttribute("package-id");
 
 				// convert to lower case if case-insensitive mode is on
 				if (dependId != null) {
@@ -2611,86 +3470,220 @@ function getPackagePrecheckPolicyDowngrade(packageNode) {
 }
 
 /**
- * Returns 'check' XML node array on a given package XML node
+ * Returns an array of <check /> XML sub-nodes on a given XML node.
+ * In case extended host matching attributes are used only the checks which match the
+ * current host are returned.
  * 
- * @return XML node array on a given package XML node containing all package
- *         checks. returns empty array if no checks are defined
+ * @param xmlNode The XML node from which all 'check' sub-nodes are read
+ * @return Array of XML nodes containing all 'check'-nodes which match to the current host.
+ *         Returns empty array if no checks are defined.
+ *         If extended host matching attributes like "hostname", "os" or similar are used
+ *         then checks which do not match the current host are not returned.
  */
-function getPackageChecks(packageNode) {
-	return packageNode.selectNodes("check");
+function getChecks(xmlNode) {
+	var checkNodes = xmlNode.selectNodes("check");
+	/*
+	var checkNodes = xmlNode.selectNodes("wpkg:check");
+	if (checkNodes.length <= 0) {
+		// Maybe amespace was wrongly specified.
+		// Try default namespace.
+		checkNodes = xmlNode.selectNodes("check");
+	}
+	*/
+	return filterConditionalNodes(checkNodes);
 }
 
 /**
- * Returns 'downgrade' XML node array on a given package XML node
+ * This is a convenience-method to get all downgrade commands.
  * 
  * @param packageNode
  *            package XML node which contains 'downgrade' nodes
  * @return Array of 'downgrade' XML nodes, returns empty array if no nodes are
  *         defined
  */
-function getPackageCmdDowngrade(packageNode) {
-	// Fetch commands from package node
-	var downgradeNodes = packageNode.selectNodes("downgrade");
-	// Filter out all packages which do not apply to current host.
-	downgradeNodes = getHostMatches(downgradeNodes, true);
+function getPackageCmdDowngrade(packageNode, includeChain) {
+	// Fetch commands from package node.
+	var commandNodes = getPackageCmd(packageNode, "downgrade", null);
 
 	// Return list of applying install commands.
-	return downgradeNodes;
+	return commandNodes;
 }
 
 /**
- * Returns 'install' XML node array on a given package XML node
+ * This is a convenience-method to get all install commands.
  * 
  * @param packageNode
  *            package XML node which contains 'install' nodes
  * @return Array of 'install' XML nodes, returns empty array if no nodes are
  *         defined
  */
-function getPackageCmdInstall(packageNode) {
-	// Fetch commands from package node
-	var installNodes = packageNode.selectNodes("install");
-	// Filter out all packages which do not apply to current host.
-	installNodes = getHostMatches(installNodes, true);
+function getPackageCmdInstall(packageNode, includeChain) {
+	// Fetch commands from package node.
+	var commandNodes = getPackageCmd(packageNode, "install", null);
 
 	// Return list of applying install commands.
-	return installNodes;
+	return commandNodes;
 }
 
+
 /**
- * Returns 'remove' XML node array on a given package XML node
+ * This is a convenience-method to get all remove commands.
  * 
  * @param packageNode
  *            package XML node which contains 'remove' nodes
  * @return Array of 'remove' XML nodes, returns empty array if no nodes are
  *         defined
  */
-function getPackageCmdRemove(packageNode) {
-	// Fetch commands from package node
-	var removeNodes = packageNode.selectNodes("remove");
-	// Filter out all packages which do not apply to current host.
-	removeNodes = getHostMatches(removeNodes, true);
+function getPackageCmdRemove(packageNode, includeChain) {
+	// Fetch commands from package node.
+	var commandNodes = getPackageCmd(packageNode, "remove", null);
 
 	// Return list of applying install commands.
-	return removeNodes;
+	return commandNodes;
 }
 
 /**
- * Returns 'install' XML node array on a given package XML node
+ * This is a convenience-method to get all upgrade commands.
  * 
  * @param packageNode
  *            package XML node which contains 'remove' nodes
- * @return Array of 'remove' XML nodes, returns empty array if no nodes are
+ * @return Array of 'upgrade' XML nodes, returns empty array if no nodes are
  *         defined
  */
-function getPackageCmdUpgrade(packageNode) {
-	// Fetch commands from package node
-	var upgradeNodes = packageNode.selectNodes("upgrade");
-	// Filter out all packages which do not apply to current host.
-	upgradeNodes = getHostMatches(upgradeNodes, true);
+function getPackageCmdUpgrade(packageNode, includeChain) {
+	// Fetch commands from package node.
+	var commandNodes = getPackageCmd(packageNode, "upgrade", null);
 
 	// Return list of applying install commands.
-	return upgradeNodes;
+	return commandNodes;
 }
+
+
+/**
+ * Returns a list of commands which apply to the given command type.
+ * Common types are 'install', 'upgrade', 'downgrade' or 'remove' but WPKG
+ * allows any custom type definition within the commands/command XML structure.
+ * For example it is possible to specify <command type="test-type" /> and then
+ * receive all "test-type" commands using this method.
+ * 
+ * @param packageNode
+ *            package XML node which contains command nodes.
+ * @param type
+ *            Type description. Defines which command group to receive.
+ * @param includeChain
+ * 	        Array of command types (install/upgrade/downgrade/remove) already
+ *          included.
+ *          This is used to detect inclusion loops (recursive inclusion).
+ * @return Array of command XML nodes, returns empty array if no nodes are
+ *         defined
+ */
+function getPackageCmd(packageNode, type, includeChain) {
+	// Verify input parameters.
+	if (packageNode == null) {
+		return null;
+	}
+
+	// Type must be specified in order to get command group.
+	if (type == null || type == "") {
+		return null;
+	}
+
+	var alreadyIncluded;
+	if (includeChain == null) {
+		alreadyIncluded = new Array();
+	} else {
+		alreadyIncluded = includeChain;
+	}
+	alreadyIncluded.push(type);
+	
+	// This variable holds the result set returned.
+	var commandNodeList = new Array();
+	
+	// Fetch commands directly attached to package node
+	var directCommandNodes = null;
+	switch (type) {
+	case "install":
+		directCommandNodes = packageNode.selectNodes("install");
+		break;
+	case "upgrade":
+		directCommandNodes = packageNode.selectNodes("upgrade");
+		break;
+	case "downgrade":
+		directCommandNodes = packageNode.selectNodes("downgrade");
+		break;
+	case "remove":
+		directCommandNodes = packageNode.selectNodes("remove");
+		break;
+	default:
+		// Command type is none of the "default" types This command type is
+		// supported in command nodes only.
+		break;
+	}
+
+	// Fetch command-nodes from <commands><command type="type" /></commands> structure.
+	var commandNodes = packageNode.selectNodes("commands/command[@type=\"" + type + "\"]");
+
+	// Merge command lists.
+	if (directCommandNodes != null) {
+		for (var iCmd=0; iCmd < directCommandNodes.length; iCmd++) {
+			commandNodeList.push(directCommandNodes[iCmd]);
+		}
+	}
+	if (commandNodes != null) {
+		for (var iCmd=0; iCmd < commandNodes.length; iCmd++) {
+			commandNodeList.push(commandNodes[iCmd]);
+		}
+	}
+	
+	// Filter out all packages which do not apply to current host.
+	commandNodeList = filterConditionalNodes(commandNodeList, true);
+
+	// Expand command includes.
+	// Create array which is returned as a complete command list.
+	var fullCommandList = new Array();
+
+	// Check all commands for inclusion.
+	for (var iTypeCommands=0; iTypeCommands<commandNodeList.length; iTypeCommands++) {
+		var command = commandNodeList[iTypeCommands];
+		var include = getCommandInclude(command);
+		
+		// Inclusion found.
+		if (include != null) {
+			dinfo("Found inclusion for command type " + include + ".");
+			
+			// Clone array of already included command types which helps to
+			// detect duplicated includes.
+			// The same loop will check whether the type to be included has
+			// already been included (recursive inclusion detection).
+			var prevIncluded = new Array();
+			for (var j=0; j<alreadyIncluded.length; j++) {
+				var includeElement = alreadyIncluded[j];
+				if (includeElement == include) {
+					throw new Error("Recursive inclusion detected!");
+				} else {
+					prevIncluded.push(alreadyIncluded[j]);
+				}
+			}
+
+			// Fetch commands of specified type (if any)
+			var includedCommands = getPackageCmd(packageNode, include, prevIncluded);
+
+			// Insert fetched commands to command list.
+			if (includedCommands != null) {
+				for (var iIncCmds=0; iIncCmds<includedCommands.length; iIncCmds++) {
+					fullCommandList.push(includedCommands[iIncCmds]);
+				}
+			}
+		} else {
+			// Include command in command-list.
+			fullCommandList.push(command);
+		}
+	}
+
+	// Return list of applying commands.
+	return fullCommandList;
+}
+
 
 /**
  * Returns array of package IDs which represent the package dependencies.
@@ -2713,8 +3706,10 @@ function getPackageDependencies(packageNode, packageList) {
 	if(packageNode != null) {
 		var dependNodes = packageNode.selectNodes("depends");
 		if (dependNodes != null) {
-			for (var i=0; i < dependNodes.length; i++) {
-				var dependId = dependNodes[i].getAttribute("package-id");
+			// Get only dependencies which match the current host.
+			var matchingDependNodes = filterConditionalNodes(dependNodes, true);
+			for (var i=0; i < matchingDependNodes.length; i++) {
+				var dependId = matchingDependNodes[i].getAttribute("package-id");
 
 				// convert to lower case if case-insensitive mode is on
 				if (dependId != null) {
@@ -2775,8 +3770,9 @@ function getPackageIncludes(packageNode, packageList) {
 	if(packageNode != null) {
 		var includeNodes = packageNode.selectNodes("include");
 		if (includeNodes != null) {
-			for (var i=0; i < includeNodes.length; i++) {
-				var dependId = includeNodes[i].getAttribute("package-id");
+			var matchingIncludeNodes = filterConditionalNodes(includeNodes, true);
+			for (var i=0; i < matchingIncludeNodes.length; i++) {
+				var dependId = matchingIncludeNodes[i].getAttribute("package-id");
 
 				// convert to lower case if case-insensitive mode is on
 				if (dependId != null) {
@@ -2793,21 +3789,27 @@ function getPackageIncludes(packageNode, packageList) {
 }
 
 /**
- * Returns Date representation of 'installdate' attribute from the given
- * package.
+ * Reads the "manualInstall" attribute from a package node.
+ * This attribute is true only if the package as installed manually via
+ * command line. It is false for packages which are initially installed by
+ * package synchronization.
  * 
- * @param packageNode
- *            the package node to read the 'installdate' attribute from
- * @return Date object representing installation date of the given package.
- *         Returns null in case the 'installdate' attribute is not set.
+ * @param packageNode the package from which the attribute is read.
+ * @returns {Boolean} True if package was installed manually, false if it is
+ *        applied by profile.
  */
-function getPackageInstallDate(packageNode) {
-	var installDate = null;
-	var packageInstallDate = packageNode.getAttribute("installdate");
-	if (packageInstallDate != null) {
-		installDate = parseISODate(packageInstallDate, false);
+function getPackageManualInstallation(packageNode) {
+	// Initialize return variable.
+	var isManualInstall = false;
+
+	// Read yctual value.
+	var manualInstall = packageNode.getAttribute("manualInstall");
+
+	// Evaluate result.
+	if (manualInstall != null && manualInstall == "true") {
+		isManualInstall = true;
 	}
-	return installDate;
+	return isManualInstall;
 }
 
 /**
@@ -2877,7 +3879,7 @@ function getPackageNodeFromAnywhere(packageID) {
 	if(packageDBNode != null) {
 		// package found in package database, mark for installation/upgrade
 		dinfo("Found package node '" + getPackageName(packageDBNode) + "' (" +
-				getPackageID(packageDBNode) + ") in package database");
+				getPackageID(packageDBNode) + ") in package database.");
 		packageNode = packageDBNode;
 	} else {
 		// error package not in package database
@@ -2895,10 +3897,17 @@ function getPackageNodeFromAnywhere(packageID) {
 		// if no package definition has been found jet the package is not
 		// installed
 		if(packageSettingsNode != null) {
-			var messageLocalOnly = "Database inconsistency: Package with package ID '" +
-							packageID + "' missing in package database. Package information " +
-							"found on local installation:\n" +
-							"Package ID: " + getPackageID(packageSettingsNode) + "\n" +
+			// Check if the package has been manually installed.
+			var messageLocalOnly = "";
+			var isManualInstall = getPackageManualInstallation(packageSettingsNode);
+			if (isManualInstall == true) {
+				messageLocalOnly = "Manually installed package not found in server database.";
+			} else {
+				messageLocalOnly = "Database inconsistency: Package with package ID '" +
+								packageID + "' missing in package database. Package information " +
+								"found on local installation:\n";
+			}
+			messageLocalOnly += "Package ID: " + messageLocalOnly + "\n" +
 							"Package Name: " + getPackageName(packageSettingsNode) + "\n" +
 							"Package Revision: " + getPackageRevision(packageSettingsNode) + "\n";
 			warning(messageLocalOnly);
@@ -3114,7 +4123,7 @@ function getPackageRevision(packageNode) {
 		// variable)
 		if( packageRevision.match(new RegExp("%.+%"), "ig") ) {
 			// Generate the correct environment.
-			saveEnv();
+			var previousEnv = getEnv();
 
 			// set package specific environment
 			loadPackageEnv(packageNode);
@@ -3124,28 +4133,10 @@ function getPackageRevision(packageNode) {
 			packageRevision = wshObject.ExpandEnvironmentStrings(packageRevision);
 
 			// reset environment
-			loadEnv();
+			loadEnv(previousEnv);
 		}
 	}
 	return packageRevision;
-}
-
-/**
- * Returns Date representation of 'uninstalldate' attribute from the given
- * package.
- * 
- * @param packageNode
- *            the package node to read the 'uninstalldate' attribute from
- * @return Date object representing uninstall date of the given package. Returns
- *         null in case the 'uninstalldate' attribute is not set.
- */
-function getPackageUninstallDate(packageNode) {
-	var uninstallDate = null;
-	var packageUninstallDate = packageNode.getAttribute("uninstalldate");
-	if (packageUninstallDate != null) {
-		uninstallDate = parseISODate(packageUninstallDate, true);
-	}
-	return uninstallDate;
 }
 
 /**
@@ -3160,21 +4151,229 @@ function getPackages() {
 }
 
 /**
+ * Returns the action to be performed on a given package if the package is
+ * applied to the current host.
+ * Valid actions are:
+ * "none"      No action; package installed already
+ * "install"   Installation, package is new on the host
+ * "upgrade"   Upgrade package which already exists on the system
+ *             New version higher than installed version
+ * "downgrade" Downgrade package which already exists on the system
+ *             New version lower than installed version
+ * 
+ * @param packageNode
+ *           The package to be checked.
+ * @returns Action to be performed. Can be 0=nothing, 1=install, 2=upgrade, 3=downgrade.
+ */
+function getPackageInstallAction(packageNode) {
+	// Action to be performed when
+	var actionNone = "none";
+	var actionInstall = "install";
+	var actionUpgrade = "upgrade";
+	var actionDowngrade = "downgrade";
+	var action = actionNone;
+
+	var packageName = getPackageName(packageNode);
+	var packageID   = getPackageID(packageNode);
+	var packageRev  = getPackageRevision(packageNode);
+	var executeAttr = getPackageExecute(packageNode);
+	// var notifyAttr  = getPackageNotify(packageNode);
+
+	 // Search for the package in the local settings.
+	var installedPackage = getSettingNode(packageID);
+
+	// String to print in events which identifies the package.
+	var packageMessage = "Package '" + packageName + "' (" + packageID + "): ";
+
+	// Evaluate type of installation (install/upgrade/downgrade/none).
+	// INSTALL:
+	if (installedPackage == null) {
+		// ONE-TIME INSTALL PACKAGE, NOT INSTALLED YET (according to settings)
+		// Install the package after checking that it is not installed already.
+		dinfo(packageMessage + "Not in local package database; Marking for installation.");
+		action = actionInstall;
+
+	// UPGRADE/DOWNGRADE:
+	} else {
+		// Get revision of installed package.
+		var packageRevInstalled = getPackageRevision(installedPackage);
+		// Compare Versions.
+		var comparisonResult = versionCompare(packageRev, packageRevInstalled);
+
+		if (comparisonResult > 0) {
+			// ONE-TIME INSTALL PACKAGE, UPGRADE:
+			info(packageMessage +
+				"Already installed but version mismatch.\n" +
+				"Installed revision: '" + packageRevInstalled + "'\n" +
+				"Available revision: '" + packageRev + "'.\n" +
+				"Preparing upgrade."
+				);
+			action = actionUpgrade;
+
+		} else if (comparisonResult < 0) {
+			// ONE-TIME INSTALL PACKAGE, DOWNGRADE:
+			info(packageMessage +
+				"Already installed but version mismatch.\n" +
+				"Installed revision '" + packageRevInstalled + "'\n" +
+				"Available revision: '" + packageRev + "'.\n" +
+				"Preparing downgrade."
+				);
+			action = actionDowngrade;
+
+		} else {
+			// ONE-TIME INSTALL PACKAGE, ALREADY INSTALLED:
+
+			if (executeAttr == "always") {
+				// ALWAYS EXECUTION PACKAGE
+				// Packages with exec attribute "always" will be installed on each run; regardless of their version.
+				dinfo(packageMessage + "Is requested to be executed 'always'. Preparing installation.");
+				action = actionInstall;
+
+			} else if (isForceInstall()) {
+				// if installation is forced, install anyway
+				info(packageMessage + "Already installed. Re-installation enforced.");
+				action = actionInstall;
+
+			} else {
+				// If execute is 'once' then package checks are not executed.
+				// We just trust that the package is installed.
+				if (executeAttr == "once") {
+					dinfo(packageMessage + "Installed already.");
+					action = actionNone;
+				} else {
+					// In case no execution attribute is defined
+					// check real package state.
+					if (getQueryMode() == "remote") {
+						// Assume package is properly installed.
+						action = actionNone;
+					} else {
+						// Verify that package is still installed.
+						if (isInstalled(installedPackage)) {
+							action = actionNone;
+						} else {
+							// Package found in local database but checks failed.
+							// Maybe the user uninstalled the package manually.
+							dinfo(packageMessage + "Installed but checks failed. Re-Installing.");
+							action = actionInstall;
+						}
+					}
+				}
+			}
+		}
+	}
+	return action;
+}
+
+/**
+ * Returns list of packages which have been manually installed.
+ * 
+ * @returns List of packages manually installed in local settings database.
+ *          Returns empty array if no package is found.
+ */
+function getPackagesManuallyInstalled() {
+	if (manuallyInstalled == null) {
+		// Get list of currently installed packages.
+		var settings = getSettings();
+		
+		// Filter manually installed packages.
+		// Fetch command-nodes from <commands><command type="type" /></commands> structure.
+		manuallyInstalled = settings.selectNodes("package[@manualInstall=\"true\"]");
+
+		// Return empty array if no package is found.
+		if (manuallyInstalled == null) {
+			manuallyInstalled = new Array();
+		}
+	}
+	return manuallyInstalled;
+}
+
+/**
+ * Returns an array of packages which are not assigned to the current host any more.
+ * 
+ * Packages which are manually installed are not included in the list of packages
+ * to be removed. Except if the package does not exist on server side any more.
+ * Therefore in case a package is removed from the server it is removed from
+ * clients as well even if the package was installed manually because it is to be
+ * assumed tha the administrator no longer wants to support this type of software.
+ *  
+ * @return Array of packages which will be removed during synchronization.
+ */
+function getPackagesRemoved() {
+	dinfo("Evaluating packages to be removed.");
+	/**
+	 * Get package nodes referenced within the profile (and profile
+	 * dependencies). This includes package dependencies as well.
+	 */
+	var profilePackageNodes = getProfilePackageNodes();
+
+	// Get list of currently installed packages.
+	var installedPackages = getSettingNodes();
+
+	// Array to store packages to be removed.
+	var removablesArray = new Array();
+
+	// Loop over each installed package and check whether it still applies.
+	for (var iInstalledPkg = 0; iInstalledPkg < installedPackages.length; iInstalledPkg++) {
+		var installedPackageNode = installedPackages[iInstalledPkg];
+		dinfo("Found installed package '" + getPackageName(installedPackageNode) + "' (" +
+				getPackageID(installedPackageNode) + ").");
+
+		// Search for the installed package in available packages.
+		var found = false;
+
+		for (var j=0; j < profilePackageNodes.length; j++) {
+			var profilePackageNode = profilePackageNodes[j];
+			if (getPackageID(installedPackageNode) == getPackageID(profilePackageNode)) {
+				dinfo("Package '" + getPackageName(installedPackageNode) + "' (" +
+						getPackageID(installedPackageNode) + ") found in profile packages.");
+				found = true;
+				break;
+			}
+		}
+
+		// If package is no longer present, mark for remove if not installed manually.
+		if (!found) {
+			// Check if package was installed manually.
+			// Manually installed packages remain on the system.
+			var packageMessage = "Package '" + getPackageName(installedPackageNode) + "' (" +
+			getPackageID(installedPackageNode) + "): ";
+			var isManuallyInstalled = getPackageManualInstallation(installedPackageNode);
+			if (isManuallyInstalled == true) {
+				if (isZombie(installedPackageNode)) {
+					// Package is not in server package database any more.
+					dinfo("Package was manually installed but is " +
+							"not in package database any more.  Marking package for removal.");
+					removablesArray.push(installedPackageNode);
+				} else {
+					dinfo("Package was manually installed and is " +
+							"still available in package database. Keeping package.");
+				}
+			} else {
+				dinfo(packageMessage + "Marked for removal.");
+				removablesArray.push(installedPackageNode);
+			}
+		}
+	}
+
+	return removablesArray;
+}
+
+
+/**
  * Returns a list of variables for the given package.
  * 
  * @param packageNode
  *            The package node to get the variables from.
- * @param dictionary
- *            Dictionary of type Scripting.Dictionary to which the the variables
- *            are written to (existing values are overwritten). In case null is
- *            supplied it returns a new dictionary object.
+ * @param array
+ *            Object of type Array to which the the variables appended.
+ *            In case null is supplied it returns a new Array object.
  * @return Object of type Scripting.Dictionary which contains all key/value
  *         pairs from the given package including its dependencies
  */
-function getPackageVariables(packageNode, dictionary) {
+function getPackageVariables(packageNode, array) {
 	dinfo("Reading variables from package '" + getPackageName(packageNode) + "'.");
-	dictionary = getVariables(packageNode, dictionary);
-	return dictionary;
+	array = getVariables(packageNode, array);
+	return array;
 }
 
 /**
@@ -3189,8 +4388,10 @@ function getProfileDependencies(profileNode) {
 
 	var dependNodes = profileNode.selectNodes("depends");
 	if (dependNodes != null) {
-		for (var i=0; i < dependNodes.length; i++) {
-			var dependencyId = dependNodes[i].getAttribute("profile-id");
+		// Get only dependencies which match the current host.
+		var matchingDependNodes = filterConditionalNodes(dependNodes, true);
+		for (var i=0; i < matchingDependNodes.length; i++) {
+			var dependencyId = matchingDependNodes[i].getAttribute("profile-id");
 
 			// convert dependency to lower case if case-sensitive mode is off
 			if (dependencyId != null && !isCaseSensitive()) {
@@ -3233,26 +4434,27 @@ function getProfileID(profileNode) {
  * @return array of strings representing the referenced profiles
  */
 function getProfileList() {
-	if (profilesApplying == null) {
+	if (applyingProfilesDirect == null) {
+		var profilesMatching = new Array();
+
 		// get arguments
 		var argn = getArgv().Named;
-		profilesApplying = new Array();
 
 		// Set the profile from either the command line or the hosts file.
 		if (argn("profile") != null) {
-			profilesApplying.push(argn("profile"));
+			profilesMatching.push(argn("profile"));
 		} else {
 			var hostNodes = getHostsApplying();
 			for (var ihostNode=0; ihostNode < hostNodes.length; ihostNode++) {
-				profilesApplying = profilesApplying.concat(getHostProfiles(hostNodes[ihostNode]));
+				profilesMatching = profilesMatching.concat(getHostProfiles(hostNodes[ihostNode]));
 			}
-
-			if (profilesApplying.length <= 0) {
+			if (profilesMatching.length <= 0) {
 				throw new Error("Could not find any profile for host " + getHostname() + ".");
 			}
 		}
+		applyingProfilesDirect = profilesMatching;
 	}
-	return profilesApplying;
+	return applyingProfilesDirect;
 }
 
 /**
@@ -3321,10 +4523,33 @@ function getProfilePackageIDs() {
 	for (var i=0; i < profileArray.length; i++) {
 		profileNode = profileArray[i];
 
+		// Load profile environment.
+		var previousEnv = getEnv();
+
+		// Array to store all variables found.
+		var variables =  new Array();
+
+		// Host variables first...
+		variables = getHostsVariables(variables);
+
+		// Get variables of this profile.
+		variables = getVariables(profileNode, variables);
+
+		// Apply variables to environment.
+		for (var iVariable=0; iVariable < variables.length; iVariable++) {
+			var varDefinition = variables[iVariable];
+			var variableKeys = varDefinition.keys().toArray();
+			for (var iVarKey = 0; iVarKey < variableKeys.length; iVarKey++) {
+				var key = variableKeys[iVarKey];
+				var value = varDefinition.Item(key);
+				setEnv(key, value);
+			}
+		}
+
 		// Fetch packages from profile.
 		var profilePackageNodes = profileNode.selectNodes("package");
 		// Filter out packages which shall not apply to this host
-		var packageNodes = getHostMatches(profilePackageNodes, true);
+		var packageNodes = filterConditionalNodes(profilePackageNodes, true);
 
 		// Add all package IDs to the array and avoid duplicates
 		for (var j = 0; j < packageNodes.length; j++) {
@@ -3335,7 +4560,7 @@ function getProfilePackageIDs() {
 			if (packageId == null || packageId == "") {
 				continue;
 			}
-
+			
 			// Use package methods for profile package node because the
 			// attribute is the same.
 			var installDate = getProfilePackageInstallDate(packageNode);
@@ -3381,6 +4606,8 @@ function getProfilePackageIDs() {
 				}
 			}
 		}
+		// Restore environment.
+		loadEnv(previousEnv);
 	}
 
 	return packageIDs;
@@ -3392,7 +4619,7 @@ function getProfilePackageIDs() {
  * @param packageNode
  *            the package definition node as specified within the profile
  *            definition
- * @return date object representing installation date
+ * @return date object representing installation date. Null if date is undefined.
  */
 function getProfilePackageInstallDate(packageNode) {
 	var installDate = null;
@@ -3408,7 +4635,7 @@ function getProfilePackageInstallDate(packageNode) {
  * profile. This function returns full package nodes.
  *
  * NOTE: Since the profile
- * just contains the package IDs packages referenced within profiles.xml but not
+ * just contains the package IDs referenced within profiles.xml but not
  * existing within the packages database (packages.xml) will not be part of the
  * list.
  * 
@@ -3421,7 +4648,7 @@ function getProfilePackageInstallDate(packageNode) {
 function getProfilePackageNodes() {
 	if (profilePackageNodes == null) {
 		// Create a new empty package array.
-		var profilePackageNodes = new Array();
+		packageNodes = new Array();
 
 		/*
 		 * get package IDs which apply to the profile (without dependencies, includes and chained packages) regardless
@@ -3437,13 +4664,14 @@ function getProfilePackageNodes() {
 
 			// add dependencies first
 			if (packageNode != null) {
-				getPackageReferences(packageNode, profilePackageNodes);
-				if (!searchArray(profilePackageNodes, packageNode)) {
+				getPackageReferences(packageNode, packageNodes);
+				if (!searchArray(packageNodes, packageNode)) {
 					// Add the new node to the array _after_ adding dependencies.
-					profilePackageNodes.push(packageNode);
+					packageNodes.push(packageNode);
 				}
 			}
 		}
+		profilePackageNodes = packageNodes;
 	}
 	return profilePackageNodes;
 }
@@ -3485,9 +4713,9 @@ function getProfiles() {
  */
 function getProfilesApplying() {
 	dinfo("Getting profiles which apply to this node.");
-	if (applyingProfiles == null) {
+	if (applyingProfilesAll == null) {
 		// create cache entry
-		applyingProfiles = new Array();
+		var profilesApplying = new Array();
 
 		// get list of applying profiles
 		var profileList = getProfileList();
@@ -3501,15 +4729,16 @@ function getProfilesApplying() {
 
 				// Add the current profile's node as the first element in the
 				// array.
-				applyingProfiles.push(profileNode);
+				profilesApplying.push(profileNode);
 
-				appendProfileDependencies(applyingProfiles, profileNode);
+				appendProfileDependencies(profilesApplying, profileNode);
 			} else {
 				error("Profile '" + profileList[i] + "' applies to this host but was not found!");
 			}
 		}
+		applyingProfilesAll = profilesApplying;
 	}
-	return applyingProfiles;
+	return applyingProfilesAll;
 }
 
 /**
@@ -3525,14 +4754,20 @@ function getProfilesLogLevel() {
 	var logLevel = 0x00;
 
 	// merge log levels
-	var profileList = getProfileList();
-	for (var i=0; i<profileList.length; i++) {
-		var profileId = profileList[i];
-		var profileNode = getProfileNode(profileId);
-		if (profileNode != null) {
-			// add bitmask
-			logLevel = logLevel | profileNode.getAttribute("logLevel");
+	try {
+		var profileList = getProfileList();
+		for (var i=0; i<profileList.length; i++) {
+			var profileId = profileList[i];
+			var profileNode = getProfileNode(profileId);
+			if (profileNode != null) {
+				// add bitmask
+				logLevel = logLevel | profileNode.getAttribute("logLevel");
+			}
 		}
+	} catch (e) {
+		// Unable to read profile-specific log leve.
+		// Maybe there is no profile found for this host.
+		dinfo("No profile-specific log level found.");
 	}
 	if (logLevel > 0x00) {
 		return logLevel;
@@ -3544,38 +4779,47 @@ function getProfilesLogLevel() {
 /**
  * Returns a list of variables from the Profile.
  * 
- * @param dictionary
- *            Dictionary of type Scripting.Dictionary to which the the variables
- *            are written to (existing values are overwritten). In case null is
- *            supplied it returns a new dictionary object.
+ * @param array
+ *            Object of type Array to which the the variables are appended.
+ *            In case null is supplied it returns a new Array object.
  * @return Object of type Scripting.Dictionary which contains all key/value
  *         pairs from the given profile including its dependencies
  */
-function getProfileVariables(dictionary) {
+function getProfileVariables(array) {
 	dinfo("Reading variables from profile[s]");
-	var profileArray = getProfilesApplying();
-	dinfo(profileArray.length + " profiles apply to this host.");
+	if (profilesVariables == null) {
+		profilesVariables = new Array();
+		var profileArray = getProfilesApplying();
+		// dinfo(profileArray.length + " profiles apply to this host.");
 
-	var variables;
-	// make sure variables is either assigned or created
-	if (dictionary == null) {
-		variables = new ActiveXObject("Scripting.Dictionary");
-	} else {
-		variables = dictionary;
+		/*
+		 * add each profile's variables to the array in reverse order reversing the order is done in order to allow
+		 * overwriting of variables from dependent profiles
+		 */
+
+		for (var iProfiles=profileArray.length-1; iProfiles >= 0; iProfiles--) {
+			var profileNode = profileArray[iProfiles];
+			dinfo("Reading variables from profile " + getProfileID(profileNode));
+
+			// Add variables from profile XML node.
+			profilesVariables = getVariables(profileNode, profilesVariables);
+		}
 	}
 
-	/*
-	 * add each profile's variables to the array in reverse order reversing the order is done in order to allow
-	 * overwriting of variables from dependent profiles
-	 */
-	for (var i=profileArray.length-1; i >= 0; i--) {
-		var profileNode = profileArray[i];
-		dinfo("Reading variables from profile " + getProfileID(profileNode));
-
-		variables = getVariables(profileNode, variables);
+	var concatenatedVariables = profilesVariables;
+	if (array != null) {
+		concatenatedVariables = profilesVariables.concat(array);
 	}
 
-	return variables;
+	return concatenatedVariables;
+}
+
+/**
+ * Returns current state of query mode.
+ * @returns {String} Current query mode.
+ */
+function getQueryMode() {
+	return queryMode;
 }
 
 /**
@@ -3590,6 +4834,70 @@ function getProfileVariables(dictionary) {
 function getSettingNode(packageID) {
 	// get first node which matched the specified ID
 	return getSettings().selectSingleNode("package[@id='" + packageID +"']");
+}
+
+
+/**
+ * Tries to read host attributes from the settings database.
+ * All host attributes found in the settings database will be used to override
+ * attributes of the local host.
+ */
+function getSettingHostAttributes() {
+	// Fetch settings.
+	var settings = getSettings();
+	var attributes = settings.attributes;
+
+	// Check whether attributes are defined.
+	if (attributes.length > 0) {
+
+		// Reset cache for host information.
+		resetHostInformationCache();
+		
+		for (var iAttribute=0; iAttribute < attributes.length; iAttribute++) {
+			var node = attributes.item(iAttribute);
+			var attribute = node.nodeName;
+
+			var value = node.nodeValue;
+			switch (attribute) {
+			case "hostname":
+				setHostname(value);
+				break;
+
+			case "architecture":
+				setArchitecture(value);
+				break;
+
+			case "os":
+				setHostOS(value);
+				break;
+
+			case "ipaddresses":
+				var ipList = value.split(",");
+				setIPAddresses(ipList);
+				break;
+
+			case "domainname":
+				setDomainName(value);
+				break;
+
+			case "groups":
+				var hostGroupList = value.split(",");
+				setHostGroups(hostGroupList);
+				break;
+
+			case "lcid":
+				setLocale(value);
+				break;
+
+			case "lcidOS":
+				setLocaleOS(value);
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
 }
 
 /**
@@ -3610,6 +4918,62 @@ function getSettingNodes() {
 }
 
 /**
+ * Returns current path to settings file.
+ * 
+ * @returns Settings file FS object.
+ */
+function getSettingsPath() {
+	if (settings_file == null || settings_file == "") {
+		// Will be used for file operations.
+		var fso = new ActiveXObject("Scripting.FileSystemObject");
+
+		// Evaluate path.
+		// Our default settings file is located in %SystemRoot%\system32.
+		// If settings path was not specified via command line, then evaluate it
+		// from the configuration file or fall back to default.
+		if (settings_file_path == null) {
+			var SystemFolder = 1;
+			settings_file_path = fso.GetSpecialFolder(SystemFolder);
+		}
+		settings_file = settings_file_path + "\\" + settings_file_name;
+		settings_file_processed = false;
+	}
+
+	if (!settings_file_processed) {
+		// Check whether [PROFILE] epxression was used and repace it.
+		var profileExp = new RegExp("\\[PROFILE\\]", "g");
+		if (profileExp.test(settings_file) == true) {
+			// This will throw an error if profile is not available yet.
+			var profileList = getProfileList();
+	
+			// concatenate profile names or throw error if no names
+			// available
+			if (profileList.length > 0) {
+				var allProfiles = "";
+				for (var i=0; i<profileList.length; i++) {
+					if (allProfiles == "") {
+						allProfiles = profileList[i];
+					} else {
+						allProfiles += "-" + profileList[i];
+					}
+				}
+				settings_file = settings_file.replace(profileExp, allProfiles);
+			} else {
+				throw new Error("Profile information not available.");
+			}
+		}
+	
+		// Check whether [HOSTNAME] expression was used and replace it.
+		var hostnameExp = new RegExp("\\[HOSTNAME\\]", "g");
+		if (hostnameExp.test(settings_file) == true) {
+			settings_file = settings_file.replace(hostnameExp, getHostname());
+		}
+	}
+
+	return settings_file;
+}
+
+/**
  * Returns XML node which contains all settings (local package database).
  */
 function getSettings() {
@@ -3619,6 +4983,193 @@ function getSettings() {
 	}
 	return settings;
 }
+
+/**
+ * Returns the checkResults node of the settings database.
+ * 
+ * @returns checkResults node of currently loaded settings database.
+ */
+function getSettingsCheckResults() {
+	var currentSettings = getSettings();
+	var checkResults = currentSettings.selectSingleNode("checkResults");
+	if (checkResults == null) {
+		var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
+		checkResults = xmlDoc.createElement("checkResults");
+		currentSettings.appendChild(checkResults);
+	}
+	return checkResults;
+}
+
+/**
+ * Adds the given check node to the checkResults list in the settings database.
+ * 
+ * @param checkNode Check XML node to be inserted.
+ * @param result Result of the check on current node.
+ */
+function addSettingsCheckResult(checkNode, result) {
+	try {
+		// Clone XML node to be added to settings.
+		var settingsCheckNode = checkNode.cloneNode(false);
+
+		// Check if there is already a check with the same attributes.
+		var previousChecks = getSettingsCheck(settingsCheckNode);
+
+		// Fetching checkResults node from settings.
+		var checkResults = getSettingsCheckResults();
+	
+		// If a check was found then remove it from the results in order to avoid
+		// duplicate entries. Checks might also be executed multiple times (with
+		// potentially different results) and only the last result should be kept.
+		if (previousChecks != null) {
+			for (var i=0; i < previousChecks.length; i++) {
+				dinfo("Replacing check results of previous evaluation");
+				var previousCheck = previousChecks[i];
+				checkResults.removeChild(previousCheck);
+			}
+		}
+	
+		// Add result attribute.
+		var resultValue = "false";
+		if(result != null && result == true) {
+			resultValue = "true";
+		}
+		settingsCheckNode.setAttribute("result", resultValue);
+		
+		// Add check results node.
+		checkResults.appendChild(settingsCheckNode);
+	
+		// Save modified settings.
+		saveSettings(false);
+	} catch (e) {
+		error("Unable to add result of check to settings: " + e.message);
+	}
+}
+
+/**
+ * Returns result of pre-evaluated check from settings node.
+ * 
+ * @param checkNode the check node for which to look in the settings
+ * "checkResults" nodes to verify if the check has been executed already.
+ * 
+ * @returns result of already evaluated check. Returns null if the check has
+ *          not been evaluated and saved to settings node before.
+ */
+function getSettingsCheckResult(checkNode) {
+	var result = null;
+	var previousChecks = getSettingsCheck(checkNode);
+	if (previousChecks != null) {
+		// Get latest check result.
+		var previousCheck = previousChecks[previousChecks.length-1];
+		var checkResult = previousCheck.getAttribute("result");
+		if (checkResult != null && checkResult == "true") {
+			result = true;
+		} else {
+			result = false;
+		}
+		dinfo("Found previously executed check with result '" + result + "'.");
+	}
+	return result;
+}
+
+/**
+ * Takes a check as a parameter and looks for the same check in the local
+ * settings database. If an identical check with results is found, then this
+ * check is returned in an array. Returns null if no identical check could be
+ * found in the local settings database.
+ * 
+ * @param checkNode check to seek for in local settings databse.
+ *  
+ * @returns Array of matching checks; returns null if no check match.
+ */
+function getSettingsCheck(checkNode) {
+	if (checkNode == null) {
+		return null;
+	}
+	var result = null;
+	var currentSettings = getSettings();
+
+	var checkResults = currentSettings.selectSingleNode("checkResults");
+
+	if (checkResults != null) {
+		var attributes = checkNode.attributes;
+
+		// Check whether attributes are defined.
+		if (attributes.length > 0) {
+			var attributesClause = "";
+			var checkMessage = "";
+			for (var iAttribute=0; iAttribute < attributes.length; iAttribute++) {
+				if (attributesClause != "") {
+					attributesClause += " and ";
+					checkMessage += ", ";
+				}
+				var node = attributes.item(iAttribute);
+				var attribute = node.nodeName;
+				var value = node.nodeValue.replace(new RegExp("\\\\", "g"), "\\\\");
+				attributesClause += "@" + attribute + "=\"" + value + "\"";
+				checkMessage += attribute + "='" + value +"'";
+			}
+			// Get all nodes which match the attributes.
+			dinfo("Searching for previously executed checks with attributes " + checkMessage);
+			var xPathQuery = "check[" + attributesClause + "]";
+			// dinfo("Query to find previously executed check: " + xPathQuery);
+			var checkNodes = checkResults.selectNodes(xPathQuery);
+
+			if (checkNodes != null) {
+				// Make sure the check nodes found do not contain any attributes
+				// not present in comparison node.
+				for (var iCheck=0; iCheck < checkNodes.length; iCheck++) {
+					var checkNode = checkNodes[iCheck];
+					// dinfo("Found previously executed check: " + checkNode.xml);
+					var checkAttributes = checkNode.attributes;
+					var allAttrFound = true;
+					
+					// Iterate over all attributes of the check node found and
+					// verify that the attribute is found in comparison node.
+					// (Except the result attribute)
+					for (var iAttr=0; iAttr < checkAttributes.length; iAttr++) {
+						var attrFound = false;
+						var checkAttrSettings = checkAttributes.item(iAttr).nodeName;
+
+						if (checkAttrSettings == "result") {
+							attrFound = true;
+						} else {
+							for (var iRefAttr=0; iRefAttr < attributes.length; iRefAttr++) {
+								var checkAttrRef = attributes.item(iRefAttr).nodeName;
+								if (checkAttrRef == checkAttrSettings) {
+									attrFound = true;
+									break;
+								}
+							}
+						}
+
+						// If attribute has not been found in comparison node
+						// Then the node contains different checks.
+						if (attrFound == false) {
+							allAttrFound = false;
+							break;
+						}
+					}
+					
+					// If all attributes were found in original query node then
+					// the check is identical to the one in the settings DB.
+					if (allAttrFound) {
+						if (result == null) {
+							result = new Array();
+						}
+						result.push(checkNode);
+					}
+				}
+			}
+			if (result != null) {
+				dinfo("Found " + result.length + " previously executed checks.");
+			} else {
+				dinfo("Unable to find any previously executed checks with these attributes.");
+			}
+		}
+	}
+	return result;
+}
+
 
 /**
  * Returns a list of package nodes (Array object) which have been scheduled for
@@ -3640,59 +5191,52 @@ function getSkippedRemoveNodes() {
  * 
  * @param XMLNode
  *            The XML node to get the variables from
- * @param dictionary
- *            Dictionary of type Scripting.Dictionary to which the the variables
- *            are written to (existing values are overwritten). In case null is
- *            supplied it returns a new dictionary object.
+ * @param array
+ *            Object of type Array to which the the variables are appended.
+ *            In case null is supplied it returns a new Array object.
+ *            Each array element is a dictionary object containing a key and
+ *            a value. The key is the variable name and the value is the
+ *            variable value to be assigned.
  * @return Object of type Scripting.Dictionary which contains all key/value
  *         pairs from the given XML node.
  */
-function getVariables(XMLNode, dictionary) {
+function getVariables(XMLNode, array) {
 	// a new empty array of variables
-	var variables;
+	var variables = null;
 
 	// make sure variables is either created or assigned
-	if(dictionary == null) {
-		variables = new ActiveXObject("Scripting.Dictionary");
+	if(array == null) {
+		// variables = new ActiveXObject("Scripting.Dictionary");
+		variables = new Array();
 	} else {
-		variables = dictionary;
+		variables = array;
 	}
 
-	// create a shell to expand variables immediately
-	var shell = new ActiveXObject("WScript.Shell");
 	var variableNodes = XMLNode.selectNodes("variable");
 
 	// Perform host matching on variables.
-	variableNodes = getHostMatches(variableNodes, true);
+	variableNodes = filterConditionalNodes(variableNodes, true);
 
 	for (var i=0; i < variableNodes.length; i++) {
 		var variableName = variableNodes[i].getAttribute("name");
 		var variableValue = variableNodes[i].getAttribute("value");
 
+		if (variableName == null || variableValue == null) {
+			error("Incomplete variable specification found. " +
+					"Variable name is '" + variableName + "' and variable value is '" +
+					variableValue + "'. Ignoring variable.");
+			continue;
+		}
+		
 		// Expand environment variables in value.
-		variableValue = shell.ExpandEnvironmentStrings(variableValue);
+		// variableValue = shell.ExpandEnvironmentStrings(variableValue);
 		dinfo("Got variable '" + variableName + "' of value '" + variableValue + "'");
 
-		// remove eventually existing variable
-		// I don't like to use
-		// variables.Item(variableName)=variableValue;
-		// because my IDE/parser treats it as an error:
-		// "The left-hand side of an assignment must be a variable"
-		try {
-			variables.Remove(variableName);
-		} catch(e) {
-			dinfo("Variable '" + variableName + "' was not defined before. Creating now.");
-		}
-		try {
-			variables.Add(variableName, variableValue);
-		} catch(e) {
-			var message = "Variable '" + variableName + "' of value '" + variableValue + "'" +
-				" could not be assigned to dictionary!";
-			if (isQuitOnError()) {
-				throw new Error(message);
-			}
-			error(message);
-		}
+		var variable = new ActiveXObject("Scripting.Dictionary");
+		variable.Add(variableName, variableValue);
+		
+		// Add to variables list.
+		variables.push(variable);
 	}
 
 	return variables;
@@ -3705,9 +5249,9 @@ function getVariables(XMLNode, dictionary) {
  * 
  */
 function installPackage(packageNode) {
-	// return value
+	// Initialize return value.
 	var success = false;
-
+	
 	var packageName = getPackageName(packageNode);
 	var packageID   = getPackageID(packageNode);
 	var packageRev  = getPackageRevision(packageNode);
@@ -3724,10 +5268,19 @@ function installPackage(packageNode) {
 		"), Revision " + packageRev + ", (execute flag is '" + executeAttr +
 		"', notify flag is '" + notifyAttr + "').");
 
-
 	 // search for the package in the local settings
 	var installedPackage = getSettingNode(packageID);
 
+	// Check if package is manually installed.
+	if (installedPackage != null) {
+		var isManual = getPackageManualInstallation(installedPackage);
+		if (isManual == true) {
+			// Transfer manual install flag to new package.
+			setPackageManualInstallation(packageNode, true);
+		}
+	}
+	
+	
 	// if set then the package installation will be bypassed
 	var bypass = false;
 	// type of installation "install" or "upgrade"
@@ -3773,180 +5326,137 @@ function installPackage(packageNode) {
 		bypass = false;
 		// evaluate what do do with the package
 
-		if (executeAttr == "always") {
-			// ALWAYS EXECUTION PACKAGE
-			/*
-			 * packages with exec attribute "always" will be installed on each turn regardless of their version.
-			 */
-			bypass = false;
-			installType = typeInstall;
+		// Get action of package to be installed.
+		var packageAction = getPackageInstallAction(packageNode);
+		
+		// Evaluate installation actions.
+		switch (packageAction) {
+		case "none":
+			// No package actions shall be performed.
+			dinfo(packageMessage + "Already installed.");
+			installType = typeUpgrade;
+			bypass = true;
+			success = true;
+			break;
+
+		case "install":
+			// Package needs to be installed.
 			dinfo(packageMessage + "Prepared for installation.");
+			installType = typeInstall;
+			bypass = false;
+			success = false;
 
-		} else {
-			// evaluate type of installation (install/upgrade/skip)
-			// install
-			if (installedPackage == null) {
-				// ONE-TIME INSTALL PACKAGE, NOT INSTALLED YET (according to
-				// settings)
-				// install the package after checking that it is not installed
-				// already
-				/*
-				 * there is a slight chance that the package check of a new package returns true in case an old package
-				 * is installed. In such case the package will be marked as "installed" immediately. Next update will
-				 * update it to the new version then.
-				 */
-				dinfo(packageMessage + "Not in local package database.");
-
-				if (installCheckPolicy == "never") {
-					// Checks shall be bypassed and package is installed in any case.
-					bypass = false;
-					success = false;
-					installType = typeInstall;
-					dinfo(packageMessage + "Skipping checks whether package is already installed.");
-				} else {
-					if (isInstalled(packageNode)) {
-						info(packageMessage +
-							"Already installed (checks succeeded). Checking dependencies and chained packages.");
-	
-						// append new node to local xml
-						addSettingsNode(packageNode, true);
-	
-						// install all dependencies
-						var depSuccess = installPackageReferences(packageNode, "dependencies");
-						if (depSuccess) {
-							info(packageMessage +
-								 "Package and all dependencies are already installed. Skipping.");
-	
-						} else {
-							info(packageMessage +
-								"Installed but at least one dependency is missing.");
-						}
-	
-						// install all chained packages
-						var chainedSuccess = installPackageReferences(packageNode, "chained");
-						if (chainedSuccess) {
-							info(packageMessage +
-								 "Package and all chained packages are already installed. Skipping.");
-	
-						} else {
-							info(packageMessage +
-							"Installed but at least one chained package is missing.");
-						}
-	
-						bypass = true;
-						installType = typeInstall;
-	
-						// still set success to true since the package seems to be
-						// installed properly (check succeed)
-						success = true;
-	
-					} else {
-						// package not installed
-						bypass = false;
-						success = false;
-						installType = typeInstall;
-						info(packageMessage +
-							"Not installed (checks failed). Preparing installation.");
-					}
-				}
-
-			// upgrade
+			// If execute attribute is set to "always" just continue with installation.
+			if (executeAttr == "always") {
+				break;
+			}
+			if (installCheckPolicy == "never") {
+				// Checks shall be bypassed and package is installed in any case.
+				dinfo(packageMessage + "Skipping checks whether package is already installed.");
 			} else {
-				// compare versions
-				var comparisonResult = versionCompare(packageRev, getPackageRevision(installedPackage));
-				if (comparisonResult > 0) {
-					// ONE-TIME INSTALL PACKAGE, NEW REVISION
+				// Default is to execute checks first in order to evaluate if
+				// package is already installed.
+				if (isInstalled(packageNode)) {
 					info(packageMessage +
-						"Already installed but version mismatch.\n" +
-						"Installed revision: '" + getPackageRevision(installedPackage) + "'\n" +
-						"Available revision: '" + packageRev + "'.\n" +
-						"Preparing upgrade."
-						);
-					// Verify whether the package shall use the checks defined to verify if it is up-to-date already.
-					if (upgradeCheckPolicy == "always" && isInstalled(packageNode)) {
-						dinfo(packageMessage +
-								"Forced checks on upgrades succeeded. Package already up to date.");
-						// Update local package database.
-						addSettingsNode(packageNode, true);
+						"Already installed (checks succeeded). Checking dependencies and chained packages.");
 
-						// Package does not need to be upgraded.
-						bypass = true;
-						success = true;
-						installType = typeUpgrade;						
+					// append new node to local xml
+					addSettingsNode(packageNode, true);
+
+					// install all dependencies
+					var depSuccess = installPackageReferences(packageNode, "dependencies");
+					if (depSuccess) {
+						info(packageMessage +
+							 "Package and all dependencies are already installed. Skipping.");
+
 					} else {
-						// Package needs to be upgraded.
-						bypass = false;
-						success = false;
-						installType = typeUpgrade;						
+						info(packageMessage +
+							"Installed but at least one dependency is missing.");
 					}
 
-				// downgrade
-				} else if (comparisonResult < 0) {
-					// ONE-TIME INSTALL PACKAGE, DOWNGRADE
-					info(packageMessage +
-						"Already installed but version mismatch.\n" +
-						"Installed revision '" + getPackageRevision(installedPackage) + "'\n" +
-						"Available revision: '" + packageRev + "'.\n" +
-						"Preparing downgrade."
-						);
-					// Verify whether the package shall use the checks defined to verify if it is already downgraded.
-					if (downgradeCheckPolicy == "always" && isInstalled(packageNode)) {
-						dinfo(packageMessage +
-							"Forced checks on downgrade succeeded. Package already downgraded.");
-						// Package does not need to be downgraded.
-						bypass = true;
-						success = true;
-						installType = typeDowngrade;
-						
+					// install all chained packages
+					var chainedSuccess = installPackageReferences(packageNode, "chained");
+					if (chainedSuccess) {
+						info(packageMessage +
+							 "Package and all chained packages are already installed. Skipping.");
+
 					} else {
-						// Package needs to be downgraded.
-						bypass = false;
-						success = false;
-						installType = typeDowngrade;
+						info(packageMessage +
+						"Installed but at least one chained package is missing.");
 					}
 
-				// skip in case of execute=once, otherwise check.
+					// Bypass installation as installations seems to be done already.
+					bypass = true;
+					installType = typeInstall;
+
+					// Still set success to true since the package seems to be
+					// installed properly (check succeed).
+					success = true;
+
 				} else {
-					// ONE-TIME INSTALL PACKAGE, ALREADY INSTALLED
-
-					if (isForceInstall()) {
-						// if installation is forced, install anyway
-						info(packageMessage + "Already installed. Forcing re-installation");
-						bypass = false;
-						success = false;
-						installType = typeInstall;
-					} else {
-						// if execute is 'once' then package checks are not
-						// executed. We just
-						// trust that the package is installed
-						if (executeAttr == "once") {
-							dinfo(packageMessage + "Installed already.");
-							bypass = true;
-							success = true;
-							installType = typeUpgrade;
-						} else {
-							// in case the no execution attribute is defined
-							// check real package state
-							if (isInstalled(installedPackage)) {
-								dinfo(packageMessage + "Already installed. Skipping.");
-								bypass = true;
-								success = true;
-								installType = typeUpgrade;
-							} else {
-								// package not installed
-								dinfo(packageMessage + "Installed but checks failed. Re-Installing.");
-								bypass = false;
-								success = false;
-								installType = typeInstall;
-							}
-						}
-					}
+					// Package not installed yet. Perform normal installation.
+					info(packageMessage +
+						"Not installed (checks failed). Preparing installation.");
 				}
 			}
+			break;
+
+		case "upgrade":
+			// Package needs to be upgraded.
+			dinfo(packageMessage + "Prepared for upgrade.");
+			installType = typeUpgrade;
+			bypass = false;
+			success = false;
+
+			// If check policy is set to "always" then verify if the upgrade
+			// might have been performed already.
+			if (upgradeCheckPolicy == "always" && isInstalled(packageNode)) {
+				// Package marked for upgrade but upgrade is not necessary.
+				dinfo(packageMessage +
+						"Forced checks on upgrades succeeded. Package already up to date.");
+
+				// Update local package database.
+				addSettingsNode(packageNode, true);
+
+				// Package does not need to be upgraded.
+				bypass = true;
+				success = true;
+			}
+			break;
+
+		case "downgrade":
+			// Package needs to be downgraded.
+			dinfo(packageMessage + "Prepared for downgrade.");
+			installType = typeDowngrade;
+			bypass = false;
+			success = false;
+
+			// If check policy is set to "always" then verify if the downgrade
+			// might have been performed already.
+			if (downgradeCheckPolicy == "always" && isInstalled(packageNode)) {
+				dinfo(packageMessage +
+					"Forced checks on downgrade succeeded. Package already downgraded.");
+
+				// Update local package database.
+				addSettingsNode(packageNode, true);
+
+				// Package does not need to be downgraded.
+				bypass = true;
+				success = true;
+			}
+			break;
+
+		default:
+			bypass = true;
+			error("Unknown package action: " + packageAction);
+			break;
 		}
 	}
 
 	if (!bypass) {
+		// Store current environment.
+		var previousEnv = getEnv();
+
 		try {
 			// install dependencies
 			var depInstallSuccess = installPackageReferences(packageNode, "dependencies");
@@ -3968,9 +5478,8 @@ function installPackage(packageNode) {
 			var rebootPostponed = false;
 
 			// Generate the correct environment.
-			saveEnv();
 
-			// set package specific environment
+			// Set package specific environment.
 			loadPackageEnv(packageNode);
 
 			// Select command lines to install.
@@ -3978,27 +5487,27 @@ function installPackage(packageNode) {
 			dinfo("Install type: " + installType);
 			if (installType == typeUpgrade) {
 				// installation is an upgrade
-				cmds = getPackageCmdUpgrade(packageNode);
+				cmds = getPackageCmdUpgrade(packageNode, null);
 				dinfo("Fetched " + cmds.length + " upgrade command(s).");
 			} else if (installType == typeDowngrade) {
 				// prepare downgrade
-				cmds = getPackageCmdDowngrade(packageNode);
+				cmds = getPackageCmdDowngrade(packageNode, null);
 				dinfo("Fetched " + cmds.length + " downgrade command(s).");
 			}else {
 				// installation is default
-				cmds = getPackageCmdInstall(packageNode);
+				cmds = getPackageCmdInstall(packageNode, null);
 				dinfo("Fetched " + cmds.length + " install command(s).");
 			}
 
-			// download files (if any)
+			// Get downloads from package node (if any).
 			var downloadNodes = getDownloads(packageNode, null);
-			// append command downloads
+			// Append downloads from command node.
 			for (var iCommands = 0; iCommands < cmds.length; iCommands++) {
 				var commandNode = cmds[iCommands ];
 				getDownloads(commandNode, downloadNodes);
 			}
 
-			// download all specified downloads
+			// Download all specified downloads.
 			var downloadResult = downloadAll(downloadNodes);
 			if (downloadResult != true) {
 				var failureMessage = "Failed to download all files.";
@@ -4014,6 +5523,10 @@ function installPackage(packageNode) {
 				// execute commands
 				var cmdNode = cmds[iCmd];
 				var cmd = getCommandCmd(cmdNode);
+				if(cmd == null) {
+					error("Error: Command missing. Please fix the package. Ignoring command.");
+					continue;
+				}
 				var timeout = getCommandTimeout(cmdNode);
 				var workdir = getCommandWorkdir(cmdNode);
 
@@ -4077,7 +5590,7 @@ function installPackage(packageNode) {
 			}
 
 			// packages with checks have to pass the isInstalled() test
-			if (getPackageChecks(packageNode).length > 0 && !isInstalled(packageNode)) {
+			if (getChecks(packageNode).length > 0 && !isInstalled(packageNode)) {
 				// package failed for now
 				success = false;
 
@@ -4148,7 +5661,7 @@ function installPackage(packageNode) {
 			// restore old environment
 			dinfo("Restoring previous environment.");
 			// restore previous environment
-			loadEnv();
+			loadEnv(previousEnv);
 		}
 	}
 	return success;
@@ -4233,14 +5746,36 @@ function installPackage(packageNode) {
 
 /**
  * Installs a package by name.
+ * 
+ * @param name Package ID of package to be installed.
+ * @param manualInstall Boolean value specifying whether the package is
+ *        manually added. These packages are handled differently and not
+ *        removed during synchronization. 
  */
-function installPackageName(name) {
+function installPackageName(name, manualInstall) {
+	// Check package name.
+	if (name == null || name == "") {
+		info("Package ID missing!");
+		return;
+	}
+
+	// Query manual installation flag.
+	var isManual = false;
+	if (manualInstall != null && manualInstall == true) {
+		isManual = true;
+	}
+
 	// Query the package node.
 	var node = getPackageNode(name);
 
 	if (node == null) {
 		info("Package " + name + " not found!");
 		return;
+	}
+	
+	// Set manual installation flag.
+	if (isManual) {
+		setPackageManualInstallation(node, true);
 	}
 
 	 installPackage(node);
@@ -4363,40 +5898,24 @@ function isInstalled(packageNode) {
 	dinfo ("Checking existence of package: " + packageName);
 
 	// Get a list of checks to perform before installation.
-	var checkNodes = getPackageChecks(packageNode);
+	var checkNodes = getChecks(packageNode);
 
 	// When there are no check conditions, say "not installed".
 	if (checkNodes.length == 0) {
 		return false;
 	}
 
-	// save current environment
-	saveEnv();
+	// Save current environment.
+	var previousEnv = getEnv();
+
 	// load package specific environment
 	loadPackageEnv(packageNode);
 
-	// Loop over every condition check.
-	// If all are successful, we consider package as installed.
-	for (var i = 0; i < checkNodes.length && result != false; i++) {
-		try {
-			if (!checkCondition(checkNodes[i])) {
-				result = false;
-			}
-		} catch (err) {
-			message = "Error evaluating package check for package '" + packageName +
-						"': " + err.description;
-			if (isQuitOnError()) {
-				// restore environment
-				loadEnv();
-				throw new Error(message);
-			} else {
-				error(message);
-				result = false;
-			}
-		}
-	}
+	// Verify checks
+	result = checkAll(checkNodes);
+
 	// restore environment
-	loadEnv();
+	loadEnv(previousEnv);
 
 	return result;
 }
@@ -4411,7 +5930,7 @@ function isNoDownload() {
 }
 
 /**
- * Returns current status of /forceremove parameter
+ * Returns current status of /noforcedremove parameter
  * 
  * @return true in case forced remove is enabled, false if it is disabled
  */
@@ -4447,7 +5966,7 @@ function isNoRemove() {
 }
 
 /**
- * Returns if the noRuningState flag is set or not.
+ * Returns if the noRunningState flag is set or not.
  * 
  * @return true if noRunningState flag is set, false if noRunningState is not
  *         set (boolean)
@@ -4506,6 +6025,16 @@ function isSkipEventLog() {
 }
 
 /**
+ * Returns current state of event log fallback mode (logging to STDOUT instead
+ * of event log.
+ * 
+ * @returns {Boolean} Current status of event log fallback mode.
+ */
+function isEventLogFallback() {
+	return eventLogFallback;
+}
+
+/**
  * Returns true if quiet mode is on. False otherwise.
  * 
  * @return true if quiet flag is set, false if it is unset (boolean)
@@ -4526,7 +6055,7 @@ function isQuitOnError() {
 
 /**
  * Checks if a package is a zombie package which means that it exists within the
- * locale package database (wpkg.xml) but not on server database (packages.xml)
+ * locale package database (wpkg.xml) but not on server database (packages.xml).
  * 
  * @return true in case the package is a zombie, false otherwise
  */
@@ -4559,6 +6088,84 @@ function isZombie(packageNode) {
 	return zombie;
 }
 
+
+/**
+ * Query and print local host information (read from the host where wpkg.js is
+ * executed).
+ */
+function queryHostInformation() {
+	// Reset cache for host information.
+	resetHostInformationCache();
+
+	var hostInfoAttributes = getHostInformation();
+	var hostInfo = hostInfoAttributes.keys().toArray();
+	// Initialize output message.
+	var message = "Host information attributes from local host:\n";
+	// Fetch all host information attributes.
+	for (var i=0; i < hostInfo.length; i++) {
+		var hostInfoKey = hostInfo[i];
+		message += "    " + hostInfoKey + ":";
+
+		// Pad label to 20 characters (minus one for the colon ":").
+		var padding = 19 - hostInfoKey.length;
+		for (var iPadding=0; iPadding < padding; iPadding++) {
+			message += " ";
+		}
+		message += hostInfoAttributes.Item(hostInfoKey) + "\n";
+	}
+	message += "\n\n";
+
+	// If remote query mode is active reset host information.
+	if (getQueryMode() == "remote") {
+		dinfo("Query mode: remote");
+		getSettingHostAttributes();
+	}
+	
+	// Print message.
+	alert(message);
+}
+
+
+/**
+ * Query and print host information fread from settings file. This requires
+ * that host information is available in settings file. You must have
+ * settingsHostInfo enabled in your configuration.
+ */
+function queryHostInformationFromSettings() {
+	// Fetch settings.
+	var settings = getSettings();
+	var attributes = settings.attributes;
+
+	// Initialize output message.
+	var message = "Host information attributes from settings database:\n";
+
+	// Check whether attributes are defined.
+	if (attributes.length > 0) {
+	
+		for (var iAttribute=0; iAttribute < attributes.length; iAttribute++) {
+			var node = attributes.item(iAttribute);
+			var attribute = node.nodeName;
+			var value = node.nodeValue;
+
+			message += "    " + attribute + ":";
+	
+			// Pad label to 20 characters (minus one for the colon ":").
+			var padding = 19 - attribute.length;
+			for (var iPadding=0; iPadding < padding; iPadding++) {
+				message += " ";
+			}
+			message += value + "\n";
+		}
+	} else {
+		message += "    No host attributes found in settings database.\n" +
+			"Make sure \"settingsHostInfo\" is enabled in your configuration.\n";
+	}
+	message += "\n\n";
+
+	// Print message.
+	alert(message);
+}
+
 /**
  * Queries all available packages (from package database and local settings) and
  * prints a quick summary.
@@ -4577,10 +6184,10 @@ function queryAllPackages() {
 
 	// query all packages
 	for (var i = 0; i < packageNodes.length; i++) {
-		message += queryPackage(packageNodes[i]) + "\n\n";
+		message += queryPackage(packageNodes[i], null) + "\n\n";
 	}
 
-	info(message);
+	alert(message);
 }
 
 /**
@@ -4594,33 +6201,61 @@ function queryInstalledPackages() {
 	var message = "Packages currently installed:\n";
 
 	for (var i = 0; i < packageNodes.length; i++) {
-		message += queryPackage(packageNodes[i]) + "\n\n";
+		message += queryPackage(packageNodes[i], null) + "\n\n";
 	}
 
-	info(message);
+	alert(message);
 }
 
 /**
  * Show the user information about a specific package.
  * 
  * @param packageNode
- *            the package node to print information of
+ *            The package node to print information of
+ * @param packageAction
+ *            Optional argument to include the action applied to the package
+ *            in the package information. If set to null the package action
+ *            information is omitted from the output.
  * @return string representing the package information
  */
-function queryPackage(packageNode) {
+function queryPackage(packageNode, packageAction) {
 	var message = "";
 	if (packageNode != null) {
-		message = getPackageName(packageNode) + "\n";
-		message += "    ID:          " + getPackageID(packageNode) + "\n";
-		message += "    Revision:    " + getPackageRevision(packageNode) + "\n";
-		message += "    Reboot:      " + getPackageReboot(packageNode) + "\n";
-		message += "    ExecAttribs: " + getPackageExecute(packageNode) + "\n";
 		var settingNode = getSettingNode(getPackageID(packageNode));
-		if (settingNode != null && getPackageID(settingNode) == getPackageID(packageNode)) {
-			message += "    Status:      Installed\n";
-		} else {
-			message += "    Status:      Not Installed\n";
+		var executeAttribute = getPackageExecute(packageNode);
+		if (executeAttribute == null || executeAttribute == "") {
+			executeAttribute = "-";
 		}
+
+		message = getPackageName(packageNode) + "\n";
+		message += "    ID:                " + getPackageID(packageNode) + "\n";
+		
+		if (settingNode != null && packageAction != null) {
+			var newPackageRevision = getPackageRevision(packageNode);
+			var oldPackageRevision = getPackageRevision(settingNode);
+			if (newPackageRevision != oldPackageRevision) {
+				message += "    Revision (new):    " + getPackageRevision(packageNode) + "\n";
+				message += "    Revision (old):    " + getPackageRevision(settingNode) + "\n";
+			} else {
+				message += "    Revision:          " + getPackageRevision(packageNode) + "\n";
+			}
+		} else {
+			message += "    Revision:          " + getPackageRevision(packageNode) + "\n";
+		}
+		
+		if (packageAction != null) {
+			message += "    Action:            " + packageAction + "\n";
+		}
+
+		message += "    Reboot:            " + getPackageReboot(packageNode) + "\n";
+		message += "    Execute:           " + executeAttribute + "\n";
+		message += "    Priority:          " + getPackagePriority(packageNode) + "\n";
+		if (settingNode != null) {
+			message += "    Status:            Installed\n";
+		} else {
+			message += "    Status:            Not Installed\n";
+		}
+		
 	} else {
 		message += "No such package\n";
 	}
@@ -4632,58 +6267,112 @@ function queryPackage(packageNode) {
  * Shows the user a list of packages that are currently not installed.
  */
 function queryUninstalledPackages() {
-	// create a string to append package descriptions to
+	// Create a string to append package descriptions to.
 	var message = "Packages not installed:\n";
 
-	// get list of all available packages from package database
+	// Get list of all available packages from package database.
 	var packageNodes = getPackageNodes();
 
-	// check for each package if it is installed
+	// Check for each package if it is installed.
 	for (var i = 0; i < packageNodes.length; i++) {
 		if (getSettingNode(getPackageID(packageNodes[i])) == null) {
-			message += queryPackage(packageNodes[i]) + "\n\n";
+			message += queryPackage(packageNodes[i], null) + "\n\n";
 		}
 	}
-	info(message);
+
+	alert(message);
 }
 
 /**
- * Show the user a list of packages that can be updated.
+ * Query packages listed in the current profile.
+ * @param listInstall List packages which are pending to be installed.
+ * @param listUpgrade List packages which are pending to be upgraded.
+ * @param listDowngrade List packages which are pending to be downgraded.
+ * @param listRemove List packages which are pending to be removed.
+ * @param listUnmodified List packages which are not modified during synchronization.
  */
-function queryUpgradablePackages() {
-	// Retrieve currently installed and installable nodes.
-	var installedNodes = getSettingNodes();
-	var availableNodes = getPackageNodes();
+function queryProfilePackages(listInstall, listUpgrade, listDowngrade, listRemove, listUnmodified) {
+	// Message to be shown as a result of query.
+	var message = "Current profile packages:\n";
 
-	// Create a string to append package descriptions to.
-	var message = "";
+	// Message which is appended when system is modified (includes execute="change" packages).
+	var messageOnChangeOnly = "";
 
-	for (var i = 0; i < installedNodes.length; i++) {
-		var installedNode       = installedNodes[i];
-		var instPackageId       = getPackageID(installedNode);
-		var instPackageRevision = getPackageRevision(installedNode);
-		var instPackageExecAttr = getPackageExecute(installedNode);
-		if (instPackageExecAttr == "") {
-			instPackageExecAttr = "none";
+	// Flag whether the system would be modified when WPKG is run.
+	var systemModified = false;
+
+	var profilePackageNodes = getProfilePackageNodes();
+	// Read all packages applying to current profile.
+	for (var i=0; i<profilePackageNodes.length; i++) {
+		var packageNode = profilePackageNodes[i];
+
+		// Check package action which would be applied during synchronization.
+		var packageAction = getPackageInstallAction(packageNode);
+
+		// "none" No action; package installed already
+		// "install" Installation, package is new on the host
+		// "upgrade" Upgrade package which already exists on the system
+		// New version higher than installed version
+		// "downgrade" Downgrade package which already exists on the system
+		// New version lower than installed version
+		var packageMessage = "";
+		var changesSystem = false;
+		switch (packageAction) {
+		case "none":
+			if (listUnmodified) {
+				packageMessage += queryPackage(packageNode, "None") + "\n\n";
+			}
+			break;
+
+		case "install":
+			if (listInstall) {
+				packageMessage += queryPackage(packageNode, "Installation pending") + "\n\n";
+				changesSystem = true;
+			}
+			break;
+
+		case "upgrade":
+			if (listUpgrade) {
+				packageMessage += queryPackage(packageNode, "Upgrade pending") + "\n\n";
+				changesSystem = true;
+			}
+			break;
+
+		case "downgrade":
+			if (listDowngrade) {
+				packageMessage += queryPackage(packageNode, "Downgrade pending") + "\n\n";
+				changesSystem = true;
+			}
+			break;
+
+		default:
+			break;
 		}
-		for (var j = 0; j < availableNodes.length; j++) {
-			var availableNode        = availableNodes[j];
-			var availPackageId       = getPackageID(availableNode);
-			var availPackageRevision = getPackageRevision(availableNode);
-			if (instPackageId == availPackageId) {
-				if (versionCompare(availPackageRevision, instPackageRevision) > 0) {
-					message += getPackageName(availableNode) + "\n";
-					message += "    ID:           " + instPackageId + "\n";
-					message += "    Old Revision: " + instPackageRevision + "\n";
-					message += "    New Revision: " + availPackageRevision + "\n";
-					message += "    ExecAttribs:  " + instPackageExecAttr + "\n";
-					message += "    Status:       upgradeable\n";
-					message += "\n";
-				}
+		var executeAttribute = getPackageExecute(packageNode);
+		if (executeAttribute == "changed") {
+			messageOnChangeOnly += packageMessage;
+		} else {
+			message += packageMessage;
+			// If the package modifies the system also packages which are
+			// executed on change only shall be executed.
+			if (changesSystem) {
+				systemModified = changesSystem;
 			}
 		}
 	}
-	info(message);
+	if (systemModified) {
+		message += messageOnChangeOnly;
+	}
+	
+	// Print packages which are pending for removal.
+	if (listRemove) {
+		var removeList = getPackagesRemoved();
+		for (var i=0; i<removeList.length; i++) {
+			var packageNode = removeList[i];
+			message += queryPackage(packageNode, "Remove pending") + "\n\n";
+		}
+	}
+	alert(message);
 }
 
 /**
@@ -4703,6 +6392,11 @@ function removePackage(packageNode) {
 	var packageName = getPackageName(packageNode);
 	var packageID = getPackageID(packageNode);
 	var notifyAttr = getPackageNotify(packageNode);
+
+	// stores if the package needs a reboot after removing
+	var rebootRequired = false;
+	// stores if a postponed reboot should be scheduled
+	var rebootPostponed = false;
 
 	// Get package removal check policy.
 	var checkPolicy = getPackagePrecheckPolicyRemove(packageNode);
@@ -4779,7 +6473,7 @@ function removePackage(packageNode) {
 				success = false;
 			} else {
 				// Get a list of checks to perform before installation.
-				var checkNodes = getPackageChecks(packageNode);
+				var checkNodes = getChecks(packageNode);
 
 				if (checkNodes.length != 0) {
 					// package not installed - remove from local settings file
@@ -4814,26 +6508,46 @@ function removePackage(packageNode) {
 					error(failedRemove);
 				}
 			} else {
+				// Save environment.
+				var previousEnv = getEnv();
+				
 				try {
 					info("Removing " + packageName + " (" + packageID + ")...");
 
 					// select command lines to remove
-					var cmds = getPackageCmdRemove(packageNode);
-
-					// stores if the package needs a reboot after removing
-					var rebootRequired = false;
-
-					// stores if a postponed reboot should be scheduled
-					var rebootPostponed = false;
+					var cmds = getPackageCmdRemove(packageNode, null);
 
 					// set package specific environment
 					loadPackageEnv(packageNode);
 
+					// Get downloads from package node (if any).
+					var downloadNodes = getDownloads(packageNode, null);
+					// Append downloads from command node.
+					for (var iCommand = 0; iCommand < cmds.length; iCommand++) {
+						var commandNode = cmds[iCommand ];
+						getDownloads(commandNode, downloadNodes);
+					}
+
+					// Download all specified downloads.
+					var downloadResult = downloadAll(downloadNodes);
+					if (downloadResult != true) {
+						var failureMessage = "Failed to download all files.";
+						if (isQuitOnError()) {
+							throw new Error(failureMessage);
+						} else {
+							error(failureMessage);
+						}
+					}
+					
 					// execute all remove commands
 					for (var iCommand = 0; iCommand  < cmds.length; iCommand++) {
 						// execute commands
 						var cmdNode = cmds[iCommand ];
 						var cmd = getCommandCmd(cmdNode);
+						if(cmd == null) {
+							error("Error: Command missing. Please fix the package. Ignoring command.");
+							continue;
+						}
 						var timeout = getCommandTimeout(cmdNode);
 						var workdir = getCommandWorkdir(cmdNode);
 
@@ -4859,9 +6573,12 @@ function removePackage(packageNode) {
 									"exit code [" + result + "]. This exit code " +
 									"requires an immediate reboot.");
 
+								// Verify if the package is a zombie (not in package
+								// database any more). If it is a zombie, and not referenced
+								// in the profile then prevent endless reboots by removing
+								// the package from local database.
 								if(isZombie(packageNode)) {
-									// check if still referenced within the
-									// profile
+									// check if still referenced within the profile
 									var profilePackageArray = getProfilePackageNodes();
 									var referenceFound = false;
 									for (var iPackage = 0; iPackage < profilePackageArray.length; iPackage++) {
@@ -4871,8 +6588,7 @@ function removePackage(packageNode) {
 										}
 									}
 									// if package is a zombie and not referenced
-									// within the profile
-									// remove the settings entry
+									// within the profile remove the settings entry
 									if(!referenceFound && !isNoForcedRemove()) {
 										removeSettingsNode(packageNode, true);
 										info("Removed '" + packageName + "' ("
@@ -4940,7 +6656,7 @@ function removePackage(packageNode) {
 					dinfo("Restoring previous environment.");
 
 					// restore previous environment
-					loadEnv();
+					loadEnv(previousEnv);
 				}
 			}
 
@@ -4950,7 +6666,7 @@ function removePackage(packageNode) {
 			// Use package checks to prove if package has been removed.
 			// Zombies are removed in any case (even if uninstall failed) except
 			// if the
-			// "/noforcedremoval" parameter was set
+			// "/noforcedremove" parameter was set
 			if (!isInstalled(packageNode)) {
 				// Remove package node from local xml.
 				removeSettingsNode(packageNode, true);
@@ -4965,9 +6681,9 @@ function removePackage(packageNode) {
 					info("Removal of " + packageName + " successful.");
 				}
 			} else {
-				// check if package is a zombie
+				// Check if package is a zombie.
 				if(isZombie(packageNode)) {
-					// check if still referenced within the profile
+					// Check if still referenced within the profile.
 					var packageArray = getProfilePackageNodes();
 					var referenced = false;
 					for (var i=0; i < packageArray.length; i++) {
@@ -4976,9 +6692,8 @@ function removePackage(packageNode) {
 							break;
 						}
 					}
-					// if package is a zombie and not referenced within the
-					// profile
-					// remove the settings entry
+					// If package is a zombie and not referenced within the profile
+					// remove the settings entry.
 					if(!referenced && !isNoForcedRemove()) {
 						removeSettingsNode(packageNode, true);
 						warning("Errors occurred while removing '" + packageName + "' ("
@@ -5142,10 +6857,27 @@ function removeSettingsNode(packageNode, saveImmediately) {
 	}
 	// save settings if remove was successful
 	if (success && saveImmediately) {
-		saveSettings();
+		saveSettings(true);
 	}
 	return success;
 }
+
+/**
+ * Erases host information cache to enforce re-reading of host information when
+ * getter methods like getHostInformation(), getHostOS(), getLocale() etc are
+ * executed. 
+ */
+function resetHostInformationCache() {
+	// Empty caches.
+	hostName = null;
+	hostOs = null;
+	domainName = null;
+	ipAddresses = null;
+	hostGroups = null;
+	hostArchitecture = null;
+	hostAttributes = null;
+}
+
 
 /**
  * Sets state of multiple profile assignment.
@@ -5155,6 +6887,14 @@ function removeSettingsNode(packageNode, saveImmediately) {
  */
 function setApplyMultiple(newState) {
 	applyMultiple = newState;
+}
+
+/**
+ * Set new architecture for this host.
+ * @param newArchitecture Architecture to used for this host.
+ */
+function setArchitecture(newArchitecture) {
+	hostArchitecture = newArchitecture;
 }
 
 /**
@@ -5306,10 +7046,10 @@ function setNoDownload(newState) {
 }
 
 /**
- * Sets new value for the forcedremove flag.
+ * Sets new value for the noforcedremove flag.
  * 
  * @param newState
- *            new value for the forcedremove flag (boolean).
+ *            new value for the noforcedremove flag (boolean).
  */
 function setNoForcedRemove(newState) {
 	noForcedRemove = newState;
@@ -5358,7 +7098,29 @@ function setPackageID(packageNode, packageID) {
 }
 
 /**
- * Set a new packages node
+ * Set a new value for the manual installation flag of the given package.
+ * Manual installations are flagged only for packages which are installed via
+ * command line directly and not via synchronization.
+ * 
+ * @param packageNode package to be modified.
+ * @param manualInstall {Boolean} new value of package installation flag.
+ */
+function setPackageManualInstallation(packageNode, manualInstall) {
+	if (packageNode == null) {
+		error("No package node specified. Cannot set manual installation flag.");
+		return;
+	}
+	if (manualInstall == null) {
+		error("No manual installation flag value specified.");
+		return;
+	}
+	if (manualInstall == true) {
+		packageNode.setAttribute("manualInstall", "true");
+	}
+}
+
+/**
+ * Set a new packages node.
  * 
  * @param newPackages
  *            the new packages XML node to be used fro now on
@@ -5415,6 +7177,17 @@ function setProfiles(newProfiles) {
 			var profileNode = profileNodes[i];
 			setProfileID(profileNode, getProfileID(profileNode).toLowerCase());
 		}
+	}
+}
+
+/**
+ * Sets query mode to new state. Allowed states are "remote" and "local".
+ * 
+ * @param newState query mode value to be set.
+ */
+function setQueryMode(newState) {
+	if (newState != null && (newState == "remote" || newState == "local")) {
+		queryMode = newState;
 	}
 }
 
@@ -5499,9 +7272,31 @@ function setSettings(newSettings, saveImmediately) {
 	}
 	// save new settings
 	if(saveImmediately) {
-		saveSettings();
+		saveSettings(true);
 	}
 }
+
+/**
+ * Set path to local settings file (locak package database).
+ * The path might contain environment variables as well as the following
+ * expressions:
+ *	 [HOSTNAME]  Replaced by the executing hostname.
+ *	 [PROFILE]   Replaced by the concatenated list of profiles applied.
+ * @param path path to settings XML file.
+ */
+function setSettingsPath(path) {
+	if (path == null || path == "") {
+		error("Path to settings is required");
+		return;
+	}
+
+	var wshObject = new ActiveXObject("WScript.Shell");
+	var expandedSettingsPath = wshObject.ExpandEnvironmentStrings(path);
+
+	// Set global variable holding settings file path.
+	settings_file = expandedSettingsPath;
+}
+
 
 /**
  * Sets the system changed attribute to true. Call this method to make WPKG
@@ -5523,6 +7318,16 @@ function setSystemChanged() {
  */
 function setSkipEventLog(newValue) {
 	skipEventLog = newValue;
+}
+
+/**
+ * Set event log fallback to new value (enabled/disabled).
+ * 
+ * @param newValue
+ *           value to be used for the event log fallback flag.
+ */
+function setEventLogFallback(newValue) {
+	eventLogFallback = newValue;
 }
 
 /**
@@ -5553,7 +7358,6 @@ function sortPackageNodes(packageNodes, sortBy, sortOrder) {
 			var prio2;
 			var priVal1 = null;
 			var priVal2 = null;
-			var pkg = sortedPackages[j];
 
 			switch(sortBy) {
 				case "NAME":
@@ -5611,8 +7415,13 @@ function sortSettings() {
 	// sort current setting nodes
 	var sortedPackages = sortPackageNodes(getSettingNodes(), "NAME", 1);
 
+	// Get setting checks.
+	var settingsChecks = getSettingsCheckResults();
+	
 	// create new (empty) settings node
 	var sortedSettings = createSettings();
+	sortedSettings.appendChild(settingsChecks);
+	
 	// use this settings node
 	setSettings(sortedSettings, false);
 
@@ -5627,13 +7436,6 @@ function sortSettings() {
  * adding, removing or upgrading packages.
  */
 function synchronizeProfile() {
-	/**
-	 * get package IDs of all packages which should be installed according to
-	 * the profile. Regardless if the package exists within the package
-	 * database.
-	 */
-	// var profilePackageIDs = getProfilePackageIDs();
-
 	// send message to client
 	logStatus("Starting software synchronization");
 
@@ -5642,40 +7444,24 @@ function synchronizeProfile() {
 	 * dependencies). This includes package dependencies as well.
 	 */
 	var profilePackageNodes = getProfilePackageNodes();
-	dinfo("Synchronizing: Number of packages referenced by profile: " + profilePackageNodes.length);
+	dinfo("Synchronizing. Number of packages referenced by profile: " + profilePackageNodes.length + ".");
 
-	// get list of currently installed packages
-	var installedPackages = getSettingNodes();
-
-	// array to store packages to be removed
-	var removablesArray = new Array();
-
-	// Loop over each installed package and check whether it still applies.
-	for (var iInstalledPkg = 0; iInstalledPkg < installedPackages.length; iInstalledPkg++) {
-		var installedPackageNode = installedPackages[iInstalledPkg];
-		dinfo("Found installed package '" + getPackageName(installedPackageNode) + "' (" +
-				getPackageID(installedPackageNode) + ").");
-
-		// Search for the installed package in available packages.
-		var found = false;
-
-		for (var j=0; j < profilePackageNodes.length; j++) {
-			var profilePackageNode = profilePackageNodes[j];
-			if (getPackageID(installedPackageNode) == getPackageID(profilePackageNode)) {
-				dinfo("Package '" + getPackageName(installedPackageNode) + "' (" +
-						getPackageID(installedPackageNode) + ") found in profile packages.");
-				found = true;
-				break;
+	var localPackages = getPackagesManuallyInstalled();
+	if (localPackages.length > 0) {
+		dinfo("Synchronizing. Locally installed packages: " + localPackages.length + ".");
+		for(var i=0; i<localPackages.length; i++) {
+			// Fetch latest package node to schedule installation/upgrade.
+			var localPackage = localPackages[i];
+			var latestVersion = getPackageNode(getPackageID(localPackage));
+			if (latestVersion != null) {
+				profilePackageNodes.push(latestVersion);
 			}
 		}
-
-		// If package is no longer present, mark for remove.
-		if (!found) {
-			dinfo("Marking package '" + getPackageName(installedPackageNode) + "' (" +
-					getPackageID(installedPackageNode) + ") for remove");
-			removablesArray.push(installedPackageNode);
-		}
 	}
+
+	// Get list of packages scheduled for removal.
+	// This excludes manually installed packages except if they do not exist.
+	var removablesArray = getPackagesRemoved();
 
 	dinfo("Number of packages to remove: " + removablesArray.length);
 	logStatus("Number of packages to be removed: " + removablesArray.length);
@@ -5711,13 +7497,13 @@ function synchronizeProfile() {
 	// to the profile
 	// reverse-sort packages to remove the one with lowest priority first
 	var sortedRemovablesArray = sortPackageNodes(removablesArray, "PRIORITY", 1);
-	for (var iRomovables = 0; iRomovables < sortedRemovablesArray.length; iRomovables++) {
-		var removePkgNode = sortedRemovablesArray[iRomovables];
+	for (var iRemovables = 0; iRemovables < sortedRemovablesArray.length; iRemovables++) {
+		var removePkgNode = sortedRemovablesArray[iRemovables];
 		// remove package from system
 		// the settings node might have been changed during update before
 		// reload it.
 		logStatus("Remove: Removing package '" + getPackageName(removePkgNode) +
-				"' (" + (iRomovables+1) + "/" + sortedRemovablesArray.length + ")");
+				"' (" + (iRemovables+1) + "/" + sortedRemovablesArray.length + ")");
 		// removePackage(getSettingNode(getPackageID(removePkgNode)));
 		removePackageName(getPackageID(removePkgNode));
 	}
@@ -5790,6 +7576,8 @@ function saveXml(root, path) {
 	}
 	dinfo("Saving XML : " + path);
 	var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
+	var processing = xmlDoc.createProcessingInstruction("xml", "version='1.0' encoding='UTF-8'");
+	xmlDoc.insertBefore(processing, xmlDoc.firstChild);
 	xmlDoc.appendChild(root);
 	if (xmlDoc.save(path)) {
 		throw new Error(0, "Could not save XML document to " + path);
@@ -5798,11 +7586,33 @@ function saveXml(root, path) {
 
 /**
  * Creates a new root element of the specified name.
+ * 
+ * @param root
+ *           Root element name to be created. Might be prefixed by a namespace.
+ *           e.g. "packages" or "packages:packages"
+ * @param rootNS
+ *           Optionally specify a namespace.
+ *           e.g. "http://www.wpkg.org/packages"
  */
-function createXml(root) {
-	var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
+function createXml(root, rootNS) {
+	// Verify root node name.
+	if (root == null) {
+		return null;
+	}
+	// Evaluate namespace.
+	var nameSpace = rootNS;
+	if (nameSpace == null) {
+		nameSpace = "";
+	}
 
-	return xmlDoc.createNode(1, root, "");
+	// Create XML document.
+	var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
+	xmlDoc.async = false;
+
+	// Create root node.
+	var rootNode = xmlDoc.createNode(1, root, nameSpace);
+
+	return rootNode;
 }
 
 /**
@@ -5815,27 +7625,168 @@ function createXml(root) {
  * @param xmlDirectory
  *            optional path to directory where XML file(s) might can be found.
  *            Specify null if you do not want to read from a directory.
- * @param rootNode
- *            The name of the root node to merge from the XML files. e.g.
- *            specify "packages" to read all "<packages>" nodes.
+ * @param type
+ *            optional, type of XML to be loaded. If type is specified some
+ *            validation on XML structure is done like the verification of root
+ *            and child node names. In addition correct namespace is inserted
+ *            into generated XML document.
+ *            Supported types:
+ *            - settings (local WPKG database XML)
+ *            - hosts (hosts database)
+ *            - profiles (profile database)
+ *            - packages (package database)
+ *            - config (configuration file)
  * @return XML root node containing all nodes from the specified files.
  */
-function loadXml(xmlPath, xmlDirectory, rootNode) {
-	// create variable to return
-	var xmlRoot = null;
-	var source = new ActiveXObject("Msxml2.DOMDocument.3.0");
+function loadXml(xmlPath, xmlDirectory, type) {
+	// Initialize return variable.
+	var xmlDocument = new ActiveXObject("Msxml2.DOMDocument.3.0");
+	
+	// Validation variables.
+	// Name of XML root node. If null it will not be verified.
+	var rootNodeName = null;
 
+	// Namespace of XML if it is to be created.
+	var xmlNamespace = null;
+
+	// Name of child elements to be read if multiple files are read from directory.
+	var childElementNodeName = null;
+	
+	// Evaluate type.
+	var xmlType = type;
+	if (xmlType != null) {
+		switch (xmlType) {
+		case "settings":
+			rootNodeName = "wpkg";
+			// childElementNodeName = "package";
+			// Multiple child nodes (packages and check results).
+			childElementNodeName = null;
+			xmlNamespace = namespaceSettings;
+			break;
+
+		case "hosts":
+			rootNodeName = "wpkg";
+			childElementNodeName = "host";
+			xmlNamespace = namespaceHosts;
+			break;
+
+		case "profiles":
+			rootNodeName = "profiles";
+			childElementNodeName = "profile";
+			xmlNamespace = namespaceProfiles;
+			break;
+
+		case "packages":
+			rootNodeName = "packages";
+			childElementNodeName = "package";
+			xmlNamespace = namespacePackages;
+			break;
+
+		case "config":
+			rootNodeName = "config";
+			// Do not verify child nodes as there are multiple:
+			// - param
+			// - languages
+			childElementNodeName = null;
+			xmlNamespace = namespaceConfig;
+			break;
+
+		default:
+			break;
+		}
+	}
+	
+	// create variable to return
+	// var rootNodeName = "pkg:packages";
+	// var rootNodeName = "packages";
+	// source.setProperty("SelectionNamespaces", "xmlns:packages='http://www.wpkg.org/packages'");
+	var filePaths = new Array();
+	
+	// Read data from specified XML directory (load all XML from folder).
+	if (xmlDirectory != null) {
+		dinfo("Trying to read XML files from directory: " + xmlDirectory);
+		// check if directory exists
+		var fso = new ActiveXObject("Scripting.FileSystemObject");
+		if( fso.FolderExists( xmlDirectory ) ) {
+			var folder = fso.GetFolder(xmlDirectory);
+			var e = new Enumerator(folder.files);
+
+			// read all files
+			for( e.moveFirst(); ! e.atEnd(); e.moveNext() ) {
+				var file = e.item();
+				var filePath = xmlDirectory.replace( /\\/g, "/" ) + "/" + file.name;
+
+				// search for last "."
+				var dotLocation = file.name.toString().lastIndexOf('.');
+				var extension = file.name.toString().substr(dotLocation + 1, file.name.toString().length);
+
+				// make sure to read only .xml files
+				if(extension == "xml") {
+					// Add file to list of files to be read.
+					filePaths.push(filePath);
+				}
+			}
+			// Sort files by name (ASCII order).
+			filePaths.sort(null);
+		} else {
+			dinfo("Specified XML directory does not exist: " + xmlDirectory);
+		}
+	}
+
+	// Add XML single-file path to the list of files to be read.
 	if (xmlPath != null) {
-		dinfo("Trying to read XML file: " + xmlPath);
+		filePaths.push(xmlPath.replace( /\\/g, "/" ));
+	}
+
+	for( var i=0; i < filePaths.length; i++) {
+		var filePath = filePaths[i];
+		dinfo("Reading XML file: " + filePath);
+
+		// Read XML file from file system.
+		var xsl = new ActiveXObject("Msxml2.DOMDocument.3.0");
+		xsl.async = false;
+		xsl.validateOnParse = false;
+		/*
+		var str = "<?xml version=\"1.0\"?>\r\n";
+		str += "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" xmlns:wpkg=\"" + xmlNamespace + "\" version=\"1.0\">\r\n";
+		str += "    <xsl:output encoding=\"utf-8\" indent=\"yes\" method=\"xml\" version=\"1.0\"/>\r\n";
+		str += "    <xsl:template match=\"/\">\r\n";
+		str += "        <" + "wpkg:" + rootNodeName + ">\r\n";
+		str += "            <xsl:copy-of select=\"document('" +
+								filePath +
+								"')/wpkg:" + rootNodeName + "/child::*\"/>\r\n";
+		str += "            <xsl:copy-of select=\"document('" +
+								filePath +
+								"')/" + rootNodeName + "/child::*\"/>\r\n";
+		str += "        </" + "wpkg:" + rootNodeName + ">\r\n";
+		str += "    </xsl:template>\r\n";
+		str += "</xsl:stylesheet>\r\n";
+
+		xsl.loadXML(str);
+		*/
+		xsl.load(filePath);
+		// dinfo("XSLT: " + xsl.xml);
+
+		// Apply transforms.
+		var source = new ActiveXObject("Msxml2.DOMDocument.3.0");
 		source.async = false;
 		source.validateOnParse = false;
-		source.load(xmlPath);
-
+		try {
+			source.loadXML(source.transformNode(xsl));
+		} catch (e) {
+			var errorMessage = "Error parsing xml '" + filePath + "': " + e.description;
+			if (isQuitOnError()) {
+				throw new Error(errorMessage);
+			} else {
+				error(errorMessage);
+			}
+		}
+		
 		// check if there was an error when loading XML
 		if (source.parseError.errorCode != 0) {
 			var loadError = source.parseError;
-			var errorMessage = "Error parsing xml '" + xmlPath + "': " + loadError.reason + "\n" +
-							"File      " + xmlPath + "\n" +
+			var errorMessage = "Error parsing xml '" + filePath + "': " + loadError.reason + "\n" +
+							"File      " + filePath + "\n" +
 							"Line      " + loadError.line + "\n" +
 							"Linepos   " + loadError.linepos + "\n" +
 							"Filepos   " + loadError.filepos + "\n" +
@@ -5846,98 +7797,85 @@ function loadXml(xmlPath, xmlDirectory, rootNode) {
 				error(errorMessage);
 			}
 		} else {
-			dinfo("Successfully loaded XML file: " + xmlPath);
-			xmlRoot = source.documentElement;
-		}
-	}
+			// dinfo("Loaded: " + source.xml);
 
-	if (xmlDirectory != null) {
-		dinfo("Trying to read XML files from directory: " + xmlDirectory);
-		// check if directory exists
-		var fso = new ActiveXObject("Scripting.FileSystemObject");
-		if( fso.folderExists( xmlDirectory ) ) {
-			var folder = fso.GetFolder(xmlDirectory);
-			var e = new Enumerator(folder.files);
-			var root = rootNode;
-			if (root == null) {
-				var folderName = folder.Name;
-				// workaround since the root element of hosts.xml is not "hosts"
-				// but "wpkg"
-				if( folderName == "hosts" ) {
-					root = "wpkg";
+			// Verify document structure.
+			if (source.documentElement == null) {
+				var message = "No root element found in '" + filePath + "'.";
+				if (isQuitOnError()) {
+					throw new Error(message);
 				} else {
-					root = folderName;
+					error(message);
 				}
+				continue;
 			}
+			var xmlRootNodeName = source.documentElement.tagName;
 
-			// read all files
-			for( e.moveFirst(); ! e.atEnd(); e.moveNext() ) {
-				var file = e.item();
-				var filePath = xmlDirectory.replace( /\\/g, "/" ) + "/" + file.name;
-
-				// search for last "."
-				var DotSpot = file.name.toString().lastIndexOf('.');
-				var extension = file.name.toString().substr(DotSpot + 1, file.name.toString().length);
-
-				// make sure to read only .xml files
-				if(extension == "xml") {
-					dinfo("Reading XML file: " + filePath);
-					var str = "<?xml version=\"1.0\"?>\r\n";
-					str += "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\r\n";
-					str += "    <xsl:output encoding=\"ISO-8859-1\" indent=\"yes\" method=\"xml\" version=\"1.0\"/>\r\n";
-					str += "    <xsl:template match=\"/\">\r\n";
-					str += "        <" + root + ">\r\n";
-					str += "            <xsl:copy-of select=\""+ root + "/child::*\"/>\r\n";
-					str += "            <xsl:copy-of select=\"document('" +
-											filePath +
-											"')/" + root + "/child::*\"/>\r\n";
-					str += "                </" + root + ">\r\n";
-					str += "        </xsl:template>\r\n";
-					str += "</xsl:stylesheet>\r\n";
-
-					var xsl = new ActiveXObject( "Msxml2.DOMDocument.3.0" );
-					xsl.async = false;
-					xsl.loadXML( str );
-
-					// check if load was successful
-					if (xsl.parseError.errorCode != 0) {
-						var loadErr = xsl.parseError;
-						var errMsg = "Error parsing xml '" + filePath + "': " + loadErr.reason + "\n" +
-										"File      " + file.name + "\n" +
-										"Line      " + loadErr.line + "\n" +
-										"Linepos   " + loadErr.linepos + "\n" +
-										"Filepos   " + loadErr.filepos + "\n" +
-										"srcText   " + loadErr.srcText + "\n";
-						if (isQuitOnError()) {
-							throw new Error(errMsg);
-						} else {
-							error(errMsg);
-						}
-					} else {
-						// try to add to root element
-						try {
-							if (xmlRoot == null) {
-								xmlRoot = source.loadXML( source.transformNode( xsl ) ).documentElemet;
-							} else {
-								source.loadXML( source.transformNode( xsl ) );
-								xmlRoot = source.documentElement;
-							}
-						} catch (err) {
-							if (isQuitOnError()) {
-								throw new Error("Error reading file: " + filePath + "\n\n" +
-												 err.description);
-							} else {
-								error("Error reading file: " + filePath + "\n" + err.description);
-							}
-						}
+			// Check name spaces.
+			var rootComponents = xmlRootNodeName.split(":");
+			var rootElementName = xmlRootNodeName;
+			if (rootComponents.length > 1) {
+				// nameSpace = rootComponents[0];
+				rootElementName = rootComponents[1];
+			}
+			
+			// Verify if root element is correct.
+			if (rootNodeName != null && rootNodeName != rootElementName) {
+				// Element does not match expected root element name.
+				var message = "Invalid XML structure found. Root element '" +
+						rootElementName + "' does not match expected element name of '" +
+						rootNodeName + "'.";
+				if (isQuitOnError()) {
+					throw new Error(message);
+				} else {
+					error(message);
+				}
+				continue;
+			}
+			
+			// If this is the only document to read, then just return it.
+			if (filePaths.length <= 1) {
+				xmlDocument = source;
+				break;
+			} else {
+				// Merge document contents.
+				if (xmlDocument.documentElement == null) {
+					var rootName = rootElementName;
+					if (xmlNamespace != null) {
+						rootName = rootName + ":" + rootName;
 					}
+					var rootElement = createXml(rootName, xmlNamespace);
+					xmlDocument.appendChild(rootElement);
+				}
+				// Fetch all document nodes from loaded XML document.
+				var childPath;
+				if (childElementNodeName != null) {
+					childPath = childElementNodeName;
+				} else {
+					childPath = "*";
+				}
+				var documentNodes = source.documentElement.selectNodes(childPath);
+
+				// Add all nodes to XML document to be returned.
+				var xmlRoot = xmlDocument.documentElement;
+				for (var iDocumentNode=0; iDocumentNode < documentNodes.length; iDocumentNode++) {
+					xmlRoot.appendChild(documentNodes[iDocumentNode]);
 				}
 			}
-		} else {
-			dinfo("Specified XML directory does not exist: " + xmlDirectory);
 		}
 	}
-	return xmlRoot;
+	// In local (non-remote) mode the settings database read shall be reset in
+	// order to assure to re-build the cached check-results.
+	if (xmlType != null && xmlType == "settings" && getQueryMode() != "remote" ) {
+		var documentElement = xmlDocument.documentElement;
+		if (documentElement != null) {
+			var checkResultsNode = documentElement.selectSingleNode("checkResults");
+			if (checkResultsNode != null) {
+				documentElement.removeChild(checkResultsNode);
+			}
+		}
+	}
+	return xmlDocument.documentElement;
 }
 
 /**
@@ -6010,11 +7948,16 @@ function cleanup() {
 	// no need as we save on each settings modification now.
 	// saveSettings();
 
+	// If there is still something in the log buffer write it to a file.
+	if (logBuffer != null) {
+		initializeLog();
+	}
+
 	// close log file
 	// do not close the file if reboot is in progress
 	// this is done since there might still be some writes to the file
 	// before the reboot actually takes place
-	if (getLogLevel() > 0 && !rebooting && logfileHandler != null) {
+	if (getLogLevel() > 0 && !rebooting && getLogFile() != null) {
 		// close the log
 		getLogFile().Close();
 	}
@@ -6060,12 +8003,29 @@ function exit(exitCode) {
  * Initializes the system, all required variables...
  */
 function initialize() {
+	// Initialize configuration (read and set values).
+	initializeConfig();
+
+	// Parse command-line parameters.
+	parseArguments(getArgv());
+
+	// Print version number.
+	dinfo("WPKG " + WPKG_VERSION + " starting...");
+
+	// Inform to which value reboot command is set.
+	dinfo("Reboot-Cmd is " + getRebootCmd() + ".");
+
+	// Set quiet mode to desired value.
+	if (quiet != null) {
+		setQuiet(quiet);
+	} else {
+		setQuiet(quietDefault);
+	}
+	
 	// get argument list
 	var argv = getArgv();
-	// Get special purpose argument lists.
-	var argn = argv.Named;
 
-	// will be used for file operations
+	// Will be used for file operations.
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
 
 	var httpregex = new RegExp("^http");
@@ -6073,26 +8033,21 @@ function initialize() {
 	var isWeb = false;
 	var base = "";
 
-	if (argn("base") != null) {
-		base = argn("base");
-		if(httpregex.test(base)) {
-			isWeb = true;
-		} else {
-			isWeb = false;
-			base = fso.GetAbsolutePathName(base);
-		}
+	if(httpregex.test(wpkg_base) == true) {
+		isWeb = true;
+		base = wpkg_base;
 	} else {
-		if(httpregex.test(wpkg_base)) {
-			isWeb = true;
-			base = wpkg_base;
-		} else {
-			// Use the executing location of the script as the default base
-			// path.
-			isWeb = false;
+		// Use the executing location of the script as the default base
+		// path.
+		isWeb = false;
+		if (wpkg_base == "") {
 			var path = WScript.ScriptFullName;
 			base = fso.GetParentFolderName(path);
+		} else {
+			base = fso.GetAbsolutePathName(wpkg_base);
 		}
 	}
+
 	dinfo("Base directory is '" + base + "'.");
 	dinfo("Log level is " + getLogLevel());
 
@@ -6115,7 +8070,7 @@ function initialize() {
 			throw new Error(10, "No profiles found. Aborting");
 		}
 		setProfiles(nodes);
-		nodes = loadXml(hosts_file, hosts_folder, "wpkg");
+		nodes = loadXml(hosts_file, hosts_folder, "hosts");
 		if (nodes == null) {
 			// cannot continue without hosts (probably network error occurred)
 			throw new Error(10, "No hosts found. Aborting");
@@ -6127,45 +8082,23 @@ function initialize() {
 		packages_file = base + "/" + web_packages_file_name;
 		profiles_file = base + "/" + web_profiles_file_name;
 		hosts_file = base + "/" + web_hosts_file_name;
-		nodes = loadXml( profiles_file, null, null );
+		nodes = loadXml(profiles_file, null, "profiles");
 		if (nodes == null) {
 			// cannot continue without profiles (probably network error
 			// occurred)
 			throw new Error(10, "No profiles found. Aborting");
 		}
 		setProfiles(nodes);
-		nodes = loadXml( hosts_file, null, null );
+		nodes = loadXml(hosts_file, null, "hosts");
 		if (nodes == null) {
 			// cannot continue without hosts (probably network error occurred)
 			throw new Error(10, "No hosts found. Aborting");
 		}
 		setHosts(nodes);
 		// load packages
-		setPackages(loadXml( packages_file , null, null));
+		setPackages(loadXml(packages_file, null, "packages"));
 	}
-	// set profile-based log level (if available)
-	var profileLogLevel = getProfilesLogLevel();
-	if (profileLogLevel != null) {
-		setLogLevel(profileLogLevel);
-	}
-	// now all parameters are set to build the final log file name
-	// even if [PROFILE] is used
-	if (logfileHandler != null) {
-		// only needs to be re-initialized if it has not yet been opened
-		initializeLog();
-	}
-
-	// our settings file is located in System32
-	var SystemFolder = 1;
-	var settings_folder = null;
-	var wshShell = new ActiveXObject("WScript.Shell");
-	if (settings_file_path != null) {
-		settings_file = wshShell.ExpandEnvironmentStrings(settings_file_path + "\\" + settings_file_name);
-	} else {
-		settings_folder = fso.GetSpecialFolder(SystemFolder);
-		settings_file = fso.BuildPath(settings_folder, wshShell.ExpandEnvironmentStrings(settings_file_name));
-	}
-
+	
 	// Load packages and profiles.
 	if (isForce() && isArgSet(argv, "/synchronize")) {
 		dinfo("Skipping current settings. Checking for actually installed packages.");
@@ -6176,75 +8109,15 @@ function initialize() {
 
 	} else {
 		// Load or create settings file.
-		if (!fso.fileExists(settings_file)) {
+		if (!fso.FileExists(getSettingsPath())) {
 			dinfo("Settings file does not exist. Creating a new file.");
 
 			setSettings(createSettings(), true);
 		} else {
-			dinfo("Reading settings file: " + settings_file);
-			// no need to save immediately because there is no change yet
-			setSettings(createSettingsFromFile(settings_file), false);
+			dinfo("Reading settings file: " + getSettingsPath());
+			// No need to save immediately because there is no change yet.
+			setSettings(createSettingsFromFile(getSettingsPath()), false);
 		}
-	}
-
-	var message;
-	if(isDebug()) {
-		var hst = getHostNodes();
-		message = "Hosts file contains " + hst.length + " hosts:";
-		for (var iHost = 0; iHost < hst.length; iHost++ ) {
-			message += "\n'" + getHostNodeDescription(hst[iHost]) + "'";
-		}
-		dinfo(message);
-
-		var settingsPkg = getSettingNodes();
-		message = "Settings file contains " + settingsPkg.length + " packages:";
-		for (var iSettings = 0; iSettings < settingsPkg.length; iSettings++) {
-			if (settingsPkg[iSettings] != null) {
-				 message += "\n'" + getPackageID(settingsPkg[iSettings]) + "'";
-			}
-		}
-		dinfo(message);
-
-		var packageNodes = getPackageNodes();
-		message = "Packages file contains " + packageNodes.length + " packages:";
-		for (var iPackage = 0; iPackage < packageNodes.length; iPackage++) {
-			if (packageNodes[iPackage] != null) {
-				 message += "\n'" + getPackageID(packageNodes[iPackage]) + "'";
-			}
-		}
-		dinfo(message);
-
-		var profileNodes = getProfileNodes();
-		message = "Profile file contains " + profileNodes.length + " profiles:";
-		for (var iProfile = 0; iProfile < profileNodes.length; iProfile++) {
-			if (profileNodes[iProfile] != null) {
-				 message += "\n'" + getProfileID(profileNodes[iProfile]) + "'";
-			}
-		}
-		dinfo(message);
-
-		// get profile list
-		var profiles = getProfileList();
-		message = "Using profile(s):";
-		for (var i=0; i<profiles.length; i++) {
-			message += "\n'" + profiles[i] + "'";
-		}
-		dinfo(message);
-	}
-
-	// check if all referenced profiles are available
-	var profileList = getProfileList();
-	var error = false;
-	message = "Could not locate referenced profile(s):\n";
-	for (var iProf = 0; iProf<profileList.length; iProf++) {
-		var currentProfile = getProfileNode(profileList[iProf]);
-		if (currentProfile == null) {
-			error = true;
-			message += profileList[iProf] + "\n";
-		}
-	}
-	if (error) {
-		throw new Error(message);
 	}
 }
 
@@ -6282,7 +8155,7 @@ function initializeConfig() {
 			eval ( name + " = \"" + value + "\"" );
 		}
 	}
-	// expand environment variables
+	// Expand environment variables.
 	var wshShell = new ActiveXObject("WScript.Shell");
 	if(rebootCmd != null) {
 		rebootCmd = wshShell.ExpandEnvironmentStrings(rebootCmd);
@@ -6290,163 +8163,220 @@ function initializeConfig() {
 	if(logfilePattern != null) {
 		logfilePattern = wshShell.ExpandEnvironmentStrings(logfilePattern);
 	}
+
+	// Check if log level shall be altered.
+	if (logLevel != null) {
+		setLogLevel(logLevel);
+	} else {
+		setLogLevel(logLevelDefault);
+	}
 }
 
 /**
  * Initializes log file depending on information available. If log file path is
  * not set or unavailable creates logfile within %TEMP%. Sets log file handler
  * to null in case logging is disabled (logLevel=0)
+ * @returns log file handler; returns null if no logfile was initialized.
  */
 function initializeLog() {
+	// Abort initialization if initialization is already running.
+	if (logInitializing) {
+		return logfileHandler;
+	}
+	/*
+	 * Set initializing flag during initialization to prevent initialization loop when logs are written during
+	 * initialization.
+	 */
+	logInitializing = true;
+
 	// only initialize a log file if log level is greater than 0
-	if (getLogLevel() > 0) {
-		/** stores the existing filehandler at method entry */
+	if (getLogLevel() <= 0) {
+		if (logfileHandler != null) {
+			logfileHandler.Close();
+			logfileHandler = null;
+		}
+		logfilePath = null;
+		return null;
+	}
+
+	/** stores the new filehandler created during this execution */
+	var newLogfileHandler = null;
+	var newLogfilePath = null;
+	var newLogfileAppendMode = false;
+
+	/** file system object */
+	var fso = new ActiveXObject("Scripting.FileSystemObject");
+
+	// try to initialize real log file
+	try {
+		// build log file name
+		var today = new Date();
+		var year = today.getFullYear();
+		var month = today.getMonth() + 1;
+		var day = today.getDate();
+		var hour = today.getHours();
+		var minute = today.getMinutes();
+		var second = today.getSeconds();
+		if (month < 10) {
+			month = "0" + month;
+		}
+		if (day < 10) {
+			day = "0" + day;
+		}
+		if (hour < 10) {
+			hour = "0" + hour;
+		}
+		if (minute < 10) {
+			minute = "0" + minute;
+		}
+		if (second < 10) {
+			second = "0" + second;
+		}
+
+		var logFileName = getLogfilePattern().replace(new RegExp("\\[HOSTNAME\\]", "g"), getHostname());
+		logFileName = logFileName.replace(new RegExp("\\[YYYY\\]", "g"), year);
+		logFileName = logFileName.replace(new RegExp("\\[MM\\]", "g"), month);
+		logFileName = logFileName.replace(new RegExp("\\[DD\\]", "g"), day);
+		logFileName = logFileName.replace(new RegExp("\\[hh\\]", "g"), hour);
+		logFileName = logFileName.replace(new RegExp("\\[mm\\]", "g"), minute);
+		logFileName = logFileName.replace(new RegExp("\\[ss\\]", "g"), second);
+		// only apply profile if required
+		/*
+		 * NOTE: In case profiles.xml is not valid this will quit the script on getProfile() call while keeping the
+		 * temporary local log file handler. As a result errors at initialization will be logged to local log only. So
+		 * make sure not to use the [PROFILE] placeholder if you like to remote- initialization logs (e.g. missing XML
+		 * files).
+		 */
+		var regularExp = new RegExp("\\[PROFILE\\]", "g");
+		if (regularExp.test(logFileName) == true) {
+			// this will throw an error if profile is not available yet
+			var profileList = getProfileList();
+			// concatenate profile names or throw error if no names
+			// available
+			if (profileList.length > 0) {
+				var allProfiles = "";
+				for (var i=0; i<profileList.length; i++) {
+					if (allProfiles == "") {
+						allProfiles = profileList[i];
+					} else {
+						allProfiles += "-" + profileList[i];
+					}
+				}
+				logFileName = logFileName.replace(regularExp, allProfiles);
+			} else {
+				throw new Error("Profile information not available.");
+			}
+		}
+
+		if (log_file_path == null || log_file_path == "") {
+			log_file_path = "%TEMP%";
+		}
+
+		newLogfilePath = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(log_file_path + "\\" + logFileName);
+
+		// Just open the log file in case it is not opened already or append mode changed from false to true.
+		// Do not support switching from append mode to overwrite mode if the
+		// log file is not changed as this would erase log entries.
+		if (logfilePath != newLogfilePath || (logfileAppendMode != isLogAppend() && isLogAppend() == true)) {
+			var newLogMessage = "Initializing new log file: '" + newLogfilePath + "' in ";
+			if (isLogAppend()) {
+				newLogMessage += "append";
+			} else {
+				newLogMessage += "replace";
+			}
+			newLogMessage += " mode.";
+
+			dinfo(newLogMessage);
+			try {
+				// Evaluate append mode.
+				// 2=write (use 8 for append mode)
+				var openMode = 2;
+				if (isLogAppend()) {
+					openMode = 8;
+				}
+
+				// If new logfile path is identical to existing log file then just the append mode changed.
+				if (logfilePath == newLogfilePath) {
+					// Paths are identical, so mode must have been changed.
+					// Re-open the file with new file mode.
+					// NOTE: This should be handled as an atomic/synchronized
+					// operation in multi-threaded environment (not for WSH).
+					if(logfileHandler != null) {
+						// Close file first.
+						logfileHandler.Close();
+						// Replace handler.
+						logfileHandler = fso.OpenTextFile(newLogfilePath, openMode, true, -2);
+						logfileAppendMode = isLogAppend();
+					}
+				} else {
+					// Open mode:
+					// 2=write (use 8 for append mode)
+					// true=create if not exist
+					// 0=ASCII, -1=unicode, -2=system default
+					newLogfileHandler = fso.OpenTextFile(newLogfilePath, openMode, true, -2);
+				}
+				newLogfileAppendMode = isLogAppend();
+			} catch (e) {
+				// Fall back to local temp folder.
+				newLogfilePath = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings("%TEMP%\\" + logFileName);
+				dinfo("Failed to open log file: " + e.description + "; falling back to local logging: " + newLogfilePath);
+				if (logfilePath != newLogfilePath) {
+					// Open mode:
+					// 2=write (use 8 for append mode)
+					// true=create if not exist
+					// 0=ASCII, -1=unicode, -2=system default
+					newLogfileHandler = fso.OpenTextFile(newLogfilePath, 2, true, -2);
+					newLogfileAppendMode = false;
+				}
+			}
+		}
+	} catch (err) {
+		dinfo("Cannot initialize log file (" + err.description + "), probably not all data available " +
+				"yet, stick with local log file. ");
+		// Initialize local log file.
+		var newLogfile = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings("%TEMP%\\wpkg-logInit.log");
+		// create new temporary file - overwrite existing
+		newLogfileHandler = fso.OpenTextFile(newLogfile, 8, true, -2);
+		newLogfileAppendMode = true;
+		dinfo("Initialized temporary local log file: " + logfilePath);
+	}
+
+
+	// In case a new log file handler was created switch handlers and move data
+	// from old log file to new log file.
+	if (newLogfileHandler != null) {
+		// Switch to new log file handler.
+		// NOTE: In multi-threaded environment this shall be synchronized.
 		var oldLogfileHandler = logfileHandler;
 		var oldLogfilePath = logfilePath;
+		logfileHandler = newLogfileHandler;
+		logfileAppendMode = newLogfileAppendMode;
+		logfilePath = newLogfilePath;
 
-		/** stores the new filehandler created during this execution */
-		var newLogfileHandler = null;
-
-		/** file system object */
-		var fso = new ActiveXObject("Scripting.FileSystemObject");
-
-		// gracefully close current log if available
-		/**
-		 * this is a work-around to prevent infinite loops which can occur in
-		 * case logging is issued from any functions within the initialization
-		 * below. All logs issued before the final target log file is
-		 * initialized are written to this temporary file.
-		 */
-		// initialize temporary local log file to allow logging as quick as
-		// possible
-		if (oldLogfileHandler == null) {
-			var tempLogPath = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings("%TEMP%\\wpkg-logInit.log");
-			// create new temporary file - overwrite existing
-			oldLogfileHandler = fso.OpenTextFile(tempLogPath, 2, true, -2);
-			// make sure all following messages are logged to this file
-			logfileHandler = oldLogfileHandler;
-			logfilePath = tempLogPath;
-			dinfo("Initialized temporary local log file: " + logfilePath);
+		// Transfer all logs to the new logfile and close old log file.
+		if (oldLogfileHandler != null) {
+			oldLogfileHandler.Close();
 		}
-
-		// try to initialize real log file
-		var logPath = null;
-
-		try {
-			// build log file name
-			var today = new Date();
-			var year = today.getFullYear();
-			var month = today.getMonth() + 1;
-			var day = today.getDate();
-			var hour = today.getHours();
-			var minute = today.getMinutes();
-			var second = today.getSeconds();
-			if (month < 10) {
-				month = "0" + month;
+		if (oldLogfilePath != null) {
+			// Read old log file and write contents to new log file.
+			// Open read-only.
+			var readerFile = fso.OpenTextFile(oldLogfilePath, 1, true, -2);
+			while (!readerFile.AtEndOfStream) {
+				logfileHandler.WriteLine(readerFile.ReadLine());
 			}
-			if (day < 10) {
-				day = "0" + day;
-			}
-			if (hour < 10) {
-				hour = "0" + hour;
-			}
-			if (minute < 10) {
-				minute = "0" + minute;
-			}
-			if (second < 10) {
-				second = "0" + second;
-			}
-
-			var logFileName = getLogfilePattern().replace(new RegExp("\\[HOSTNAME\\]", "g"), getHostname());
-			logFileName = logFileName.replace(new RegExp("\\[YYYY\\]", "g"), year);
-			logFileName = logFileName.replace(new RegExp("\\[MM\\]", "g"), month);
-			logFileName = logFileName.replace(new RegExp("\\[DD\\]", "g"), day);
-			logFileName = logFileName.replace(new RegExp("\\[hh\\]", "g"), hour);
-			logFileName = logFileName.replace(new RegExp("\\[mm\\]", "g"), minute);
-			logFileName = logFileName.replace(new RegExp("\\[ss\\]", "g"), second);
-			// only apply profile if required
-			/*
-			 * NOTE: In case profiles.xml is not valid this will quit the script on getProfile() call while keeping the
-			 * temporary local log file handler. As a result errors at initialization will be logged to local log only.
-			 * So make sure not to use the [PROFILE] placeholder if you like to remote- initialization logs (e.g.
-			 * missing XML files).
-			 */
-			var regularExp = new RegExp("\\[PROFILE\\]", "g");
-			if (regularExp.test(logFileName)) {
-				// this will throw an error if profile is not available yet
-				var profileList = getProfileList();
-				// concatenate profile names or throw error if no names
-				// available
-				if (profileList.length > 0) {
-					var allProfiles = "";
-					for (var i=0; i<profileList.length; i++) {
-						if (allProfiles == "") {
-							allProfiles = profileList[i];
-						} else {
-							allProfiles += "-" + profileList[i];
-						}
-					}
-					logFileName = logFileName.replace(regularExp, allProfiles);
-				} else {
-					throw new Error("Profile information not available.");
-				}
-			}
-
-			if (log_file_path == null || log_file_path == "") {
-				log_file_path = "%TEMP%";
-			}
-
-			newLogfilePath = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(log_file_path + "\\" + logFileName);
-
-			// just open the log file in case it is not opened already
-			if (logfilePath != newLogfilePath) {
-				// 2=write (use 8 for append mode)
-				// true=create if not exist
-				// 0=ASCII, -1=unicode, -2=system default
-				dinfo("Initializing new log file: " + newLogfilePath);
-				try {
-					var openMode = 2;
-					if (isLogAppend()) {
-						openMode = 8;
-					}
-					newLogfileHandler = fso.OpenTextFile(newLogfilePath, openMode, true, -2);
-				} catch (e) {
-					// fall back to local temp folder
-					newLogfilePath = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings("%TEMP%\\" + logFileName);
-					dinfo("Failed to open log file: " + e.description + "; falling back to local logging: " + logPath);
-					if (logfilePath != newLogfilePath) {
-						newLogfileHandler = fso.OpenTextFile(newLogfilePath, 2, true, -2);
-					}
-				}
-			}
-		} catch (err) {
-			dinfo("Cannot initialize log file, probably not all data available " +
-					"yet, stick with local log file: " + logfilePath);
+			readerFile.Close();
+			// delete old logfile
+			fso.DeleteFile(oldLogfilePath, true);
 		}
-		if (newLogfileHandler != null) {
-			logfileHandler = newLogfileHandler;
-			oldLogfilePath = logfilePath;
-			logfilePath = newLogfilePath;
-			if (oldLogfileHandler != null) {
-				// transfer all logs to the new logfile and close old log file
-				oldLogfileHandler.Close();
-			}
-			if (oldLogfilePath != null) {
-				// open read-only
-				var readerFile = fso.OpenTextFile(oldLogfilePath, 1, true, -2);
-				while (!readerFile.AtEndOfStream) {
-					logfileHandler.WriteLine(readerFile.ReadLine());
-				}
-				readerFile.Close();
-				// delete old logfile
-				fso.DeleteFile(oldLogfilePath, true);
-			}
+		// Write log buffer to file and clean buffer.
+		if (logBuffer != null) {
+			logfileHandler.Write(logBuffer);
+			logBuffer = null;
 		}
-	} else {
-		// no log file is to be used
-		logfileHandler = null;
-		logfilePath = null;
 	}
+	// Initialization finished.
+	logInitializing = false;
+	return logfileHandler;
 }
 
 /**
@@ -6457,171 +8387,404 @@ function parseArguments(argv) {
 	// Note: this will be done automatically on first log output
 	// initializeLog();
 
+	// Parse bare arguments.
+	// All which start with a "/" and do not have a ":" in them.
+	for (var i=0; i < argv.length; i++) {
+		var argument = argv.Item(i);
+		switch (argument) {
+		// Check for quiet mode.
+		case "/quiet":
+			quiet = true;
+			break;
+
+		// Check for log append flag.
+		case "/logAppend":
+			setLogAppend(true);
+			break;
+
+		// Check for dry run flag.
+		case "/dryrun":
+			setDryRun(true);
+			setDebug(true);
+			setNoReboot(true);
+			break;
+
+		// Check for debug flag.
+		case "/debug":
+		case "/verbose":
+			setDebug(true);
+			break;
+
+		// Check for help flag.
+		case "/help":
+			showUsage();
+			exit(0);
+			break;
+
+		// Check for nonotify flag.
+		case "/nonotify":
+			setNoNotify(true);
+			break;
+
+		// Check for noreboot flag.
+		case "/noreboot":
+			setNoReboot(true);
+			break;
+
+		// Check for noremove flag.
+		case "/noremove":
+			setNoRemove(true);
+			break;
+
+		// Check for force flag.
+		case "/force":
+			setForce(true);
+			break;
+
+		// Check for quot on error flag.
+		case "/quitonerror":
+			setQuitOnError(true);
+			break;
+
+		// Check if status messages should be sent.
+		case "/sendStatus":
+			setSendStatus(true);
+			break;
+
+		// Check if upgrade-before-remove feature should be enabled.
+		case "/noUpgradeBeforeRemove":
+			setUpgradeBeforeRemove(false);
+			break;
+
+		// Check if installation should be forced.
+		case "/forceinstall":
+			setForceInstall(true);
+			break;
+
+		// Check if forced remove shall be disabled.
+		case "/noforcedremove":
+			setNoForcedRemove(true);
+			break;
+
+		// Check if WPKG state shall be exported to registry.
+		case "/norunningstate":
+			setNoRunningState(true);
+			break;
+
+		// Check if WPKG shall work case-insensitive.
+		case "/ignoreCase":
+			setCaseSensitivity(false);
+			break;
+
+		// Check if multiple profiles shall be applied
+		case "/applymultiple":
+			setApplyMultiple(true);
+			break;
+
+		// Check if user likes to disable all downloads.
+		case "/noDownload":
+			setNoDownload(true);
+			break;
+
+		// Check if /synchronize parameter is set.
+		case "/synchronize":
+			// Do not do anything. The /synchronize parameter is handled by main() function.
+			break;
+			
+		default:
+			// Check if the argument is a named argument.
+			var argument = argv.Item(i);
+			if (argument.indexOf(":") < 0) {
+				dinfo("Unknown argument: " + argv.Item(i));
+			}
+		}
+	}
+
 	// Get special purpose argument lists.
 	var argn = argv.Named;
-	var argu = argv.Unnamed;
 
-	// Process property named arguments that set values.
-	if (isArgSet(argv, "/quiet")) {
-		setQuiet(true);
-
-	// check quiet value which was probably set within config.xml
-	} else if (quiet != null) {
-		setQuiet(quiet);
-	} else {
-		setQuiet(quietDefault);
+	// Process quiet mode flag.
+	var quietFlagValue = argn.Item("quiet");
+	if (quietFlagValue != null) {
+		if (quietFlagValue == "true") {
+			quiet = true;
+		} else if (quietFlagValue == "false"){
+			quiet = false;
+		}
 	}
 
-	// process log append flag
-	if (isArgSet(argv, "/logAppend")) {
-		setLogAppend(true);
+	// Process log append mode flag.
+	var logAppendFlagValue = argn.Item("logAppend");
+	if (logAppendFlagValue != null) {
+		if (logAppendFlagValue == "true") {
+			setLogAppend(true);
+		} else if (logAppendFlagValue == "false"){
+			setLogAppend(false);
+		}
 	}
 
-	// Process log level
-	if (argn("logLevel") != null) {
-		setLogLevel(parseInt(argn("logLevel")));
-	} else if (logLevel != null) {
-		setLogLevel(logLevel);
-	} else {
-		setLogLevel(logLevelDefault);
+	// Process dryrun mode flag.
+	var dryrunFlagValue = argn.Item("dryrun");
+	if (dryrunFlagValue != null) {
+		if (dryrunFlagValue == "true") {
+			setDryRun(true);
+			setDebug(true);
+			setNoReboot(true);
+		} else if (dryrunFlagValue == "false"){
+			setDryRun(false);
+			setNoReboot(false);
+		}
 	}
 
-	// IMPORTANT: THIS NEEDS TO BE DONE BEFORE FIRST LOG OUTPUT IS WRITTEN
-	// IN ORDER TO ALLOW CORRECT HOSTNAME REPLACEMENT IN LOGFILE PATTERN!
+	// Process verbose mode flag.
+	var verboseFlagValue = argn.Item("verbose");
+	if (verboseFlagValue != null) {
+		if (verboseFlagValue == "true") {
+			setDebug(true);
+		} else if (verboseFlagValue == "false"){
+			setDebug(false);
+		}
+	}
+	
+	// Process debug mode flag.
+	var debugFlagValue = argn.Item("debug");
+	if (debugFlagValue != null) {
+		if (debugFlagValue == "true") {
+			setDebug(true);
+		} else if (debugFlagValue == "false"){
+			setDebug(false);
+		}
+	}
+
+	// Process nonotify mode flag.
+	var nonotifyFlagValue = argn.Item("nonotify");
+	if (nonotifyFlagValue != null) {
+		if (nonotifyFlagValue == "true") {
+			setNoNotify(true);
+		} else if (nonotifyFlagValue == "false"){
+			setNoNotify(false);
+		}
+	}
+
+	// Process noreboot mode flag.
+	var norebootFlagValue = argn.Item("noreboot");
+	if (norebootFlagValue != null) {
+		if (norebootFlagValue == "true") {
+			setNoReboot(true);
+		} else if (norebootFlagValue == "false"){
+			setNoReboot(false);
+		}
+	}
+
+	// Process noremove mode flag.
+	var noremoveFlagValue = argn.Item("noremove");
+	if (noremoveFlagValue != null) {
+		if (noremoveFlagValue == "true") {
+			setNoRemove(true);
+		} else if (noremoveFlagValue == "false"){
+			setNoRemove(false);
+		}
+	}
+
+	// Process force mode flag.
+	var forceFlagValue = argn.Item("force");
+	if (forceFlagValue != null) {
+		if (forceFlagValue == "true") {
+			setForce(true);
+		} else if (forceFlagValue == "false"){
+			setForce(false);
+		}
+	}
+
+	// Process quitonerror mode flag.
+	var quitonerrorFlagValue = argn.Item("quitonerror");
+	if (quitonerrorFlagValue != null) {
+		if (quitonerrorFlagValue == "true") {
+			setQuitOnError(true);
+		} else if (quitonerrorFlagValue == "false"){
+			setQuitOnError(false);
+		}
+	}
+
+	// Process sendStatus mode flag.
+	var sendStatusFlagValue = argn.Item("sendStatus");
+	if (sendStatusFlagValue != null) {
+		if (sendStatusFlagValue == "true") {
+			setSendStatus(true);
+		} else if (sendStatusFlagValue == "false"){
+			setSendStatus(false);
+		}
+	}
+
+	// Process noUpgradeBeforeRemove mode flag.
+	var noUpgradeBeforeRemoveFlagValue = argn.Item("noUpgradeBeforeRemove");
+	if (noUpgradeBeforeRemoveFlagValue != null) {
+		if (noUpgradeBeforeRemoveFlagValue == "true") {
+			setUpgradeBeforeRemove(false);
+		} else if (noUpgradeBeforeRemoveFlagValue == "false"){
+			setUpgradeBeforeRemove(true);
+		}
+	}
+
+	// Process forceinstall mode flag.
+	var forceInstallFlagValue = argn.Item("forceinstall");
+	if (forceInstallFlagValue != null) {
+		if (forceInstallFlagValue == "true") {
+			setForceInstall(true);
+		} else if (forceInstallFlagValue == "false"){
+			setForceInstall(false);
+		}
+	}
+
+	// Process noforcedremove mode flag.
+	var noForcedRemoveFlagValue = argn.Item("noforcedremove");
+	if (noForcedRemoveFlagValue != null) {
+		if (noForcedRemoveFlagValue == "true") {
+			setNoForcedRemove(true);
+		} else if (noForcedRemoveFlagValue == "false"){
+			setNoForcedRemove(false);
+		}
+	}
+
+	// Process norunningstate mode flag.
+	var noRunningStateFlagValue = argn.Item("norunningstate");
+	if (noRunningStateFlagValue != null) {
+		if (noRunningStateFlagValue == "true") {
+			setNoRunningState(true);
+		} else if (noRunningStateFlagValue == "false"){
+			setNoRunningState(false);
+		}
+	}
+
+	// Process ignoreCase mode flag.
+	var ignoreCaseFlagValue = argn.Item("ignoreCase");
+	if (ignoreCaseFlagValue != null) {
+		if (ignoreCaseFlagValue == "true") {
+			setCaseSensitivity(false);
+		} else if (ignoreCaseFlagValue == "false"){
+			setCaseSensitivity(true);
+		}
+	}
+
+	// Process applymultiple mode flag.
+	var applyMultipleFlagValue = argn.Item("applymultiple");
+	if (applyMultipleFlagValue != null) {
+		if (applyMultipleFlagValue == "true") {
+			setApplyMultiple(true);
+		} else if (applyMultipleFlagValue == "false"){
+			setApplyMultiple(false);
+		}
+	}
+
+	// Process noDownload mode flag.
+	var noDownloadFlagValue = argn.Item("noDownload");
+	if (noDownloadFlagValue != null) {
+		if (noDownloadFlagValue == "true") {
+			setNoDownload(true);
+		} else if (noDownloadFlagValue == "false"){
+			setNoDownload(false);
+		}
+	}
+	
+	// Parse parameters with string values.
+
+	// Fetch base folder where to read XML files from.
+	if (argn("base") != null) {
+		wpkg_base = argn("base");
+	}
+	
+	// Process log level.
+	if (argn.Item("logLevel") != null) {
+		setLogLevel(parseInt(argn.Item("logLevel")));
+	}
+	
 	// Set the profile from either the command line or the hosts file.
-	if (argn("host") != null) {
+	if (argn.Item("host") != null) {
 		setHostname(argn("host"));
 	}
 
-	if (argn("os") != null) {
+	// Parse OS override setting.
+	if (argn.Item("os") != null) {
 		setHostOS(argn("os"));
 	}
 
-	if (argn("ip") != null) {
-		var ipListParam = argn("ip").split(",");
+	// Parse IP address override setting.
+	if (argn.Item("ip") != null) {
+		var ipListParam = argn.Item("ip").split(",");
 		setIPAddresses(ipListParam);
 	}
 
-	if (argn("domainname") != null) {
-		setDomainName(argn("domainname"));
+	// Parse domain name override setting.
+	if (argn.Item("domainname") != null) {
+		setDomainName(argn.Item("domainname"));
 	}
 
-	if (argn("group") != null) {
-		var hostGroupParam = argn("group").split(",");
+	// Parse group override setting.
+	if (argn.Item("group") != null) {
+		var hostGroupParam = argn.Item("group").split(",");
 		setHostGroups(hostGroupParam);
 	}
 
-	// Process log file pattern
-	if (argn("logfilePattern") != null) {
-		setLogfilePattern(argn("logfilePattern"));
+	// Process log file pattern.
+	if (argn.Item("logfilePattern") != null) {
+		setLogfilePattern(argn.Item("logfilePattern"));
 	}
 
-	// Process path to log file
-	if (argn("log_file_path") != null) {
-		log_file_path = argn("log_file_path");
+	// Process path to log file.
+	if (argn.Item("log_file_path") != null) {
+		log_file_path = argn.Item("log_file_path");
 	}
 
-	// Process property named arguments that set values.
-	if (isArgSet(argv, "/dryrun")) {
-		setDryRun(true);
-		setDebug(true);
-		setNoReboot(true);
+	// Parse reboot command.
+	if (argn.Item("rebootcmd") != null) {
+		setRebootCmd(argn.Item("rebootcmd"));
 	}
 
-	// Process property named arguments that set values.
-	if (isArgSet(argv, "/debug") || isArgSet(argv, "/verbose")) {
-		setDebug(true);
+	// Parse path to settings file.
+	if (argn.Item("settings") != null) {
+		setSettingsPath(argn.Item("settings"));
 	}
+	
+	// Evaluate query mode.
+	if (argn.Item("query") != null) {
+		// Read query mode.
+		setQueryMode(argn.Item("queryMode"));
 
-	// If the user is wanting command help, give it to him.
-	if (isArgSet(argv, "/help")) {
-		showUsage();
-		exit(0);
-	}
-
-	// If the user passes /nonotify, we don't want to notify the user.
-	if (isArgSet(argv, "/nonotify")) {
-		setNoNotify(true);
-	}
-
-	// If the user passes /noreboot, we don't want to reboot.
-	if (isArgSet(argv, "/noreboot")) {
-		setNoReboot(true);
-	}
-
-	// do not remove packages if the user specified /noremove
-	if (isArgSet(argv, "/noremove")) {
-		setNoRemove(true);
-	}
-
-	// Process property named arguments that set values.
-	if (isArgSet(argv, "/force")) {
-		setForce(true);
-	}
-
-	// Process property named arguments that set values.
-	if (isArgSet(argv, "/quitonerror")) {
-		setQuitOnError(true);
-	}
-
-	// check if status messages should be sent
-	if (isArgSet(argv, "/sendStatus")) {
-		setSendStatus(true);
-	}
-
-	// check if upgrade-before-remove feature should be enabled
-	if (isArgSet(argv, "/noUpgradeBeforeRemove")) {
-		setUpgradeBeforeRemove(false);
-	}
-
-	// Process property named arguments that set values.
-	if (isArgSet(argv, "/forceinstall")) {
-		setForceInstall(true);
-	}
-
-	if (isArgSet(argv, "/noforcedremove")) {
-		setNoForcedRemove(true);
-	}
-
-	if (argn("rebootcmd") != null) {
-		setRebootCmd(argn("rebootcmd"));
-	}
-	dinfo("Reboot-Cmd is " + getRebootCmd() + ".");
-
-	// Want to export the state of WPKG to registry?
-	if (isArgSet(argv, "/norunningstate")) {
-		setNoRunningState(true);
-	} else {
-		// Indicate that we are running.
-		setNoRunningState(false);
-	}
-
-	// do we want case insensitivity?
-	if (isArgSet(argv, "/ignoreCase")) {
-		setCaseSensitivity(false);
-	}
-
-	// do we want multiple host definition applying
-	if (isArgSet(argv, "/applymultiple")) {
-		setApplyMultiple(true);
-	}
-
-	// Check whether user likes to disable all downloads.
-	if (isArgSet(argv, "/noDownload")) {
-		setNoDownload(true);
+		if (getQueryMode() == "remote") {
+			dinfo("Query mode: remote");
+		}
 	}
 }
 
 /**
- * saves settings to file system
+ * Saves settings to file system. Optionally allows sorting of package nodes.
+ * 
+ * @param sort {Boolean} Set to true in order to sort package nodes.
  */
-function saveSettings() {
-	dinfo("Saving sorted settings to '" + settings_file + "'.");
-	sortSettings();
-	if (settings_file != null && settings != null) {
-		saveXml(settings, settings_file);
+function saveSettings(sort) {
+	if (getQueryMode() == "remote") {
+		// Do not save settings in remote qurey mode.
+		dinfo("Skipping settings save: Remote query mode enabled.");
+		return;
+	}
+
+	var sortPackages = true;
+	if (sort != null && sort == false) {
+		sortPackages = false;
+	}
+	
+	if (sortPackages) {
+		dinfo("Saving sorted settings to '" + getSettingsPath() + "'." + sort);
+		sortSettings();
 	} else {
-		dinfo("Settings not saved!");
+		dinfo("Saving unsorted settings to '" + getSettingsPath() + "'." + sort);
+	}
+
+	// Do not save settings if settings are empty or in remote query mode.
+	if (getSettingsPath() != null && settings != null) {
+		saveXml(settings, getSettingsPath());
+	} else {
+		dinfo("Settings not saved! Either settings are empty or path is not set.");
 	}
 }
 
@@ -6661,9 +8824,6 @@ function error(message) {
  * @return log file handler (returns null if log level is 0)
  */
 function getLogFile() {
-	if (logfileHandler == null) {
-		initializeLog();
-	}
 	return logfileHandler;
 }
 
@@ -6758,14 +8918,14 @@ function info(message) {
 function log(type, description) {
 	// just log information level to event log or everything in case debug is
 	// enabled.
-	if ((type & 7) > 0 || isDebug()) {
-		if(isQuiet() && !isSkipEventLog()) {
+	if (((type & 7) > 0 || isDebug()) && !isSkipEventLog()) {
+		if(isQuiet() && !isEventLogFallback()) {
 			try {
 				WshShell = WScript.CreateObject("WScript.Shell");
 				WshShell.logEvent(type, "" + description);
 			} catch (e) {
 				// skip future event log entries and log an error
-				setSkipEventLog(true);
+				setEventLogFallback(true);
 				var message = "Error when writing to event log, falling back" +
 							" to standard output (STDOUT).\n" +
 							"Description: " + e.description + "\n" +
@@ -6805,7 +8965,25 @@ function log(type, description) {
 				break;
 		}
 
-		getLogFile().WriteLine(getLogLine(logSeverity, description));
+		var logFile = getLogFile();
+		if (logFile != null) {
+			// Write log to file.
+			logFile.WriteLine(getLogLine(logSeverity, description));
+		} else {
+			// First write log line to buffer.
+			if (logBuffer != null) {
+				// Write log entry to local buffer.
+				logBuffer += getLogLine(logSeverity, description) + "\r\n";
+			} else {
+				// Create new log buffer.
+				logBuffer = getLogLine(logSeverity, description) + "\r\n";
+			}
+			if (logInitReady == true) {
+				// Log file not initialized but ready to be initialized
+				// If log is ready to be initialized, then initialize it.
+				initializeLog();
+			}
+		}
 	}
 }
 
@@ -6839,7 +9017,7 @@ function notify(message) {
 			cmd += msgPath + " * /TIME:" + notificationDisplayTime + " \"" + message + "\"";
 		} else {
 			// try net send method
-			cmd += "%SystemRoot%\\System32\\NET.EXE SEND ";
+			cmd += netPath + " SEND ";
 			cmd += getHostname();
 			cmd += " \"" + message + "\"";
 		}
@@ -6910,7 +9088,7 @@ function notifyUserStop() {
 		var msg = getLocalizedString("notifyUserStop");
 		if (msg == null) {
 			msg = "";
-			msg += "The automated software installation utility has completing ";
+			msg += "The automated software installation utility has completed ";
 			msg += "installing or updating software on your system. No reboot was ";
 			msg += "necessary. All updates are complete.";
 		}
@@ -6918,8 +9096,30 @@ function notifyUserStop() {
 		try {
 			notify(msg);
 		} catch (e) {
-			error("Unable to notify the user that all action has been completed.");
+			error("Unable to notify the user that all actions have been completed.");
 		}
+	}
+}
+
+/**
+ * Set new locale LCID for user.
+ * 
+ * @param newLocale new locale to be used starting from now.
+ */
+function setLocale(newLocale) {
+	if (newLocale != null) {
+		LCID = newLocale;
+	}
+}
+
+/**
+ * Set new locale LCID for OS.
+ * 
+ * @param newLocale new locale to be used starting from now.
+ */
+function setLocaleOS(newLocale) {
+	if (newLocale != null) {
+		LCIDOS = newLocale;
 	}
 }
 
@@ -7000,6 +9200,60 @@ function concatenateList(list1, list2) {
 	return list;
 }
 
+/**
+ * Concatenates two Dictionary object and returns concatenated list.
+ * Does not modify any of the dictionaries passed as paramters. Returns new
+ * Dictionary object instead.
+ * If an element is listed in both dictionaries, then the value of the second
+ * Dictionary is applied (overwrite).
+ * Throws error in case an error occurs during dictionary append.
+ * @param dictionary1 Dictionary to be used as a base.
+ * @param dictionary2 Dictionary to be appended to dictionary1.
+ * @returns Dictionary object containing values of dicitonary1 and dictionary2.
+ */
+function concatenateDictionary(dictionary1, dictionary2) {
+	// Return variable.
+	var concatenatedDictionary = new ActiveXObject("Scripting.Dictionary");
+
+	var dictionaries = new Array();
+	dictionaries.push(dictionary1);
+	dictionaries.push(dictionary2);
+	
+	// Concatenate
+	for (var iDictionary=0; iDictionary<dictionaries.length; iDictionary++) {
+		var dictionary = dictionaries[iDictionary];
+		var dictKeys = dictionaries[iDictionary].keys().toArray();
+
+		for (var iDictKey=0; iDictKey<dictKeys.length; iDictKey++) {
+			var key = dictKeys[iDictKey];
+			var value = dictionary.Item(key);
+	
+			// remove eventually existing variable
+			// I don't like to use
+			// variables.Item(variableName)=variableValue;
+			// because my IDE/parser treats it as an error:
+			// "The left-hand side of an assignment must be a variable"
+			try {
+				concatenatedDictionary.Remove(key);
+			} catch(e) {
+				// dinfo("Dictionary element '" + key + "' was not defined before. Creating now.");
+			}
+			try {
+				concatenatedDictionary.Add(key, value);
+			} catch(e) {
+				var message = "Dictionary element '" + key + "' with value '" + value + "'" +
+					" could not be assigned to dictionary!";
+				if (isQuitOnError()) {
+					throw new Error(message);
+				}
+				error(message);
+			}
+		}
+	}
+
+	return concatenatedDictionary;
+}
+
 
 /**
  * Downloads a file by url, target directory and timeout
@@ -7009,30 +9263,36 @@ function concatenateList(list1, list2) {
  * @param target
  *            target directory do download to. This is specified relative to the
  *            downloadUrl path as specified within config.xml
- * @param timeoutValue
+ * @param timeout
  *            timeout in seconds
  * @return true in case of successful download, false in case of error
  */
-function downloadFile(url, target, timeoutValue) {
+function downloadFile(url, target, timeout, expandURL) {
 	if (url == null || url == "") {
 		error("No URL specified for download!");
 		return false;
 	}
-	try {
-		// evaluate target directory
-		if (target == null || target == "") {
-			error("Invalid download target specified: " + target);
-			return false;
-		} else {
-			target = downloadDir + "\\" + target;
-		}
-		target = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(target);
 
-		// evaluate timeout
-		var timeout = downloadTimeout;
-		if (timeoutValue != null && timeoutValue == "") {
-			timeout = parseInt(timeoutValue);
+	// evaluate target directory
+	if (target == null || target == "") {
+		error("Invalid download target specified: " + target);
+		return false;
+	} else {
+		target = downloadDir + "\\" + target;
+	}
+
+	try {
+		// Get shell to expand environment.
+		var shell = new ActiveXObject("WScript.Shell");
+
+		// Expand environment on target.
+		target = shell.ExpandEnvironmentStrings(target);
+
+		// Expand environment on URL.
+		if (expandURL) {
+			url = shell.ExpandEnvironmentStrings(url);
 		}
+
 		var fso = new ActiveXObject("Scripting.FileSystemObject");
 		var stream = new ActiveXObject("ADODB.Stream");
 		var xmlHttp = new createXmlHttp();
@@ -7048,7 +9308,7 @@ function downloadFile(url, target, timeoutValue) {
 			if (xmlHttp.ReadyState == 4) {
 				break;
 			}
-			WScript.sleep(1000);
+			WScript.Sleep(1000);
 		}
 
 		// abort download if not finished yet
@@ -7069,8 +9329,8 @@ function downloadFile(url, target, timeoutValue) {
 		stream.position = 0;
 
 		// delete temporary file if it already exists
-		if (fso.fileExists(target)) {
-			fso.deleteFile(target);
+		if (fso.FileExists(target)) {
+			fso.DeleteFile(target);
 		}
 
 		// check if target folder exists, crate if required
@@ -7150,6 +9410,9 @@ function exec(cmd, timeout, workdir) {
 	// Expand command for better traceability in logs.
 	var cmdExpanded = shell.ExpandEnvironmentStrings(cmd);
 
+	// Initialize shell execute object.
+	var shellExec = null;
+
 	try {
 
 		// Timeout after an hour by default.
@@ -7170,16 +9433,17 @@ function exec(cmd, timeout, workdir) {
 		}
 		dinfo(executeMessage + ".");
 		var shellExec = shell.exec(cmd);
+		var startTime = (new Date()).getTime();
 
 		// close STDIN channel as we won't write to it and some command like
 		// PowerShell might wait for it to be closed on exit
 		shellExec.StdIn.close();
 
-		var count = 0;
+		var timeUsed = 0;
+		var timeoutMilliseconds = timeout * 1000;
+		var increment = 10;
+		var incrementMax = 1000;
 		while (shellExec.status == 0) {
-			WScript.sleep(1000);
-			count++;
-
 			/*
 			 * Unfortunately WSH is terribly broken when handling I/O streams from processes. AtEndOfStream blocks as
 			 * well as ReadAll(), Read(x) and ReadLine(). So it's impossible to fetch STDOUT/ STDERR without blocking
@@ -7198,7 +9462,21 @@ function exec(cmd, timeout, workdir) {
 			 * (!shellExec.StdErr.AtEndOfStream) { dinfo("STDERR: " + shellExec.StdErr.ReadAll()); }
 			 */
 
-			if (count >= timeout) {
+			for(var i=0; i < 10 && shellExec.status == 0 && timeUsed < timeoutMilliseconds; i++) {
+				WScript.Sleep(increment);
+				timeUsed += increment;
+			}
+
+			if (shellExec.status != 0) {
+				break;
+			}
+			increment = increment * 10;
+			if(increment > incrementMax) {
+				increment = incrementMax;
+			}
+			// Update time used to get real time used
+			timeUsed = (new Date()).getTime() - startTime;
+			if (timeUsed >= timeoutMilliseconds) {
 				throw new Error("Timeout reached while executing.");
 			}
 		}
@@ -7219,9 +9497,9 @@ function exec(cmd, timeout, workdir) {
 		}
 	} finally {
 		// If process is not terminated then make sure it's terminated now.
-		if (shellExec.status == 0) {
-            shellExec.Terminate();
-        }
+		if (shellExec != null && shellExec.status == 0) {
+			shellExec.Terminate();
+		}
 	}
 }
 
@@ -7247,21 +9525,23 @@ function getArgv() {
  * @returns Processor architecture string.
  */
 function getArchitecture() {
-	var arch = "x86";
-	var wshObject = new ActiveXObject("WScript.Shell");
-	// check if PROCESSOR_ARCHITECTURE is AMD64
-	// NOTE: On 32-bit systems PROCESSOR_ARCHITECTURE is x86 even if the CPU is
-	// actually a 64-bit CPU
-	var architecture = wshObject.ExpandEnvironmentStrings("%PROCESSOR_ARCHITECTURE%");
-	switch (architecture) {
-		case "AMD64":
-			arch = "x64";
-			break;
-		case "IA64":
-			arch = "ia64";
-			break;
+	if (hostArchitecture == null) {
+		hostArchitecture = "x86";
+		var wshObject = new ActiveXObject("WScript.Shell");
+		// check if PROCESSOR_ARCHITECTURE is AMD64
+		// NOTE: On 32-bit systems PROCESSOR_ARCHITECTURE is x86 even if the CPU is
+		// actually a 64-bit CPU
+		var architecture = wshObject.ExpandEnvironmentStrings("%PROCESSOR_ARCHITECTURE%");
+		switch (architecture) {
+			case "AMD64":
+				hostArchitecture = "x64";
+				break;
+			case "IA64":
+				hostArchitecture = "ia64";
+				break;
+		}
 	}
-	return arch;
+	return hostArchitecture;
 }
 
 /**
@@ -7272,8 +9552,6 @@ function getArchitecture() {
 function getIPAddresses() {
 	if (ipAddresses == null) {
 		ipAddresses = new Array();
-
-		var shell = new ActiveXObject("WScript.Shell");
 
 		var netCards = "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\NetworkCards\\";
 		var netInterfaces = "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\";
@@ -7331,14 +9609,14 @@ function getIPAddresses() {
 }
 
 /**
- * Returns the windows LCID configured for the current user. NOTE: The LCID is
- * read from "HKCU\Control Panel\International\Locale" This is the locale of the
- * user under which WPKG is run. In case WPKG GUI is used this might probably
- * differ from the real locale of the user but at least it will match the system
- * default locale. A user working on an English installation will most probably
- * be able to understand English messages even if the users locale might be set
- * to German. I was yet unable to find any other reliable way to read the
- * locale.
+ * Returns the Windows LCID configured for the current user.<br>
+ * NOTE: The LCID is read from "HKCU\Control Panel\International\Locale"
+ * This is the locale of the user under which WPKG is run. In case WPKG GUI is
+ * used this might probably differ from the real locale of the user but at
+ * least it will match the system default locale. A user working on an English
+ * installation will most probably be able to understand English messages even
+ * if the users locale might be set to German. I was yet unable to find any
+ * other reliable way to read the locale.
  * 
  * @return LCID value corresponding to current locale. See
  *         http://www.microsoft.com/globaldev/reference/lcid-all.mspx for a list
@@ -7355,15 +9633,50 @@ function getLocale() {
 		if (regLocale != null) {
 			// trim leading zeroes
 			var locale = trimLeadingZeroes(regLocale).toLowerCase();
-			dinfo("Found system locale: " + locale);
+			dinfo("Found user locale: " + locale);
 			LCID = locale;
 		} else {
 			LCID = defaultLocale;
-			dinfo("Unable to locate system locale. Using default locale: " + defaultLocale);
+			dinfo("Unable to locate user locale. Using default locale: " + defaultLocale);
 		}
 	}
 
 	return LCID;
+}
+
+/**
+ * Returns the Windows operating system install language LCID.<br>
+ * NOTE: The LCID is read from the InstallLanguage value at
+ * HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Nls\Language\.
+ * This is the locale under which the OS has been initially installed
+ * regardless of the user locale settings.<br>
+ * For example on an English Windows installation with the locale settings set
+ * to German it will still return 409.
+ * 
+ * @returns LCID value corresponding to system install language. See
+ *          http://www.microsoft.com/globaldev/reference/lcid-all.mspx for a list
+ *          of possible values. Leading zeroes are stripped.
+ */
+function getLocaleOS() {
+	if (LCIDOS == null) {
+		// set default to English - United States
+		var defaultLocale = "409";
+		var localePath = "HKLM\\SYSTEM\\CurrentControlSet\\Control\\Nls\\Language\\InstallLanguage";
+
+		// read the key
+		var regLocale = getRegistryValue(localePath);
+		if (regLocale != null) {
+			// trim leading zeroes
+			var locale = trimLeadingZeroes(regLocale).toLowerCase();
+			dinfo("Found system locale: " + locale);
+			LCIDOS = locale;
+		} else {
+			LCIDOS = defaultLocale;
+			dinfo("Unable to locate system locale. Using default locale: " + defaultLocale);
+		}
+	}
+
+	return LCIDOS;
 }
 
 /**
@@ -7418,7 +9731,7 @@ function getRegistrySubkeys(parentKey, subLevels) {
 	try {
 		// Getting registry access object.
 		var locator = new ActiveXObject("WbemScripting.SWbemLocator");
-		var service = locator.ConnectServer(null, "root\\default");
+		var service = locator.ConnectServer(".", "root\\default");
 		var regProvider = service.Get("StdRegProv");
 
 		var enumKeyMethod = regProvider.Methods_.Item("EnumKey");
@@ -7502,7 +9815,7 @@ function getRegistryValue(registryPath) {
 
 		// force error message to get returned error string
 		// in case the key does not exist
-		var noSuchKeyError;
+		var noSuchKeyError = "";
 		try {
 			WshShell.RegRead("HKLM\\SOFTWARE\\NOSUCHKEY\\");
 		} catch (noKeyError) {
@@ -7573,61 +9886,76 @@ function isArgSet(argv, arg) {
  * 
  * <pre>
  * [...]
- * saveEnv();
+ * var previousEnv = getEnv();
  * loadPackageEnv(package);
  * // do some actions
- * loadEnv();
+ * loadEnv(previousEnv);
  * </pre>
  *
  * @param packageNode The package definition to load the environment from
  */
 function loadPackageEnv(packageNode) {
-		// Package variables first...
-		var variables = getPackageVariables(packageNode, null);
 
-		// ...then profile variables...
-		getProfileVariables(variables);
+	// Array to store all variables found.
+	var variables =  new Array();
 
-		// ...and lastly host variables.
-		getHostsVariables(variables);
+	// Host variables first...
+	variables = getHostsVariables(variables);
 
-		var procEnv=new ActiveXObject("WScript.Shell").Environment("Process");
-		// apply variable keys to environment
-		var variableKeys = variables.keys().toArray();
-		for (var i = 0; i < variableKeys.length; i++) {
-			var key = variableKeys[i];
-			var value = variables.Item(key);
-			dinfo("Variable " + key + " = " + value);
-			// yields warning in my IDE:
-			procEnv(key) = value;
-			/*
-			 * if (procEnv.Exist(key)) { procEnv.Remove(key); } procEnv.add(key, value);
-			 */
+	// ...then profile variables...
+	variables = getProfileVariables(variables);
+
+	// ...and lastly package variables.
+	variables = getPackageVariables(packageNode, variables);
+
+	// Apply variables to environment.
+	for (var iVariable=0; iVariable < variables.length; iVariable++) {
+		var varDefinition = variables[iVariable];
+		var variableKeys = varDefinition.keys().toArray();
+		for (var iVarKey = 0; iVarKey < variableKeys.length; iVarKey++) {
+			var key = variableKeys[iVarKey];
+			var value = varDefinition.Item(key);
+			dinfo("Setting variable: '" + key + "=" + value + "'.");
+			setEnv(key, value);
 		}
+	}
 }
 
 /**
- * To restore the environment.
+ * Restores environment using the given dictionary object.
+ * Variables which are not defined within the dictionary object are unset.
+ * Variables which are defined within the dictionary object are set to the
+ * value defined in the dictionary object.
+ * @param environment
+ *           Optionally specify a Scripting.Dictionary object which contains
+ *           the environment to load. If null is passed loads the environment
+ *           previously saved with parameter-less saveEnv().
+ * @return Always returns true.
  */
-function loadEnv() {
-	dinfo("Loading saved environment");
+function loadEnv(environment) {
+	// dinfo("Loading environment");
+	if (environment == null) {
+		return true;
+	}
+	var success = true;
 	var procEnv = new ActiveXObject("WScript.Shell").Environment("Process");
-	for(e = new Enumerator(procEnv); !e.atEnd(); e.moveNext()) {
+	for(var e = new Enumerator(procEnv); !e.atEnd(); e.moveNext()) {
 		var env = e.item(e);
 		var splitEnv = env.split("=", 1);
 		var key = splitEnv[0];
 		if (key != null && key != "") {
-			if (oldEnv.Exists(key)) {
-				procEnv(key) = oldEnv(key);
+			if (environment.Exists(key)) {
+				// dinfo("Setting environment variable '" + key + "' to value '" + environment(key) + "'.");
+				procEnv(key) = environment(key);
 				// yields warning in my IDE:
 				// procEnv.Remove(key);
-				// var valueStartOffset = key + 1;
-				// procEnv.add(key, env.substr(valueStartOffset));
+				// procEnv.add(key, environment.Item(key));
 			} else {
 				procEnv.Remove(key);
 			}
 		}
 	}
+	return success;
 }
 
 /**
@@ -7691,14 +10019,16 @@ function loadEnv() {
  * @param ceil
  *            defines if missing date components are "rounded-up" or "rounded
  *            down", see above
- * @return Date object representing the specified date
+ * @return Date object representing the specified date. Returns null if the
+ *         date cannot be parsed.
  */
 function parseISODate(dateString, ceil) {
 	// <YYYY>[-]<MM>[-]<DD>[T ]<hh>:<mm>:<ss>.<ms>[
 	// make sure dateString is defined
 	var now = new Date();
-	if (dateString == null) {
-		dateString = now.getFullYear() + "";
+	var dateStringValue = dateString;
+	if (dateStringValue == null) {
+		dateStringValue = now.getFullYear() + "";
 	}
 
 	// http://www.w3.org/TR/NOTE-datetime
@@ -7707,67 +10037,72 @@ function parseISODate(dateString, ceil) {
 			"(?:(Z)|(?:([-+])([0-9]{1,2})(?::([0-9]{1,2}))?))?)?)?)?";
 
 	// execute matching
-	var matches = dateString.match(new RegExp(regexp));
+	var matches = dateStringValue.match(new RegExp(regexp));
 
-	if (ceil == null) {
-		ceil = false;
+	var ceilValue = ceil;
+	if (ceilValue == null) {
+		ceilValue = false;
 	}
-	var offset = 0;
 
-	// create new date object using the parsed year
+	// create new date object using the year parsed
 	var date = new Date(now.getFullYear(), 0, 1);
 	if (matches[1]) {
 		date.setFullYear(matches[1]);
-	} else if (ceil) {
-		date.setFullYear(date.getFullYear() + 1);
+	} else {
+		dinfo("Date '" + dateString + "' could not be parsed.");
+		return null;
 	}
+	/*
+	 else if (ceilValue) {
+		date.setFullYear(date.getFullYear() + 1);
+	} */
 	// parse months
 	if (matches[2]) {
 		date.setMonth(matches[2] - 1);
-	} else if (ceil) {
+	} else if (ceilValue) {
 		// month not defined, advance to next year
 		date.setFullYear(date.getFullYear() + 1);
-		ceil = false;
+		ceilValue = false;
 	}
 	// parse days (of the month)
 	if (matches[3]) {
 		date.setDate(matches[3]);
-	} else if (ceil) {
+	} else if (ceilValue) {
 		// date (day of the month) not defined, advance to next month
 		date.setMonth(date.getMonth() + 1);
-		ceil = false;
+		ceilValue = false;
 	}
 	// parse hours
 	if (matches[4]) {
 		date.setHours(matches[4]);
-	} else if (ceil) {
+	} else if (ceilValue) {
 		// hours not defined, advance to next day
 		date.setDate(date.getDate() + 1);
-		ceil = false;
+		ceilValue = false;
 	}
 	// parse minutes
 	if (matches[5]) {
 		date.setMinutes(matches[5]);
-	} else if (ceil) {
+	} else if (ceilValue) {
 		// minutes not defined, advance to next hour
 		date.setHours(date.getHours() + 1);
-		ceil = false;
+		ceilValue = false;
 	}
 	// parse seconds
 	if (matches[6]) {
 		date.setSeconds(matches[6]);
-	} else if (ceil) {
+	} else if (ceilValue) {
 		// seconds not defined, advance to next minute
 		date.setMinutes(date.getMinutes() + 1);
-		ceil = false;
+		ceilValue = false;
 	}
 	// parse milliseconds
 	if (matches[7]) {
 		date.setMilliseconds(Number(matches[7]));
-	} else if (ceil) {
+	} else if (ceilValue) {
 		// milliseconds not defined, advance to next second
 		date.setSeconds(date.getSeconds() + 1);
-		ceil = false;
+		ceilValue = false;
 	}
 	// parse timezone offset
 	var timeZoneSet = false;
@@ -7826,11 +10161,11 @@ function psreboot() {
 		// Overwrites global variable rebootcmd!
 		var rebootCmd = "tools\\psshutdown.exe";
 		var fso = new ActiveXObject("Scripting.FileSystemObject");
-			if (!fso.fileExists(rebootCmd)) {
+			if (!fso.FileExists(rebootCmd)) {
 				var path = WScript.ScriptFullName;
 				var psBase = fso.GetParentFolderName(path);
 				rebootCmd = fso.BuildPath(psBase, rebootCmd);
-				if (!fso.fileExists(rebootCmd)) {
+				if (!fso.FileExists(rebootCmd)) {
 					throw new Error("Could not locate rebootCmd '" + rebootCmd + "'.");
 				}
 			}
@@ -7893,11 +10228,11 @@ function reboot() {
 			break;
 		default:
 			var fso = new ActiveXObject("Scripting.FileSystemObject");
-			if (!fso.fileExists(getRebootCmd())) {
+			if (!fso.FileExists(getRebootCmd())) {
 				var path = WScript.ScriptFullName;
 				var toolBase = fso.GetParentFolderName(path);
 				setRebootCmd(fso.BuildPath(toolBase, getRebootCmd()));
-				if (!fso.fileExists(getRebootCmd())) {
+				if (!fso.FileExists(getRebootCmd())) {
 					throw new Error("Could not locate rebootCmd '" + getRebootCmd() + "'.");
 				}
 			}
@@ -7920,25 +10255,62 @@ function reboot() {
 }
 
 /**
- * To save the current environment in order to allow later restore. See
- * loadEnv() method.
+ * Fetches current environment and returns Scripting.Dictionary object
+ * containing current environment.
+ * @returns {ActiveXObject} Dictionary representing current environment.
  */
-function saveEnv() {
-	dinfo("Saving current environment");
- 	var procEnv = new ActiveXObject("WScript.Shell").Environment("Process");
- 	for(e=new Enumerator(procEnv); !e.atEnd(); e.moveNext()) {
- 		var env = e.item(e);
- 		var RetVal = env.split("=", 1);
- 		var key = RetVal[0];
- 		if (key != null && key != "") {
- 			if (oldEnv.Exists(key)) {
- 				oldEnv.Remove(key);
- 			}
- 			var valueStartOffset = key.length + 1;
- 			oldEnv.add(RetVal[0], env.substr(valueStartOffset));
- 		}
- 	}
- }
+function getEnv() {
+	// dinfo("Fetching environment");
+	var currentEnvironment = new ActiveXObject("Scripting.Dictionary");
+	var procEnv = new ActiveXObject("WScript.Shell").Environment("Process");
+	for(var e=new Enumerator(procEnv); !e.atEnd(); e.moveNext()) {
+		var env = e.item(e);
+		var envKey = env.split("=", 1);
+		var key = envKey[0];
+		if (key != null && key != "") {
+			var valueStartOffset = key.length + 1;
+			currentEnvironment.add(envKey[0], env.substr(valueStartOffset));
+		}
+	}
+	return currentEnvironment;
+}
+
+
+/**
+ * Set an environment variable in the current script environment.
+ * @param key Environment variable name.
+ * @param value Value to assign to the variable.
+ */
+function setEnv(key, value) {
+	if (key == null) {
+		dinfo("Cannot set environment variable: No key specified!");
+		return;
+	}
+	if (value == null) {
+		dinfo("Cannot set environment variable '" + key + "': No value specified!");
+		return;
+	}
+
+	// Expand environment variables in variable definition.
+	var shell = new ActiveXObject("WScript.Shell");
+	// Somehow an empty string is not accepted as string in set instruction below.
+	// So make sure value is of type string.
+	var valueExpanded = shell.ExpandEnvironmentStrings(value) + "";
+
+	// Fetch process environment.
+	var procEnv = new ActiveXObject("WScript.Shell").Environment("Process");
+
+	// Set environment.
+	procEnv(key) = valueExpanded;
+
+	/*
+	 if (procEnv.Exist(key)) {
+		 procEnv.Remove(key);
+	 }
+	 procEnv.add(key, value);
+	 */
+}
+
 
 /**
  * Scans uninstall list for given name. Uninstall list is placed in registry
@@ -7988,7 +10360,7 @@ function scanUninstallKeys(nameSearched) {
 				// first try direct 1:1 matching
 				if (displayName == nameSearched) {
 					dinfo("Uninstall entry '" + displayName +
-							"' matches string '" + nameSearched+  "'.");
+							"' matches string '" + nameSearched + "'.");
 					uninstallPath.push(registryPath);
 					break;
 				} else if(regularExpression) {
@@ -7996,7 +10368,7 @@ function scanUninstallKeys(nameSearched) {
 						// try regular-expression matching
 						var displayNameRegExp = new RegExp("^" + nameSearched + "$");
 
-						if (displayNameRegExp.test(displayName)) {
+						if (displayNameRegExp.test(displayName) == true) {
 							dinfo("Uninstall entry '" + displayName +
 									"' matches expression '" + nameSearched+  "'.");
 							uninstallPath.push(registryPath);

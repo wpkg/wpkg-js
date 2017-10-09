@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
-<packages
-        xmlns:xsi="http://www.wpkg.org/packages"
-        xsi:noNamespaceSchemaLocation="../xsd/packages.xsd" >
+<packages:packages
+        xmlns:packages="http://www.wpkg.org/packages" xmlns:wpkg="http://www.wpkg.org/wpkg" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.wpkg.org/packages ../xsd/packages.xsd" >
 
     <package id="AdobeFlashPlayer"
             name="Adobe Flash Player"
@@ -36,4 +36,4 @@
 
         <remove cmd='"%PKG_SOURCE%\uninstall_flash_player.exe" -uninstall' />
     </package>
-</packages>
+</packages:packages>

@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
-<packages
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="../xsd/packages.xsd" >
-
+<packages:packages
+        xmlns:packages="http://www.wpkg.org/packages" xmlns:wpkg="http://www.wpkg.org/wpkg" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.wpkg.org/packages ../../xsd/packages.xsd" >
     <package id="ShortPackageID"
             name="Long Package Description"
-            revision="%PKG_VERSION%"
+            revision="%PKG_VERSION%rc1"
             reboot="false"
             priority="10">
 
@@ -21,12 +20,11 @@
 
         <check type="file" condition="versiongreaterorequal" path="%PKG_DESTINATION%\%PKG_NAME%\" value="%PKG_VERSION%" />
 
-        <install cmd='%ComSpec% /c if not exist "%PKG_DESTINATION%\%PKG_NAME%"         mkdir "%PKG_DESTINATION%\%PKG_NAME%"' />
-        <install cmd='%ComSpec% /c xcopy "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_NAME%" /S /V /I /R /Y &gt;"%TMP%\%PKG_NAME%.log"' />
+        <install cmd='%ComSpec% /c if not exist "%PKG_DESTINATION%\%PKG_NAME%"                 mkdir "%PKG_DESTINATION%\%PKG_NAME%"' />
+        <install cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_NAME%" &gt;"%TMP%\%PKG_NAME%.log"' />
 
-        <upgrade cmd='%ComSpec% /c if not exist "%PKG_DESTINATION%\%PKG_NAME%"         mkdir "%PKG_DESTINATION%\%PKG_NAME%"' />
-        <upgrade cmd='%ComSpec% /c xcopy "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_NAME%" /S /V /I /R /Y &gt;"%TMP%\%PKG_NAME%.log"' />
+        <upgrade include="install" />
 
         <remove cmd='%ComSpec% /c if exist "%PKG_DESTINATION%\%PKG_NAME%" rmdir /s /q "%PKG_DESTINATION%\%PKG_NAME%"' />
     </package>
-</packages>
+</packages:packages>

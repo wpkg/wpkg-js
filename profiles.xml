@@ -1,39 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- System profile database.
+<!--
+	List of profiles available to be assigned to hosts.
 
-     Lists profiles available to the systems. A profile represents a certain
-     selection of packages from the packages database. Profiles can depend on
-     other profiles, the end result being the sum of all required packages.
-     
-     THIS IS A SAMPLE FILE
-     
-     For more info, see http://wpkg.org/index.php/Category:Documentation
+	A profile represents a certain selection of packages from the package
+	database. Profiles can depend on other profiles in order to build the
+	complete set of packages to be assigned to a host.
 
+	THIS IS A SAMPLE FILE.
+
+	For detailed documentation on the XML structure, attributes etc it's
+	recommended to have a look at the XSD schema included here:
+		xsd/
+
+	An automatically generated documentation of the XML structure is included
+	here:
+		documents/
+	Just open documents/index.html in your favorite web browser.
+
+	More documentation is available on the WPKG web-page as well:
+		<http://wpkg.org/Category:Documentation>
 -->
 
-<profiles>
 
-    <profile id="default">
-        <package package-id="firefox" />
-        <package package-id="thunderbird" />
-    </profile>
-  
-    <profile id="custom">
-        <depends profile-id="default" />
-        <package package-id="openoffice" />
-    </profile>
+<profiles:profiles xmlns:profiles="http://www.wpkg.org/profiles"
+	xmlns:wpkg="http://www.wpkg.org/wpkg" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.wpkg.org/profiles xsd/profiles.xsd ">
+	<!--
+		Default set of software to be assigned to all hosts.
+	-->
+	<profile id="default">
+		<package package-id="firefox" />
+		<package package-id="thunderbird" />
+	</profile>
 
-    <profile id="administration">
-        <depends profile-id="default" />
-        <package package-id="openoffice" />
-        <package package-id="acrobat7" />
-    </profile>
+	<!--
+		Custom profile to be assigned to specific hosts only.
+		The profile depends on the default profile and therefore includes
+		packages from the default profile too.
+	-->
+	<profile id="custom">
+		<depends profile-id="default" />
+		<package package-id="openoffice" />
+	</profile>
 
-    <profile id="other">
-        <depends profile-id="default" />
-        <package package-id="openoffice" />
-    </profile>
+	<!--
+		Custom profile to be assigned to hosts in administration department.
+		The profile depends on the default profile and therefore includes
+		packages from the default profile too.
+	-->
+	<profile id="administration">
+		<depends profile-id="default" />
+		<package package-id="openoffice" />
+		<package package-id="acrobat7" />
+	</profile>
 
-
-</profiles>
+	<!--
+		Custom profile to all remaining hosts.
+		The profile depends on the default profile and therefore includes
+		packages from the default profile too.
+	-->
+	<profile id="other">
+		<depends profile-id="default" />
+		<package package-id="openoffice" />
+	</profile>
+</profiles:profiles>

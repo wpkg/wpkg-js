@@ -1,403 +1,165 @@
-﻿===============================================================================
-= CHANGES FOR 1.2 release
+===============================================================================
+= CHANGES FOR 1.3 release
 ===============================================================================
 
 Change notes
 ============
-WPKG Version: 1.2
+WPKG Version: 1.3.0
 Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
-Date        : 2011-07-16
+Date        : 2011-12-08
 Status      : release pending
 
 Changes/fixes visible to the user:
+- Fixed possibility to catch "file not found" on command execution.
+- Minor typo and formatting fixes.
+- Fixed order of include for XML files from sub-directories.
+- Further improvements on XML reading.
+- Fixed one more bug when reading XML files from folders.
+- Extended host attribute matching for checks.
+- Ext. host attribute matching for dependencies, chain, includes and downloads.
+- Fixed English LCID message in config.xml.
+- Speed up termination of short-running tasks.
+- Fixed literal sorting of XML files during read from directory.
+- Updated logfile handling.
+- Enhanced command-line parsing.
+- Added qualifiers for command-line switches.
+- Added lcidOS advanced host matching attribute.
+- Fix for lcidOS reading.
+- Printing WPKG version later during init process.
+- Added extended host attribute matching for host/profile and profile/depends.
+- Logfile handling improvement.
+- Added expansion of environment variables in download URLs.
+- Fixed download timeout.
+- Fixed download during package removal.
+- Fixed typo on reading expandURL attribute from download nodes.
+- Added package command inclusion.
+- New options to /query argument.
+- Verious smaller fixes.
+- Fixed XSD and moved installdate/uninstalldate to profile.
+- Fixed quiet mode.
+- Added file date comparison operation for checks.
+- Fixed XSD package include.
+- Improved handling of command include recursion detection.
+- (Re-)fixed download tag.
+- Updated package templates to include latest WPKG features.
+- Limited file date equal comparison to 1-second resolution.
+- Support for host checks in <check /> nodes.
+- Condition support for extended host attribute check nodes.
+- Added generic command type specification and inclusion.
+- Enhanced variable resolution (recursive variables within same node).
+- Fixed typos in config files.
+- Fixed typos in XSD files.
+- Fixed typos in NSIS package template.
+- Fixed typos in wpkg.js (non-functional related).
+- Modified XSD data structure eliminating duplicated code.
+- Prevent crash in case invalid variable specification with missing attributes.
+- Fixed handling of packages without any classical commands.
+- Allow mixing profile and manual installations using /install:<package>
+- Further improvement of NSIS template.
+- Further improvement on notifications in config.xml.
+- Further fix to empty environment variable definition on Win 2k/XP.
+- Improved downloader.
+- Updated variable expansion order.
+- Efficiency improvements on variable expansion.
+- Added /settings:<path> command-line argument.
+- Improved variable handling. Especially for recursive variables.
+- New query parameters to query host information.
+- Fixed /query:m not to show execute="changed" packages if there is no change.
+- Fixed /help screen messages.
+- added /queryMode:remote switch to allow remote query of changes.
+- Re fixed handling of empty variables on Windows XP.
+- Fixed reading of host attributes in remote query mode.
+- Fixed /query:l in remote query mode now showing local host information.
+- Fixed error executing on remote node which did not have a matching profile.
+- Fixed conditional nodes exclusion if condition does not match.
+- Added files for maven-based build.
+- Migrated directory structure for maven-based build.
+- Added xs3p to generate HTML-based documentation from XSD files.
+- Added support for multiple check nodes within a NOT logical check.
+- Updated included sample files.
+- Added XSD for config.xml
+- Modified generated site content.
+- Added XML namespace and reference to XSD in documentation files.
+- Fixed WPKG error in case multiple profiles apply to a host.
+- Fixed conditional expressions and checks in default namespace.
+- Fixed include attribute allowing only pre-defined values.
+- Fixed included Firefox package "id" attribute.
+- Removed unused variable from the code.
+- Added XML schema for validation to included sample packages and templates.
+- Remote query did not take architecture into account.
+- Storing check evaluation results in local settings database for remote use.
+- Fixed replacing of check nodes during WPKG run in local settings file.
+- Improved efficiency when saving check nodes to settings file.
+- Fixed issue when working with wpkg.xml which does not contain check results.
+- Fixed lookup of logical checks in check results in wpkg.xml.
+- Not saving wpkg.xml in remote query mode.
+- Added checkHost type to wpkg.xsd.
+- Enhanced variable expansion in advanced host check attributes.
+- Re-introduced XSLT processing during XML read.
+- Fixed WPKG exit due to invalid regular expression in hosts definition.
+- Fixed losing of host information in settings.
+- Added XML name space to settings file.
+- Added XML processing information to settings file.
+- Fixed minor typo in error message about invalid XML structure loaded.
+- Final release of WPKG 1.3.0
 
-Summary:
-- Fixed IP-address match in case 3 "." are used in host matching string.
-- Fixed package removal procedure exception in case of /noremove flag is used.
-- Fixed removal of settings entry in case of /noremove and no package checks.
-- Allow folders to be checked with file checks.
-- Allows recursive search for uninstall entries in registry
-- Enhance wrapper.js to use sysnative cmd.exe.
-- Disabled recursive registry uninstall checking again due to slow execution.
-- Closing STDIN when executing commands.
-- Extended host matching for OS, IP, domain and groups.
-- Fix for crash if interface has no IP bound to it.
-- Fix for registry exist checks not returning true.
-- Fix for execute test writes null values to the logs.
-- Fix included aesthetic break.
-- Extended host attribute match for host architecture.
-- Extended host attribute match for environment variables.
-- Support for host attribute matches in <package/> definitions within profiles.
-- Small fixes and optimizations.
-- New /noDownload switch.
-- Fixed debug mode (broken since introduced advanced host checks).
-- Added extended host attribute match for package commands.
-- Added package pre-check attributes to package nodes.
-- Fixed ignore of lcid in package variables.
-- Cosmetic fix in extended host matching debug output.
-- Allow multiple packages to be installed/removed/upgraded in one-shot.
-- Allow variable expansion in file size checks.
-- Fix for null-reference exception if package variable did not specify lcid.
-- Added tabular output to report.pl
-- Fixed references to wpkg.org in profiles.xsd
-- Fixed change log typos.
-- Fixed invalid read of "uninstalldate" attribute.
-- Fixed typos in comments within wpkg.js.
-- Fixed additional typos in README.
-- Minor usage message formatting fixes.
-- Added printing of expanded command-line in debug message.
-- Fixed adding of packages to local DB if precheck-upgrade=always succeeds.
-- Added extended host matching in variables.
-- Added lcid matching for all extended host match supported nodes.
-- Added host information to local <wpkg /> settings node.
-- Using "hostname" now for extended host attribute matching instead of "host".
-- Fixed LCID extended host matching variable clash.
-- Fixed termination of commands which run into timeout.
-- Fixed classic host name matching.
-- Added support for IA64 architecture.
-- Fixed handling of failed commands with variables in path.
-- Fixed process termination when command times out.
-- Added sample package templates.
-- Included updated Firefox example package.
-- Included updated sample profile.
-- Final release as version 1.2.
-
-NEW: Updated IP matching algorithm to prevent accidental matching if regexp or
-     host name is used which uses exactly 3 "." within the string.
-     Thanks to Stefan Pendl for reporting.
-FIX: Fixed package removal procedure in case /noremove flag is set. WPKG would
-     have failed (exception thrown) in case /noremove was used and a package
-     is detected NOT to be installed.
-FIX: In case /noremove is used and the package does not define any checks WPKG
-     is unable to detect if the package is still installed or not. Previously
-     WPKG was assuming that the package is not installed and removed it from
-     the local settings file. This has been changed. The package will now only
-     be removed from the settings file if it defines some checks which allow
-     WPKG to clearly detect that the package is not installed on the system.
-     So if the package does not define any checks WPKG assumes it's still
-     installed on the system and does not remove its entry from the local
-     settings file (wpkg.xml).
-FIX: Updated "file" type checks to match folders too. Now a check of type file
-     for condition exist yields true for a patch referring either a file or
-     a folder.
-     Thanks to Joe for reporting.
-NEW: WPKG now allows uninstall entries to be defined in sub-nodes of the
-     uninstall registry key. I was unable to verify that Windows supports such
-     entries but as reported RationalPlan Viewer seems to add such a sub-node:
-     Uninstall\RationalPlan\Viewer.
-     There might be other programs doing the same.
-     During tests Windows XP and Windows 7 were ignoring such entries but now
-     WPKG supports these entries now. (NOTE: Disabled again, read below)
-NEW: Enhanced wrapper.js to use sysnative directory. The sysnative directory
-     allows 32-bit programs to access the 64-bit binaries within
-     %SystemRoot%\system32\. This way it is not necessary any more to copy the
-     64-bit version of cmd.exe to the 64-bit\ sub-folder since the wrapper can
-     launch the locally available 64-bit cmd.exe.
-MOD: Disabled recursive uninstall checks again. Reading registry keys
-     recursively is very slow with WSH and since there are typically
-     many sub-keys within the uninstall locations this causes a very long
-     delay each time an uninstall check is used.
-     It's recommended to use a registry value check instead of an uninstall
-     check in order to check for the status of an application which puts its
-     uninstall entry within a sub-key of the uninstall keys in the registry.
-MOD: WPKG now closes STDIN when executing external commands. Some applications
-     seem to wait for STDIN to be closed before they exit. Microsoft PowerShell
-     seems to be one of the affected applications.
-     Since closing STDIN should not have negative effects (WPKG will not write
-     to STDIN) it's supposed to be safe to close it.
-     Thanks to Stéphane Bilqué for reporting.
-NEW: Many extensions in host matching. Now a host entry in hosts.xml is allowed
-     to include the following attributes:
-       <host name='host-x'
-         profile-id='profile-reference'
-         os="windows 7"
-         ipaddresses="^192\.168\.1\..*"
-         domainname="^domain$"
-         groups="^group.*$" />
-     Note: All special parameters (os, ipaddresses, domainname, groups) are
-     specified as regular expressions. Especially keep this in mind when
-     specifying IP-addresses or any parameter including periods (.). As a
-     period in regular expression means "any character". So keep in mind to
-     escape special regular expression characters.
-     Note that the group attribute refers to regular Windows NT group
-     membership and not to Active-Directory organization units.
-     Many thanks to Daniel Dehennin for continued support of this changes.
-     It just almost took as long as finishing DNF to include it. *sigh*
-FIX: Included fix for bug 196 which could make WPKG crash in case no IP
-     address is assigned to a network card.
-     Thanks to Daniel Dehennin again.
-FIX: Included fix for bug 199 where registry exist checks did not return true.
-     Thanks to Daniel Dehennin again.
-FIX: Included fix for bug 200 where execute test fallback to 'exitcodeequalto'
-     in 'execute' tests writes null values to the logs.
-     Thanks to Daniel Dehennin again.
-FIX: Included aesthetic break statement in check condition for uninstall checks.
-     Thanks to Daniel Dehennin again.
-NEW: Extended host attribute match now allows to match architecture using
-     architecture="<arc>" attribute. The following architectures are currently
-     supported:
-     x86      32-bit operating system
-     x64      64-bit operating system
-     Note: You will have to match x86 also if you run Windows 32-bit on
-     AMD64/EMT64/x64 hardware.
-NEW: Extended host attribute match allows to match environment variables using
-     environment="variable1=^regexp$|variable2=regexp..." attribute.
-     Please note that regular expressions are matched case-insensitive and
-     multiple variables have to be separated by the pipe ('|') character.
-     Please also note that in case you use WPKG-client the system-user
-     environment might differ from the environment you see when opening a
-     command prompt and typing 'set'. Some variables might be missing and
-     others might have different content. So use with caution.
-NEW: Extended use of host matches. Now WPKG supports host matches from previous
-     update not only in <host /> definitions but also in <package />
-     definitions used within <profile /> nodes. This allows profiles where
-     certain packages are applied only if specific host-conditions match.
-     For example:
-     <profile id='default'>
-       <package package-id='AdobeReader' os="windows 7" architecture="x64" />
-       <package package-id='audacity' />
-       <package package-id='pidgin' os="windows 7" />
-       <package package-id='firefox' environment="NUMBER_OF_PROCESSORS=^4$" />
-     </profile>
-     This example would install "AdobeReader" only on systems with Windows 7
-     64-bit edition running while "pidgin" is installed on all Windows 7 hosts
-     regardless of the architecture. The "firefox" package would be installed
-     only if WPKG runs within an environment which defines the
-     NUMBER_OF_PROCESSORS environment variable to the value "4".
-     The "audacity" packages would be installed on any host which gets the
-     'default' profile assigned.
-MOD: Some smaller fixes and optimizations.
-NEW: Added /noDownload option (and noDownload property in config.xml) to
-     disable downloads globally. When the switch is used then WPKG just ignores
-     any download specification. Use with caution as your install/upgrade/...
-     commands might depend on downloaded files. So make sure that you fetch
-     the files which would be downloaded prior to WPKG execution.
-     Thanks to Marco Gaiarin.
-FIX: Fixed using of lcid="<lcid>" attribute within variable definition in
-     packages. It was documented in packages.xsd but not implemented in wpkg.js.
-     Fixes bug 206.
-     Thanks to Stefan Pendl.
-FIX: Fixed bug when using /debug switch (or implicit enable of /debug by using
-     /dryrun switch or config.xml flag). The issue was introduced with new host
-     attribute matching and advanced host identification in debug messages.
-     Fixes bug 210. Thanks to Stefan Pendl for reporting.
-NEW: Extended host attribute verification is now allowed to be used in package
-     commands too. Commands which specify additional host attributes are
-     ignored if one of the extended attributes do not match the executing host.
-     e.g.
-       <install cmd="command"
-         ...
-         os="windows 7"
-         ipaddresses="^192\.168\.1\..*"
-         domainname="^domain$"
-         groups="^group.*$"
-         architecture="x86" />
-     Note: All special parameters (os, ipaddresses, domainname, groups) are
-     specified as regular expressions. Especially keep this in mind when
-     specifying IP-addresses or any parameter including periods (.). As a
-     period in regular expression means "any character". So keep in mind to
-     escape special regular expression characters.
-     As a result you can use extended host check attributes in the following
-     locations:
-     - host matching
-       <host name="hostname"
-             profile-id="profile"
-             ...
-             architecture="x64"
-             ...
-       />
-     - profile packages
-       <package package-id="package"
-                ...
-                architecture="x64"
-                ...
-       />
-     - package commands
-       <install cmd="command-line"
-                ...
-                architecture="x64"
-                ...
-       />
-       <remove cmd="command-line"
-                ...
-                architecture="x64"
-                ...
-       />
-       <upgrade cmd="command-line"
-                ...
-                architecture="x64"
-                ...
-       />
-       <downgrade cmd="command-line"
-                ...
-                architecture="x64"
-                ...
-       />
-NEW: Added attributes to package nodes which allow to control whether checks
-     shall be execute before install/upgrade/downgrade/remove. By default WPKG
-     only executes checks before first installation in order to prevent re-
-     installing a package which is already installed. Using the new attributes
-     it allows you to enable these checks before upgrade/downgrade/remove too.
-     For example if you use precheck-upgrade="always" and upgrade a package,
-     then WPKG will first run the checks and if they succeed WPKG will skip
-     the execution of upgrade commands and just assume this version is already
-     installed.
-     Be careful when using these attributes as it might lead WPKG to skip
-     upgrades/downgrades if your checks are not sufficiently specific. For
-     example if your check just checks for an uninstall entry existence which
-     is true for the old and the new version, then precheck-upgrade="always"
-     would make WPKG believe that the upgrade has been performed already as
-     the uninstall check from the updated package succeeds. So make sure to
-     include some checks which are true for the new package, but not for the
-     old one.
-     Here is some documentation on the attributes (all of them are optional):
-     <package ...
-     	precheck-install="never|always"
-     	precheck-remove="never|always"
-     	precheck-upgrade="never|always"
-     	precheck-downgrade="never|always"
+FIX: Fixed another issue that specifying a command which could not be executed
+     (for example if the specified target did not exist) caused WPKG to report
+     an error which could not be catched by exit code "any".
+     Reverted behavior to pre-version-1.2. So WPKG in such cases returns exit
+     code "-1" which can be catched by an exit code "-1" or "any" statement.
+     Fixes bug 226. Thanks to Bruno Choquet for reporting.
+FIX: Fixed minor typo and formatting. One bug regarding code typo is likely
+     never going to be executed in production. So no real impact on live
+     systems expected.
+FIX: Potential fix for changed XML parsing where XML database file is included
+     to the XML tree before files in sub-directory. For example host.xml was
+     read before hosts/*.xml files. Therefore if hosts.xml did include a
+     "catch-all" entry (e.g. name=".*") it was always taken into account first
+     no matter if there is a more-specifc match in any hosts/*.xml files.
+     Now WPKG first parses hosts/*.xml files (in literal order) and then reads
+     hosts.xml. Thus if there is a concrete match within any hosts/*.xml file
+     this match takes precedence.
+     Note that this change does not have any effect if applyMultiple is not
+     enabled. If applyMultiple is enabled then anyway all host matches are
+     evaluated.
+     Thanks for Marco Gaiarin for initiating the discussion.
+FIX: Fixed reading of XML files. Specifically reading the root node including
+     attributes. The change also includes simplified XML handling. The XML
+     root node name is now read from the first XML file in the list (either
+     the file passed as argument or from the first file read from the XML
+     directory). Therefore the XML root node name parameter is not needed any
+     more. The change also eliminates the requirement for XSL transformation
+     in case only a single file is loaded. This might speed up single-file
+     reading.
+FIX: Fixed reading multiple XML files from directory. The last commit included
+     too many optimizations and did not take into account that MSXML creates a
+     new XML document when loadXML() is used on a XML DOM object instead of
+     just modifying the existing one. So the root element has to be re-read.
+NEW: Added extended host matching for <check /> nodes. This enables to specify
+     checks like:
+     <check type="uninstall"
+            condition="exists"
+            path="Mozilla Firefox 5.0.1 (x86 en-US)"
+            architecture="x86"
      />
-     Notes on "precheck-install":
-        Defines how package checks are used during package
-        installation.
-        
-        Currently supported values:
-        
-        "always" (default): When a package is new to the
-        host then first the checks are run in order to
-        verify whether the package is already installed. If
-        the checks succeed then it is assumed that no
-        further installation is needed. The package is
-        silently added to the host without executing any
-        commands.
-        
-        "never": When a package is new to the host then the
-        install commands are run in any case (without doing
-        checks first). Note: Checks will still be done after
-        package installation to verify whether installation
-        was successful.
+     <check type="uninstall"
+            condition="exists"
+            path="Mozilla Firefox 5.0.1 (x64 en-US)"
+            architecture="x64"
+     />
 
-     Notes on "precheck-remove":
-        Defines how package checks are used during package
-        removal.
-        
-        Currently supported values:
-        
-        "always": When a package is removed from a
-        host then the checks will be executed before removal
-        is processes. If the checks fail this potentially
-        means that the package has been removed already. In
-        such case the package remove commands will be
-        skipped.
-        
-        "never" (default): When a package is about
-        to be removed from the host then WPKG will execute
-        the remove commands in any case without executing
-        the checks first. Note: Checks will still be done
-        after package removal to verify whether the removal
-        was successful.
+     So you can specify individual checks based on specific host matches like
+     the host architecture, OS or other attributes.
+     Thanks to "cleitet" for suggestion. Fixes bug 205.
+NEW: Added extended host attribute matching support for the following package
+     notes:
+       <depends />
+       <include />
+       <chain />
+       <download />
 
-     Notes on "precheck-upgrade":
-        Defines how package checks are used during package
-        upgrade.
-        
-        Currently supported values:
-        
-        "always": When a package is upgraded the
-        checks specified will be be executed before the
-        upgrade takes place. If checks succeed, then the
-        upgrade will not be performed (WPKG just assumes
-        that the new version is already applied correctly.
-        Please note that your checks shall verify a specific
-        software version and not just a generic check which
-        is true for all versions. If your checks are true
-        for the old version too then WPKG would never
-        perform the upgrade in this mode.
-        
-        "never" (default): When a package is about
-        to be upgraded then WPKG will execute the upgrade
-        commands in any case without executing the checks
-        first. This is the recommended behavior. Note:
-        Checks will still be done after package upgrade to
-        verify whether the upgrade was successful.
-
-     Notes on "precheck-downgrade":
-        Defines how package checks are used during package
-        downgrade.
-        
-        Currently supported values:
-        
-        "always": When a package is downgraded the
-        checks specified will be be executed before the
-        downgrade takes place. If checks succeed, then the
-        downgrade will not be performed (WPKG just assumes
-        that the old version is already applied correctly.
-        Please note that your checks shall verify a specific
-        software version and not just a generic check which
-        is true for all versions. If your checks are true
-        for the new/current version too then WPKG would
-        never perform the downgrade in this mode.
-        
-        &quot;never&quot; (default): When a package is about
-        to be downgraded then WPKG will execute the
-        downgrade commands in any case without executing the
-        checks first. This is the recommended behavior.
-        Note: Checks will still be done after package
-        downgrade to verify whether the downgrade was
-        successful.
-     This implements a change request reported in Bugzilla report 180.
-FIX: Fixed using of lcid="<lcid>" attribute within variable definition in
-     packages. It was documented in packages.xsd but not implemented in wpkg.js.
-     Fixes bug 206.
-     Thanks to Stefan Pendl.
-FIX: Fixed cosmetic issue in host matching output.
-     Fixes bug 211. Thanks to Stefan Pendl for reporting.
-NEW: Allow to specify multiple packages to be installed/removed/upgraded on
-     command-line. Just specify a comma-separated list of packages:
-     cscript wpkg.js /install:package1,package2,...
-     Implements bugzilla 204. Thanks to Michael Croes for reporting.
-NEW: Allowing use of environment variables in file size checks:
-     <check type="file"
-            condition="sizeequals"
-            path="%ProgramFiles%\%PKG_DST%"
-            value="%PKG_SIZE%" />
-     Fixes bug report 212. Thanks to Stefan Pendl for reporting.
-FIX: Fixed additional issue in package variable LCID matching in case variable
-     was defined but no lcid attribute was present (which should be fully
-     supported).
-     Support for multiple comma-separated LCID values added.
-     Fixes bug 206.
-NEW: Added tabular output for the listing to report.pl script.
-     Thanks to Stefan Pendl for providing the update.
-     Fixes bug 213.
-FIX: Fixed profiles.xsd reference to example.org instead of wpkg.org.
-     Thanks to Stefan Pendl for reporting. Fixes bug 214.
-FIX: Fixed typos in change log files.
-     Thanks to Stefan Pendl for review. Fixes bug 215.
-FIX: Fixed minior formatting errors in usage message.
-     Fixes bug 220. Thanks to Stefan Pendl.
-NEW: Printing command + expanded command in debug message when executing
-     commands.
-     Fixes bug 221. Thanks to Stefan Pendl.
-FIX: Packages which were already updated by the user (detected by
-     precheck-update=always) were not added to the local package database.
-     As a result such packages were checked over and over again for upgrade
-     on each WPKG-run.
-     Fixes bug 219. Thanks to Heiko Helmle.
-NEW: Supporting extended host matching in variables.
-     Fixes bug 209. Thanks to Stefan Pendl.
-NEW: Added generic lcid matching for all XML elements which support extended
-     host matching. Now the following attributes can be matched:
-
-     os="windows 7"
-     ipaddresses="^192\.168\.1\..*"
-     domainname="^domain$"
-     groups="^group.*$"
-     architecture="x86"
-     lcid="407,c07,1407,1007,807"
-
-     These matches can be used within the following XML elements now:
-
+     As a result the following nodes cannow deal with extended host matching:
      In hosts.xml:
      <host name="..." proifile-id="..." os="..." ... />
      <variable name="..." value="..." os="..." ... />
@@ -408,84 +170,832 @@ NEW: Added generic lcid matching for all XML elements which support extended
 
      In packages.xml:
      <variable name="..." value="..." os="..." ... />
+     <depends package-id="..." os="..." />
+     <include package-id="..." os="..." />
+     <chain package-id="..." os="..." />
+     <download url="..." target="..." os="..." />
+     <install cmd="..." os="..." />
+     <upgrade cmd="..." os="..." />
+     <downgrade cmd="..." os="..." />
+     <remove cmd="..." os="..." />
+FIX: Fixed start notification text in English LCID specification in config.xml:
+     From: ...Plase safe all...
+     To: ... Please save all...
+     Thanks for Jeff Applegate for pointing this out.
+FIX: Fixed long execution run times if many short-running external commands are
+     invoked. For example if many execute-style checks were invoked and each
+     check finished its task in less than 1s time, then WPKG would wait at
+     least 1 second for it to finish. Unfortunately WSH is not very advanced in
+     handling child processes but the algorithm has been changed in a way that
+     for the first 100ms of run time the child status is checked every 10ms.
+     For the next 1000ms the status is checked every 100ms. If the task is not
+     finished by then the task will be checked for termination once per second.
+     This allows short-running tasks to terminate quickly while preventing high
+     WPKG load for monitoring on long-lasting tasks.
+     Fixes bug 233. Thanks to Malte Starostik für suggestion.
+FIX: XML files read from directories (e.g. hosts/*.xml, profiles/*.xml or
+     packages/*.xml) have not been explcitly sorted. So the order of reading
+     was depending on the OS and not strictly defined.
+     Now all files are added to an array which is sorted in literal (ASCII)
+     order. Keep in mind if you number your files that sort oder is literally
+     and not numerically. So if you name your files "1.xml, 2,xml, 3.xml,
+     10.xml, 11.xml, 20.xml" then the sort order will be:
+     - 1.xml
+     - 10.xml
+     - 11.xml
+     - 2.xml
+     - 20.xml
+     - 3.xml
+     To prevent this try keeping the same amount of digits:
+     - 01.xml
+     - 02.xml
+     - 03.xml
+     - 10.xml
+     - 11.xml
+     - 20.xml
+     Thanks to Donny Brooks who seems to have noticed first that the ordering
+     somehow goes wrong for him.
+MOD: Updated log file handling. Now there is no intermediate local log file
+     created any more. Instead a log is kept in memory as long as the log file
+     is not initialized. If anything goes wrong WPKG still tries to flush the
+     logs at least to a log file in %TEMP%.
+     This potentially increases efficiency and execution speed slightly.
+MOD: Enhanced parsing of command-line parameters.
+     Enhances efficiency and potentially increases startup speed.
+MOD: Added possibility to add true/false qualifiers to explicitly enable or
+     disable a value on command line. As requested in bug 234.
+     For example the following parameters are now supported:
+     /quiet           Enables quiet mode.
+     /quiet:true      Same as above. Enables quiet mode.
+     /quiet:false     Explicitly disables quiet mode.
+     /nonotify        Disable user notification.
+     /nonotify:true   Same as above. Disables user notifications.
+     /nonotify:false  Explicitly re-enable user notifications.
+     ...
+     Check 'cscript wpkg.js /help' for details.
+     Thanks to Ben Hay for reporting.
+NEW: Added new advanced host matching attribute "lcidOS" which matches against
+     the executing host InstallLanguage attribute found at
+     HKLM\SYSTEM\CurrentControlSet\Control\Nls\Language.
+     The use is identical to all other advanced host matching attributes.
+     e.g.
+     <install cmd="..." os="..." lcidOS="409" />
+     <upgrade cmd="..." os="..." lcidOS="409" />
+     Implemented as requested by Stefan Pendl and "grigribou".
+FIX: Fixed reading of system locale. The registry path was broken due to typo.
+     Thanks to Grég B. for reporting.
+FIX: Printing WPKG version later during initialization to prevent debug
+     messages appearing in logs even if lower log levels are configured.
+NEW: Added full extended host attribute matching for <profile/> nodes in
+     host definitions and <depends/> nodes in profile definitions.
+     Some examples...
+
+     Assigning profiles depending on extended host attribute matching:
+     <host name="...">
+     	<profile id="default" os="windows xp" architecture="x86" />
+     	<profile id="default-x64" os="windows xp" architecture="x64" />
+     </host>
+
+     Of course the following is still possible too:
+     <host name="..." profile-id="default-x64" architecture="x64" />
+
+     Adding dependencies based on host attributes:
+     <profile id="default">
+     	<depends profile-id="default-x64" architecture="x64" />
+     </profile>
+
+     As a result the following nodes cannow deal with extended host matching:
+     In hosts.xml:
+     <host name="..." proifile-id="..." os="..." ... />
+     <profile id="..." os="..." ... />
+     <variable name="..." value="..." os="..." ... />
+
+     In profiles.xml:
+     <variable name="..." value="..." os="..." ... />
+     <package package-id="..." os="..." ... />
+     <depends profile-id="..." os="..." ... />
+
+     In packages.xml:
+     <variable name="..." value="..." os="..." ... />
+     <depends package-id="..." os="..." />
+     <include package-id="..." os="..." />
+     <chain package-id="..." os="..." />
+     <download url="..." target="..." os="..." />
      <install cmd="..." os="..." />
      <upgrade cmd="..." os="..." />
      <downgrade cmd="..." os="..." />
      <remove cmd="..." os="..." />
 
-     Implements request filed in bug 209. Thanks to Stefan Pendl.
-NEW: Added host attributes to <wpkg /> node of local settings file (wpkg.xml).
-     This allows analysis tools to get some more host information without
-     having to parse the log files. Example node:
-     <wpkg
-       hostname="admin-pc"
-       architecture="x64"
-       os="microsoft windows 7 professional, , , 6.1.7600"
-       ipaddresses="192.168.1.30"
-       domainname=""
-       groups=""
-       lcid="807"
+     Thanks to Malte Starostik for providing input.
+FIX: Further improvement on log file handling. Now the log file is not even
+     opened if there is nothing to log. So if WPKG does not have anything to do
+     and log level is set to 0x07 or lower, then WPKG will not even create an
+     empty log file. Previous releases did create an empty log file in this
+     case.
+NEW: Expansion of environment variables in download URLs added.
+     This allows specification of URLs with variables like the following:
+     <download
+     url="http://host/%VERSION%/release-%version%.exe"
+     target="release.exe"
      />
-     Fixes bug 217. Thanks to Stefan Pendl.
-     Update: This change did have a huge impact on test cases as wpkg-test
-     performs 1:1 comparison to expected wpkg.xml files. As a result all checks
-     fail. To work-around this issue unless the tests are updated I have
-     introduced a configuration switch in config.xml:
-       settingsHostInfo=true
-     If set to false, then WPKG will not write host attributes to local
-     wpkg.xml database.
-FIX: Extended host attribute matching uses "hostname" now for host name
-     matching to prevent collision with name attributes in <variable />
-     nodes. Moreover this allows now to use classical "name=" attribute
-     in <host /> nodes as wel as the "hostname" extended match attribute.
-     In addition the "name=" attribute in <hosts /> have been declared as
-     optional now. This allows to use either legacy "name" matching which
-     does direct literal-match, IP-address match and regexp matching as well
-     as it allows to use extended host match attributes instead.
+     Note: As URLs are used to contain some percentage characters (like "%20"
+     for spaces) these might be expanded too if the URL matches an environment
+     variable which is defined. For example downloading from an URL like
+     url="http://host/softwareX%20release%20.exe" would try to expand the
+     environment "20release" as well. It's very unlikely that this collides
+     with an environment variable you have actually defined but keep it in mind
+     when defining download URLs.
+     If you really need to disable expansion because the URL collides with
+     existing environment variables then use the expandURL="false" attribute:
+     <download
+     expandURL="false"
+     url="http://host/softwareX%20release%20.exe"
+     target="release.exe"
+     />
+FIX: Fixed a bug that timeout value did not have any effect on download nodes.
+FIX: Download nodes were not evaluated during package removal.
+     During package install/upgrade/downgrade WPKG reads <download /> nodes
+     from either the package or as a sub-node of the command-node. During
+     package removal no download nodes have been taken into account even though
+     it was documented to be supported.
+     This has been fixed now.
+     Fixes bug 193.
+FIX: Fixed typo in reading expandURL attribute from download nodes.
+     Fixes Bug 202. Thanks to mback2k for reporting.
+NEW: Allow command inclusion. Incluiding a complete set of commands is done
+     as follows:
+     <install include="remove" />
+     This would include all <remove /> commands into the install command list.
+     WPKG also supports mixing of inclusion and real commands. For example:
 
-     E.g. the following constructs are valid...
-     Classial host matching:
-     <host name="hostname" profile-id="p" />
+     <upgrade include="remove" />
+     <upgrade cmd="%SOFTWARE%\system-preparation" />
+     <upgrade include="install" />
 
-     IP-matching using classical name attribute:
-     <host name="192.168.1.1-255" profile-id="p" />
+     This example would first execute all defined <remove /> commands, then
+     execute the "system-preparation" binary and after this execute all defined
+     <install /> commands.
 
-     Alternative matching using extended host attributes omitting name
-     attribute:
-     <host ipaddresses="192\.168\.1\..*" profile-id="p" />
+     WPKG includes a detection for recursive inclusions. For example:
+     <install include="upgrade" />
+     <upgrade include="install" />
+     <upgrade cmd="%SOFTWARE%\some-binary" />
+
+     THis will make WPKG complain about recursion. WPKG will just ignore the
+     recursive inclusion of <install /> but sill execute "some-binary" during
+     the install process.
+     Check the logs for recursion errors (severity: error).
+
+     This change is supposed to fix bug 184 (resp. enhancement request).
+     Thanks to Stefan Pendl for suggesting.
+
+     Fixes/implements enhancement request 188 as well. Thanks to Peter Hoeg.
+NEW: Implemented new options for the /query argument. It now supports the
+     following options:
+       a   Query all packages.
+       x   List packages which are not installed but in package database.
+       i   List all packages which are currently installed.
+       I   List packages which are about to be installed during
+           synchronization.
+       u   List packages which are about to be upgraded during
+           synchronization.
+       d   List packages which are about to be downgraded during
+           synchronization.
+       r   List packages which are about to be removed during synchronization.
+       m   List all modifications which would apply during synchronization
+           (equal to Iudr)
+       n   List packages which belong to the profile but are not modified
+           during synchronization.
+
+     The options can be combined. For example /query:du would print just
+     packages which are about to be upgraded or downgraded during next
+     synchronization.
+     The "m" option is a shortcut for /query:Iudr. So if you want to get a
+     full list of all changes which will happen during next synchronization
+     just use /query:m.
+     Another example:
+     If you want to see the list of packages as it will be after the next
+     synchronization just use /query:Iudn. This will list packages which are
+     new (I), upgraded (u), downgraded (d) and the ones which are already
+     applied and are not modified (n).
+FIX: Fixed a couple of bugs in install function which only affected very rare
+     cases.
+FIX: Fixed bug in XSD. Packages do not have installdate/uninstalldate
+     attributes. Instead this attribute is supported within a package-
+     assignment in the profile only. Moved attribute from package to profile.
+FIX: Fixed bug that quiet mode was always on by default (should default to off)
+     and therefore debug messages were sent to event log.
+     Thanks to Heiko Helmle for reporting.
+NEW: Added file date comparison operations to checks. Basically you can compare
+     - file creation date
+     - file modification date
+     - file access time
+     You can compare the date to a date string passed in the value attribute or
+     compare to an existing file.
+     Basic syntax example:
+     <check type='file'
+     condition='datecreatenewerthan'
+     path='%SystemDrive%\test.txt'
+     value='@%SystemDrive%\test-comparison.txt' />
+
+     Valid conditions are:
+     - datemodifyequalto   (Modify date equal to)
+     - datemodifynewerthan (Modify date newer than)
+     - datemodifyolderthan (Modify date older than)
+     - datecreateequalto   (Create date equal to)
+     - datecreatenewerthan (Create date newer than)
+     - datecreateolderthan (Create date older than)
+     - dateaccessequalto   (Access date equal to)
+     - dateaccessnewerthan (Access date newer than)
+     - dateaccessolderthan (Access date older than)
+
+     The 'value' attribute has to contain a string in the following format:
+
+     Relative timestamp (in minutes):
+     -100     Means the file timestamp is compared to the timestamp 100
+              minutes ago.
+     +50      Means the file timestamp is compared to the timestamp 50
+              minutes in the future.
+
+     Absolute timestamp in ISO 8601 format:
+     "2007-11-23 22:00"            (22:00 local time)
+     "2007-11-23T22:00"            (Both, "T" and space delimiter are allowed)
+     "2007-11-23 22:00:00"         (specifies seconds which default to 0 above)
+     "2007-11-23 22:00:00.000" (specifies milliseconds which default to 0)
+
+     It is allowed to specify the timezone as well:
+     "2007-11-23 22:00+01:00"      (22:00 CET)
+     "2007-11-23 21:00Z"           (21:00 UTC/GMT = 22:00 CET)
+     "2007-11-23 22:00+00:00"      (21:00 UTC/GMT = 22:00 CET)
+
+     File-Comparison:
+     Prefix your value with the '@' character in order to point to a file to
+     which the timestamp of the file referred in path is compared.
+     Examples:
+     @%SystemRoot%\explorer.exe
+     @c:\myfile.txt
+
+     Special terms:
+     last-week           Check afainst timestamp of exactly one week ago (7 days).
+     last-month          Check afainst timestamp of exactly one month ago (30 days).
+     last-year           Check afainst timestamp of exactly one year ago (365 days).
+     yesterday           Check afainst timestamp of yesterday (24 hours ago).
+
+     Some more examples:
+     Check if file has been modified after 15th of September 2011 15:00:
+       <check type='file'
+         condition='datemodifywerthan'
+         path='%SystemDrive%\test.txt'
+         value='2011-09-15T15:00' />
+
+     Check if file has been accessed within the last week:
+       <check type='file'
+         condition='dateaccessnewerthan'
+         path='%SystemDrive%\test.txt'
+         value='last-week' />
+
+     Check if file is older than one day (24 hours):
+       <check type='file'
+         condition='datecreateolderthan'
+         path='%SystemDrive%\test.txt'
+         value='yesterday' />
+
+     Check if file is older than 12 hours (720 minutes)
+       <check type='file'
+         condition='datecreateolderthan'
+         path='%SystemDrive%\test.txt'
+         value='-720' />
+
+     Implements change requested in Bug 147.
+     Thanks to Jason Oster.
+FIX: Fixed XSD of packages. Command-nodes are included using the 'include'
+     attribute.
+     Thanks to Stefan Pendl for reporting.
+FIX: Improved handling of recursive command inclusion. Inclusions where the
+     loop did not include the root element were not detected properly. For
+     example:
+     upgrade -> remove -> downgrade -> remove
+     This did cause an unhandled infinite loop.
+     The new implementation will detect it and ignore the inclusion of remove
+     from downgrade (printing an error to the log).
+FIX: Fixed download tag. Thanks for Heiko Helmle for reporting and providing
+     fix.
+NEW: Updated package templates to include latest WPKG features.
+     Thanks to Stefan Pendl. Fixes bug 238.
+NEW: Updated package templates to include latest WPKG features.
+     Fixes bug 238. Thanks to Stefan Pendl.
+NEW: When doing file date equal comparison to a date entered in ISO8601 format
+     then milliseconds are ignored. So the comparison resolution is limited to
+     1 second intervals.
+     WPKG still applies full millisecond resolution when comparing to reference
+     files or when using the olderthan/newerthan operators.
+     Fixes bug 237. Thanks to Stefan Pendl.
+NEW: Added support for "host" checks in <check /> nodes. All additional host
+     check attributes are supported. Some examples:
+     <check type="host" condition="hostname" value="^hostname$" />
+     <check type="host" condition="os" value="windows 7" />
+     <check type="host" condition="architecture" value="x64" />
+NEW: Enhanced host attributes check modification applied. Now all XML nodes
+     which support enhanced host attribute checks also allow more complex
+     "condition" checks.
+     Conditions specify whether the given node is applied or simply ignored
+     by WPKG. The checks supported are identical to the checks supported for
+     package installation.
+     Here are some examples...
+
+     Conditional installation
+     ------------------------
+     <profile id="default">
+     	<package id="pidgin" >
+          <condition>
+            <check type="uninstall" condition="exists" path="Pidgin" />
+          </condition>
+       </package />
+     </profile>
+
+     Apply a package only if it is already installed. For example this could
+     be used if users are allowed to install software. In case Pidgin was
+     already installed when WPKG is run, then the package is applied.
+     Caution: Your checks have to match the old and the new version on future
+     updates. If you forget to update the check for future versions then you
+     might end up with a profile which "lost" this package after upgrade and
+     therefore results in uninstall on subsequent runs.
+     For example an application with an uninstall entry of "App 1.0" should
+     be checked for "App.*" (regular expression) instead of checking the full
+     "App 1.0" string. Since later versions are likely to be named "App 1.1"
+     or similar the condition will not match it and therefore the package is
+     removed from the profile.
+
+     Advanced host check (new style)
+     -------------------------------
+     Conditions combined with the new "host" type checks introduced in this
+     update allows you to specify host checks in more advanced way. One
+     example:
+     <package id="pidgin" revision="1">
+       <install cmd='setup-32.exe ...'>
+          <condition>
+            <check type="host" condition="architecture" value="x86" />
+          </condition>
+       </install>
+       <install cmd='setup-64.exe ...'>
+          <condition>
+            <check type="host" condition="architecture" value="x64" />
+          </condition>
+       </install>
+     </package>
+
+     This definition is identical to:
+     <package id="pidgin" revision="1">
+       <install cmd='setup-32.exe ...' architecture="x86" />
+       <install cmd='setup-64.exe ...' architecture="x64" />
+     </package>
+
+     Sure the later one (old style) is much shorter but offers less flexibility
+     in terms of logical condition chaining. Moreover future attributes might
+     clash with future attributes.
+     The following construct would be possible too:
+
+     <package id="pidgin" revision="1">
+       <install cmd='setup-64.exe ...'>
+          <condition>
+            <check type="logical" condition="or">
+              <check type="host" condition="architecture" value="x64" />
+              <check type="host" condition="os" value="windows 7" />
+              <check type="logical" condition="and">
+                <check type="uninstall" condition="exists" path="some-prog" />
+                <check type="registry" condition="exists" path="HKLM\..." />
+              </check>
+            </check>
+          </condition>
+       </install>
+     </package>
+
+     This would execute "setup-64.exe" only if either the architecture is x64,
+     the OS string matches "windows 7" or if "some-prog" is installed along
+     with a registry key.
+
+     NOTE: Currently both advanced host checks are supported, the old
+     attribute-style and the new check-style using condition XML nodes.
+     In future versions of WPKG the attributes might be dropped.
+
+NEW: Commands can now be defined in a more well-grouped format:
+     <package id='pidgin' name='Pidgin IM' revision='2.10.0'>
+       <check type='uninstall' condition='exists' path='Pidgin' />
+       <commands>
+         <command type="install" cmd='"%SOFTWARE%\..."' />
+         <command type="remove" cmd='"%SOFTWARE%\..."' />
+         <command type="upgrade" cmd='"%SOFTWARE%\..."' />
+         <command type="downgrade" cmd='"%SOFTWARE%\..."' />
+       </commands>
+     </package>
+
+     It's also allowed to mix old and new style where old-style commands are
+     installed first:
+
+     <package id='pidgin' name='Pidgin IM' revision='2.10.0'>
+       <check type='uninstall' condition='exists' path='Pidgin' />
+       <install type="install" cmd='"%SOFTWARE%\install1.cmd"' />
+       <commands>
+         <command type="install" cmd='"%SOFTWARE%\install2.cmd"' />
+         <command type="remove" cmd='"%SOFTWARE%\..."' />
+         <command type="upgrade" cmd='"%SOFTWARE%\..."' />
+         <command type="downgrade" cmd='"%SOFTWARE%\..."' />
+       </commands>
+     </package>
+
+     Here WPKG would first install "install1.cmd" and then "install2.cmd".
+     This is still the case if the commands are re-ordered:
+
+     <package id='pidgin' name='Pidgin IM' revision='2.10.0'>
+       <check type='uninstall' condition='exists' path='Pidgin' />
+       <commands>
+         <command type="install" cmd='"%SOFTWARE%\install2.cmd"' />
+         <command type="remove" cmd='"%SOFTWARE%\..."' />
+         <command type="upgrade" cmd='"%SOFTWARE%\..."' />
+         <command type="downgrade" cmd='"%SOFTWARE%\..."' />
+       </commands>
+       <install type="install" cmd='"%SOFTWARE%\install1.cmd"' />
+     </package>
+
+     Here still "install1.cmd" is launched first and then "install2.cmd".
+
+     This new style of commands also allows you to specify any artificial name
+     for type and refer to it in includes.
+     For example:
+
+     <package id='pidgin' name='Pidgin IM' revision='2.10.0'>
+       <commands>
+         <command type="install" include='prepare' />
+         <command type="install" cmd='"%SOFTWARE%\install.cmd"' />
+         <command type="install" include='cleanup' />
+
+         <command type="remove" include='prepare' />
+         <command type="remove" cmd='"%SOFTWARE%\remove.cmd"' />
+         <command type="remove" include='cleanup' />
+
+         <command type="upgrade" cmd='"%SOFTWARE%\upgrade.cmd"' />
+
+         <command type="downgrade" cmd='"%SOFTWARE%\downgrade.cmd"' />
+
+         <command type="prepare" cmd='"%SOFTWARE%\prepare1.cmd"' />
+         <command type="prepare" cmd='"%SOFTWARE%\prepare2.cmd"' />
+
+         <command type="cleanup" cmd='"%SOFTWARE%\cleanup.cmd"' />
+       </commands>
+     </package>
+
+     In this example WPKG would launch the following commands during
+     installation;
+     - prepare1.cmd
+     - prepare2.cmd
+     - install.cmd
+     - cleanup.cmd
+     During remove the following commands would be run:
+     - prepare1.cmd
+     - prepare2.cmd
+     - remove.cmd
+     - cleanup.cmd
+
+     NOTE: WPKG will not run any of the "prepare" or "cleanup" commands
+     automatically if not included by command types known to WPKG (install,
+     remove, upgrade or downgrade at time of writing).
+
+     This is supposed to implement as well a request by Peter Hoeg
+     submitted in Bug 184.
+FIX: Enhanced recursive variable evaluation. Variables can now be used within
+     other variable definitions as long as they are specified in correct order.
+     For example specifying the following shall work now:
+
+     <variable name="ext_id" value="{e2fda1a4-762b-4020-b5ad-a41df1933103}" />
+     <variable name="ext_dirname" value="lightning" />
+     <variable name="instdir" value="%PROGRAMFILES%\Mozilla \
+               Thunderbird\extensions\%ext_id%" />
+     ...
+
+     Note that the last variable included a variable which is defined within
+     the package itself. Previously it was only allowed to include variables
+     which were defined at a different level (host, profile...).
+
+     Fixes bug 236. Thanks to Kalyniak Oleksandr.
+FIX: Fixed typos in config files.
+     Fixes bug 239. Thanks to Stefan Pendl.
+FIX: Fixed typos in XSD files.
+     Fixes bug 240. Thanks to Stefan Pendl.
+FIX: Fixed typos in NSIS package template.
+     Fixes bug 241. Thanks to Stefan Pendl.
+FIX: Fixed typos in wpkg.js (non-functional related).
+     Fixes bug 242. Thanks to Stefan Pendl.
+MOD: Modified XSD data structure. Moved common elements to wpkg.xsd in order
+     not to duplicate documentation.
+FIX: Prevent crash in case of invalid XML wehere a <variable /> node is missing
+     either the name or value attribute. WPKG will now print an error to the
+     logs and ignore the variable.
+     Thanks to Stefan Pendl for reporting. Fixes bug 243.
+FIX: Fixed handling of packages which do not use classic commands but only the
+     new commands style using <commands /> node.
+     Thanks to Stefan Pendl for reporting. Fixes bug 244.
+NEW: New feature allowing manual package installation to be combined with
+     synchronization.
+     If a package is installed manually using the /install:<package> command-
+     line switch, then the package is added to the local package database and
+     retained during future synchronizations.
+     In previous versions of WPKG you could have either installed packages via
+     profiles or manually but if you installed a package manually then
+     subsequent synchronizations would have removed the package if it was not
+     part of the profile. This enhancement allows local administrators to
+     manually install any package provided in the package database. Packages
+     installed manually will also be updated on subsequent synchronizations.
+     Let's provide some examples.
      
-     Combining classical matching with extended host matching:
-     <host name="hostname" os="windows 7" profile-id="p" />
-     Fixes additional bugs found in implementation for bug 209.
-     Thanks to Stefan Pendl.
-FIX: Worked around a WSH issue of variable scopes in for loops.
-     Fixes LCID handling of extended host matches.
-FIX: Fixed termination of processes if timeout is reached.
-     Fixes bug 222. Thanks to Stefan Pendl.
-FIX: Fixed bug that "name" attribute in host node was completely ignored in
-     previous commits. Fixes classic host-name matching.
-NEW: Added support for IA64 Itanium architecture. Basically this adds
-     the possibility to use os="ia64" in extended host attribute matching.
-     So the current list of supported architectures is:
+     Host A has the following packages assigned:
+     - Pidgin
+     - Thunderbird
+     
+     A local administrator would like to install Firefox on the machine too.
+     Of course as a local admin he could also install Firefox using the Mozilla
+     installer but this would mean he has to take care about updates and
+     potentially synchronize such update actions with the IT departement.
+     Now a local administrator could simply use the "wpkg.js /install:firefox"
+     command (of course given the fact that the IT departements maintains a
+     package called "firefox") and get the official Firefox package installed.
+     
+     On future "wpkg.js /synchronize" runs WPKG will update the "firefox"
+     package in the same way as if the IT departement would have added
+     "firefox" to the profile applied to the host. Therefore on the host as
+     defined above WPKG would look for updates on Pidgin, Thunderbird and
+     Firefox during synchronization.
+     
+     
+     If the IT departement decides to remove the "firefox" package from the
+     server-side package database this likely means that support is dropped and
+     Firefox shall not be used any more. In such case WPKG would also remove
+     the package manually installed via /install:firefox on synchronization.
+     
+     So as you see the /install:<package> switch can be used by local
+     administrators to kind of modify or extend the server-based profile with
+     some manually chosen packages which keep updated automatically when
+     synchronizing.
+MOD: Updated package template for NSIS using _? parameter which works with most
+     NSIS installers to prevent installer forking.
+     Thanks to Malte Starostik. Further request in Bug 241.
+MOD: Further improvement of default user notification strings in config.xml.
+     Thanks to Malte Starostik. Further request in Bug 239.
+FIX: Fixed setting empty environment varaible value on Windows 2k/XP.
+     Thanks to Stefan Pendl for poiting this out. Fixes Bug 243.
+MOD: Improved downloader.
+     Now supports UNC paths in download URL. If UNC path is specified the
+     file is copied using robocopy.exe utility which is built-in into newer
+     Windows versions (Windows 7). For older Windows Versions (Windows XP) it
+     can be downloaded via the resource kit of Windows Server 2003 and placed
+     in the downloader tool folder.
+     Referring to UNC directories (eg. "\\server\share\folder\" (note the
+     trailing slash) will synchronize the whole folder to the target directory.
+     Of course MD5/SHA1 verification is only available when copying single
+     files but not when synchronizing complete folder structures.
+     Extensions inspired by enhancements made by David Petterson.
+     Thank you!
+MOD: Changed variable expansion order. Now the order is clearly defined as
+     follows:
+     - Host variables
+     - Profile variables (in reverse order, dependencies first)
+     - Package variables
+     This way package variables can refer to profile variables.
+     Profile variables in turn can refer to host variables.
+     Variables can always also include the value of variables already defined
+     using the %VARIABLE% syntax in the value attribute of the variable
+     definition. So for example a package variable can refer to a profile
+     variable. A package variable can also refer to a variable defined within
+     the same package as long as the variable it refers to appears before the
+     one referring to it.
+     Thanks to Brent A Nelson for pointing us to the issue.
+     Thanks to Stefan Pendl for analyzing the issue.
+MOD: Improved variable reading using caches for host and profile variables.
+NEW: Added /settings:<path> command-line parameter. It allows to specify an
+     alternative path to the settings file on command-line rather than
+     specifying setings_file_path and settings_file_name in config.xml.
+     Note: /settings:<path> takes precedence over config.xml settings.
 
-     x86:  32-bit Windows operating system running on x86 instruction set 
-     x64:  64-bit Windows operating system running on x86-64 instruction set
-     ia64: 64-bit Windows operating system running on IA64 instruction set
+     /settings:<path>
+     Path to the settings (local WPKG database) file to be used. The path might
+     be absolute or relative but including the XML file name. This parameter is
+     entirely OPTIONAL and should normally not be specified at all.
+     If not specified the settings file will be searched at:
+     %SystemRoot%\system32\wpkg.xml
+     	e.g. '%SystemRoot%\system32\wpkg-custom.xml'.
+             e.g. '\\\\server\share\directory\\[HOSTNAME].xml'.
+     If you store the settings file on a share make sure the names is unique!
+     You can use environment variables as well as the following expressions:
+      [HOSTNAME]  Replaced by the executing hostname.
+      [PROFILE]   Replaced by the concatenated list of profiles applied.
 
-     Fixes bug 224. Thanks to Stefan Pendl for requesting.
-FIX: Fixed error handling in case command execution fails AND command includes
-     variables. In such case WPKG did not properly return code -1 so the
-     <exit code="any" /> tag did not have any effect.
-     Fixes bug 226. Thanks to Bruno Choquet for reporting.
-FIX: Fixed call of Terminate() method when command times out in order to
-     properly shut down the child process.
-NEW: Added sample package templates which might help users to build their own
-     packages.
-     Fixes bug 225. Thanks to Stefan Pendl for sharing the templates.
-MOD: Modified included sample packages for firefox and added adobe flash player
-     example. The new packages give some more insight on new WPKG features
-     as provided in WPKG-1.1.3.
-     Fixes bug 227. Thanks to Stefan Pendl.
-MOD: Modified included example profile to show os attribute.
-     Fixes bug 228. Thanks to Stefan Pendl.
-NEW: Final release of WPKG 1.1.3-RC16 as WPKG 1.2. No further code changes.
+	 This feature will potentially ease reporting as settings XML files stored
+	 on a share can be queried against the host database using wpkg.js
+	 directly. So no duplicated code with external tools is required to
+	 determine whether a package is scheduled to be changed.
+	 Thanks to Kai Pastor for the hint.
+MOD: Improved variable handling. Now variables can overwrite previously defined
+     variables even if they are defined recursively.
+     For example it is possible to "extend" a previously defined variable in
+     hosts with a variable defined in profiles or packages. So the following
+     is valid now:
+     Hosts:       SOFTWARE=\\host\software-share
+                  SETTINGS\\host\settings-share
+                  VAR1=test
+     Profiles:    SOFTWARE=%SOFTWARE%\subdirectory
+                  VAR2=test
+     Package:     SOFTWARE=%SOFTWARE%\subdir-of-subdir
+NEW: Implemented new query parameters:
+         s - List host attributes from settings (wpkg.xml).
+         l - List host attributes read from local host.
+     The "s" option is mainly implemented for statistical and reporting
+     purpose. If the local settings database (settings.xml) is copied to any
+     host, then this option allows to query the host information attributes
+     stored in wpkg.xml. It's supposed to be used with the /settings:<path>
+     option therefore.
+     e.g. wpkg.js /settings:\\server\share\wpkg-<HOSTNAME>.xml /query:s
+     This will show the host attributes of of <HOSTNAME> as enclosed within the
+     XML datastructure.
+     The "l" option has been mainly implemented for testing purposes. It can
+     be used to debug the host attribute parameters read by WPKG. It will
+     always read the host attributes from the host wpkg.js is run on.
+FIX: /query:m shall list execute="changed" packages only if there are other
+     changes to be performed.
+     Fixes bug 246. Thanks to Stefan Pendl for reporting.
+FIX: Fixed formatting errors in help message (/help switch).
+     Fixes bug 247. Thanks to Stefan Pendl for reporting.
+NEW: Added /queryMode:<local|remote> command line switch and remoteMode
+     configuration parameter. This switch is used to create reliable queries
+     on expected changes to a host when running WPKG on a remote node.
+     For example when you copy wpkg.xml of a client to your server and use
+     wpkg.js /query:im /settings:local\wpkg.xml
+     just to query the impact of the next synchronization to this client.
+     IN this case WPKG needs to know the host attributes like hostname, IP-
+     addresses, architecture etc.
+     In remote query mode WPKG will read these values from wpkg.xml (if
+     available, check that settingsHostInfo parameter in config.xml is
+     enabled).
+     
+     Here's a description of the new parameter as added to config.xml:
+          Allows to switch to remote mode where package verification is skipped.
+     remote: Disable package checks and assume that packages in settings
+             database are still correctly installed. In remote mode also the
+             host information is read from the local settings database.
+     local:  Default setting. Query verifies package status using all checks.
+     Note: Query mode can only be used with the query switch. It is ignored
+     if no /query: command line parameter is used.
+
+     Details: If you intend to copy the local wpkg.xml file to a remote system
+     and execute WPKG queries based on this settings database (wpkg.xml) then
+     WPKG might print some packages as "required for installation" since the
+     package checks fail on the remote host as the package might not be
+     installed on the remote host. If remote mode is enabled, then WPKG assumes
+     that the packages are properly installed on the executing host without
+     actually verifying it.
+     Of course it might happen in this case that a package query on the remote
+     system says that a package does not need any change but on the real system
+     the user might have removed the software meanwhile which will trigger an
+     installation if WPKG is run on the client.
+
+     Also note that in remote query mode WPKG will read all host attributes
+     from the settings file (wpkg.xml) if these attributes are available. This
+     includes hostname, architecture, OS, IP addresses, domainname, groups,
+     LCID of the executing user and LCID of the operating system.
+     This is required in order to allow evaluation of all conditional
+     attributes in exactly the same way as it will evaluate on the client.
+FIX: Re-Fixed evaluation of empty variables.
+     Thanks to Stefan Pendl for reporting.
+FIX: Fixed use of host attributes read from settings file in remote mode.
+     Caching did prevent the values read from settings to become effective.
+     Thanks to Stefan Pendl for reporting.
+FIX: In remote query mode /query:l did show the contents of the remote host as
+     read from settings (wpkg.xml).
+     Added cache purging in order to read these attributes from the local host
+     instead.
+FIX: If executed in remote query mode WPKG failed if there was no profile
+     assigned to the host executing WPKG (the remote host).
+     Initialization of debug messages about assigned profiles has been delayed
+     and for queries this information is skipped.
+     Fixes issue reported by Stefan Pendl. Thank you!
+FIX: Conditional nodes which did not match were not excluding the enclosing
+     XML node. Therefore negative evaluation of conditions did not have
+     any effect.
+     Fixes bug 248. Thanks to Stefan Pendl for reporting.
+NEW: Added files for maven-based build.
+MOD: Moved file/directory structure for maven-based build.
+NEW: Added xs3p to generate HTML-based documentation from XSD files.
+NEW: Allowing multiple checks in logical "NOT" check. If multiple checks are
+     specified, then the checks are "And-linked" which means that in case any
+     of the sub-checks fails, then the result is "true". If all checks succeed,
+     then the result is "false".
+     Example:
+     <check type="logical" condition="not">
+       <check type="host" condition="hostname" value="HOSTNAME"/>
+       <check type="host" condition="os"       value="5\.0\.\d{4}"/>
+     </check>
+     The check will be false only if the host is named HOSTNAME and runs OS
+     version 5.0.x (Windows 2000).
+     If the OS version does not match or the hostname is different, then the
+     result is true, no matter which of the checks (or all) fail.
+     Thanks to Stefan Pendl for reporting the inconsistency between
+     implementation and XSD.
+NEW: Additional files for Maven-based build.
+NEW: Automatic build of Maven site, including XSD documentation references.
+     Maven build creates site documentation including project information:
+     - Team information
+     - Mailing list references
+     - Issue tracker reference
+     - Project license
+     - Source repository references
+     - XSD documentation (hosts, profiles, packages)
+MOD: Updated included config.xml, hosts.xml, profiles.xml and packages.xml.
+     - Added XML namespace and references to XSD.
+     - Updated in-line documentation.
+     - Upgraded to latest syntax.
+     - Reviewed comments and references.
+NEW: Added XSD for config.xml.
+NEW: Modified generated site content.
+NEW: Added XML namespace and reference to XSD in documentation files.
+FIX: Fixed WPKG error in case multiple profiles apply to a host.
+     Thanks to Jürgen Depicker for reporting.
+Changes 2011-10-28, v1.2.1-RC40 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Conditional expressions are defined in generic wpkg namespace at
+     http://www.wpkg.org/wpkg. Element form default has been set to unqualified
+     in order to hide (localize) namespaces. Thus eliminating the requirement
+     to specify condition and check nodes with namespace qualifier.
+     Fixes bug 249. Thanks to Stefan Pendl for reporting.
+FIX: Within the <command /> node the "include" attribute shall allow any string
+     to be used. Not just install/upgrade/downgrade/remove.
+     Fixed in XSD.
+     Fixes bug 249. Thanks to Stefan Pendl for reporting.
+FIX: Fixed id of default Firefox package included in packages/firefox.xml. The
+     Profile was referring to "firefox" while the package was called "Firefox".
+     As WPKG by default is case-sensitive it did not match. So the "id" has
+     been changed to "firefox" now.
+FIX: Removed unused variable from the code.
+     Fixes bug 253. Thanks to Stefan Pendl.
+MOD: Added XML schema for validation to included sample packages and templates.
+     Fixes bug 251. Thanks to Stefan Pendl.
+FIX: Remote query did not take architecture into account as saved within
+     the settings database (wpkg.xml).
+     Fixes bug 252. Thanks to Stefan Pendl.
+     
+     NOTE: Remote query will not take into account speial conditions based on
+     other checks like file, registry, execute or uninstall. The reason is
+     simply that these values are not available on a remote system.
+     So WPKG will have to use local values for such checks.
+     If you want to use remote query then you should not use such local-based
+     checks in conditions in order to avoid getting query results which differ
+     from the results on client side.
+NEW: Added storing results of executed checks in local settings database.
+     This allows to fetch the results from wpkg.xml in remote query mode.
+     As a result WPKG will be able to evaluate conditions in remote query mode
+     in the same way as the local node would. For example conditions in hosts
+     or profiles checking for file or registry keys will be evaluated the same
+     way as it evaluated on last run on the client.
+     Of course remote query cannot take changes on the client into account
+     which happened after last WPKG run.
+     Additional change related to bug 252.
+FIX: Fixed issue when a check is executed twice during the same WPKG run when
+     replacing check result in settings (wpkg.xml).
+     Fixes bug 252. Thanks to Stefan Pendl.
+MOD: Optimized writing of settings (wpkg.xml). Avoiding unneeded sorting if
+     just check nodes are added.
+FIX: If previously executed check results cannot be found in wpkg.xml then
+     WPKG will still evaluate the check on local machine if in remote query
+     mode. This will work for "host" type checks but not for others like
+     registry, file, execute etc. The results in this case might be inaccurate
+     and not reflecting the real check evaluation on client side.
+     An error will be printed to the logs in this case.
+     Fixes bug 252. Thanks to Stefan Pendl.
+FIX: Do not try to look up logical checks in previously executed checks in
+     wpkg.xml.
+     Fixes bug 252.
+MOD: Not saving changes to settings (wpkg.xml) in remote query mode. Changes to
+     the settings database might occur if checks are not stored within the
+     given settings database and therefore checks are executed locally on
+     remote node. WPKG will not store the results of such local evaluation in
+     the settings file now.
+MOD: Added checkHost type to wpkg.xsd to allow strict verification of host type
+     checks.
+NEW: Added variable expansion to advanced host match attributes (variable
+     expansion already worked for "host" type checks).
+     Also WPKG now loads profile and host variables before advanced host
+     matching is applied. So host and profile variables can be used within
+     check expressions.
+     Fixes bug 255. Thanks to Ross Newton.
+FIX: Re-implemented XSL transforms when reading XML files. This allows some
+     more "special" XML definitions which include content from other files or
+     the use of XML "templating".
+     The implementation might require some more through testing to verify it
+     does not breask any existing package definitions. Especially when using
+     mixed package definition, some using namespaces and others who don't use.
+     Fixes bug 257. Thanks to Falko Trojahn.
+FIX: Fixed invalid regular expression in host matching (within hosts.xml) would
+     exit WPKG. Now a warning about invalid expression is printed.
+FIX: Fixed lost host information in settings (wpkg.xml) due to applied XML
+     transforms. Bug was introduced in transforms processing added due to
+     request in bug 257. Thanks to Stefan Pendl for reporting.
+NEW: Using correct name space in settings (wpkg.xml) written locally.
+NEW: Added proper processing information to settings (wpkg.xml).
+FIX: Fixed minor typo in error message about invalid XML structure loaded.
+NEW: Final release of WPKG 1.2.1-RC49 as WPKG 1.3.0. No further code changes.

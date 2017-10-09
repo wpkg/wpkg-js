@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 
-<packages
-        xmlns:xsi="http://www.wpkg.org/packages"
-        xsi:noNamespaceSchemaLocation="../xsd/packages.xsd" >
+<packages:packages xmlns:packages="http://www.wpkg.org/packages"
+	xmlns:wpkg="http://www.wpkg.org/wpkg" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.wpkg.org/packages ../xsd/packages.xsd">
 
     <package
             id="JRE6"
@@ -66,4 +66,4 @@
         <!-- remove 64-bit version -->
         <remove architecture="x64" cmd="msiexec /passive /x {26A24AE4-039D-4CA4-87B4-2F864160%PKG_VERSION%FF}" />
     </package>
-</packages>
+</packages:packages>

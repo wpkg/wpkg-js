@@ -1,21 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- Lists host names and associated profile. This file can be edited
-     directly, or even created automatically depending on your
-     environment. 
-     
-     For more info, see http://wpkg.org/index.php/Category:Documentation
-     
-     -->
+<!--
+	Lists host names and associated profile. This file can be edited directly,
+	or even created automatically depending on your	environment.
 
-<wpkg>
+	THIS IS A SAMPLE FILE.
 
-    <host name="hostname" profile-id="custom" />
+	For detailed documentation on the XML structure, attributes etc it's
+	recommended to have a look at the XSD schema included here:
+		xsd/
+
+	An automatically generated documentation of the XML structure is included
+	here:
+		documents/
+	Just open documents/index.html in your favorite web browser.
+
+	More documentation is available on the WPKG web-page as well:
+		<http://wpkg.org/Category:Documentation>
+-->
+
+<hosts:wpkg xmlns:hosts="http://www.wpkg.org/hosts" xmlns:wpkg="http://www.wpkg.org/wpkg"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.wpkg.org/hosts xsd/hosts.xsd ">
+
+	<!--
+		Specifies a match for host name "hostname" and assigns profile "custom"
+		to this host.
+	-->
+	<host name="hostname" profile-id="custom" />
 
 
-<!-- This one will match all hosts that were not matched before.
-     For more info on regexp matching, see the documentation on http://wpkg.org/index.php/Regular_expression_support -->
-
-    <host name=".+" profile-id="other" />
-
-</wpkg>
+	<!--
+		This specification uses a regular expression for host name matching.
+		See <http://wpkg.org/index.php/Regular_expression_support> for more
+		details.
+		This will match any non-empty hostname and assign it the "other"
+		profile. So the entry acts as a kind of "catch all" entry. All hosts
+		which are not matched by a more-specific host entry appearing before
+		this one will be assigned the "other" profile.
+		Note: In case you enabled the applyMultiple option in config.xml this
+		will assign the "other" profile to all hosts in addition to any more-
+		precise host specification applying before.
+	-->
+	<host name=".+" profile-id="other" />
+</hosts:wpkg>

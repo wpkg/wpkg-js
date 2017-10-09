@@ -1,30 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema targetNamespace="http://www.wpkg.org/packages"
-	elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns="http://www.wpkg.org/packages">
-	<xsd:annotation>
-		<xsd:documentation>
-			XML Schema Definition for WPKG packages. The root
-			element
-			(packages) contains all packages. There might be multiple
-			XML
-			files of this type put to the packages sub-directory
-			where WPKG is
-			installed.
-		</xsd:documentation>
-	</xsd:annotation>
-	<xsd:element name="packages" type="packages">
+	elementFormDefault="unqualified"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.wpkg.org/packages"
+	xmlns:wpkg="http://www.wpkg.org/wpkg">
+
+	<xsd:import namespace="http://www.wpkg.org/wpkg" schemaLocation="wpkg.xsd">
 		<xsd:annotation>
 			<xsd:documentation>
-				Contains a number of package definitions.
+				Include WPKG master definition.
 			</xsd:documentation>
 		</xsd:annotation>
-	</xsd:element>
+	</xsd:import>
+
+	<xsd:element name="packages" type="packages"></xsd:element>
+
 	<xsd:complexType name="packages">
 		<xsd:annotation>
 			<xsd:documentation>
-				Specifies how the packages element is built up
-				(list of
+				Specifies how the packages element is built up (list of
 				package elements).
 			</xsd:documentation>
 		</xsd:annotation>
@@ -32,133 +26,148 @@
 			<xsd:element name="package" type="package"></xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
+
 	<xsd:complexType name="package">
 		<xsd:annotation>
 			<xsd:documentation>
-				Specifies how the package element is build up
-				(list of
+				Specifies how the package element is build up (list of
 				checks, commands and downloads).
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:choice maxOccurs="unbounded" minOccurs="0">
-			<xsd:element ref="check">
+			<xsd:element name="variable" type="wpkg:variable">
 				<xsd:annotation>
 					<xsd:documentation>
-						Specify checks to check install status of this
-						package.
+						Define an environment variable which is valid
+						during package execution. Variables can be used
+						within other variables, commands and checks.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element ref="install">
+			<xsd:element name="check" type="wpkg:check">
 				<xsd:annotation>
 					<xsd:documentation>
-						Specify installation command.
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element ref="upgrade">
-				<xsd:annotation>
-					<xsd:documentation>
-						Specify upgrade command.
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element ref="downgrade">
-				<xsd:annotation>
-					<xsd:documentation>
-						Specify downgrade command.
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element ref="remove">
-				<xsd:annotation>
-					<xsd:documentation>
-						Specify remove command.
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element ref="download">
-				<xsd:annotation>
-					<xsd:documentation>
-						Specifies a global download (downloaded
-						regardless of the command to be executed). NOTE:
-						The download is
-						even executed if your command is
-						not using it. For example if the
-						remove command
-						is executed usually you don't need to download
-						the
-						full installer. Therefore it is recommended
-						to add such downloads
-						as a sub-node of the
-						respective command.
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-
-
-			<xsd:element ref="variable">
-				<xsd:annotation>
-					<xsd:documentation>
-						Variable definition - variables defined here can
-						be used within package commands.
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element ref="depends">
-				<xsd:annotation>
-					<xsd:documentation>
-						Specify packages the current package depends on
-						(pre-requirements). Dependencies are always
-						installed before the
-						package is applied to the
+						Define checks which are used to verify whether a
+						package has been applied properly to the target
 						system.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element ref="include">
+			<xsd:element name="commands" type="commands">
 				<xsd:annotation>
 					<xsd:documentation>
-						Specifies a package which is included. An
-						included package is added to the list of
-						packages as specified by
-						the profile. Please
-						note that the install order of an included
-						package depends on its priority. If an included
-						package has high
-						priority it will be installed
-						early during synchronization. If the
-						included
-						package has low priority it will be installed
-						late. If you
-						would like to enforce a certain
-						installation order please consider
-						to specify a
-						dependency!
+						Define a list of commands to be executed for
+						installation/upgrade/downgrade/remove.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element ref="chain">
+
+			<xsd:element name="install" type="command">
 				<xsd:annotation>
 					<xsd:documentation>
-						Specifies a package which is chained. A chained
-						package is installed directly after the package
-						specifying it
-						(unless the chained package has
-						higher priority or is already
-						installed). Please
-						note that a chained package might also be
-						installed before the package chaining it. This
-						might happen if the
-						chained package is either
-						already installed or has higher priority
-						than
-						the package which references it by chain. If you
-						need to ensure
-						that a package is installed
-						before another one please specify a
-						dependency
-						(see depends node).
+						Define a command which is executed during
+						package installation.
+
+						This is still supported but in the future
+						commands shall be grouped within the commands
+						sub-node. Please regard the install node as
+						deprecated. It might be removed in future WPKG
+						releases.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="upgrade" type="command">
+				<xsd:annotation>
+					<xsd:documentation>
+						Define a comamnd which is executed during
+						package upgrade.
+
+						This is still supported but in the future
+						commands shall be grouped within the commands
+						sub-node. Please regard the upgrade node as
+						deprecated. It might be removed in future WPKG
+						releases.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="downgrade" type="command">
+				<xsd:annotation>
+					<xsd:documentation>
+						Define a comamnd which is executed during
+						package downgrade.
+
+						This is still supported but in the future
+						commands shall be grouped within the commands
+						sub-node. Please regard the downgrade node as
+						deprecated. It might be removed in future WPKG
+						releases.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="remove" type="command">
+				<xsd:annotation>
+					<xsd:documentation>
+						Define a command which is executed during
+						package removal.
+
+						This is still supported but in the future
+						commands shall be grouped within the commands
+						sub-node. Please regard the remove node as
+						deprecated. It might be removed in future WPKG
+						releases.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="download" type="download">
+				<xsd:annotation>
+					<xsd:documentation>
+						Specify a list of 'global' downloads. These
+						downloads will be processes before each package
+						command (like install, upgrade, downgrade,
+						remove).
+
+						Please consider this as deprecated. It's
+						recommended to use the download sub-node of a
+						command in order to specify downloads. This also
+						allows one to specify downloads which are not
+						executed when not needed.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+
+			<xsd:element name="depends" type="wpkg:packageReference">
+				<xsd:annotation>
+					<xsd:documentation>
+						Specify a dependency between this and another
+						package. The package referenced is a
+						pre-requirement to install this package.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="include" type="wpkg:packageReference">
+				<xsd:annotation>
+					<xsd:documentation>
+						Specify that this package includes another
+						package into the package tree. Note that this is
+						different from a dependency in the sense that
+						the package included does not need to be
+						installed BEFORE this package is applied.
+
+						A package which is included is just added to the
+						tree in the same way as it would when it's
+						applied to the profile. It will be executed in
+						order of priority.
+
+						Please consider specifying a dependency rather
+						than an include whenever possible.
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="chain" type="wpkg:packageReference">
+				<xsd:annotation>
+					<xsd:documentation>
+						Specify a package which is installed/verified
+						right after applying this package.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
@@ -168,37 +177,67 @@
 				<xsd:documentation>
 					Package identification. Needs to be a unique ID
 					among all the packages. The package ID is
-					case-sensitive unless the
-					/ignoreCase switch is
-					passed to wpkg.js. Example: "pidgin"
+					case-sensitive unless the /ignoreCase switch is
+					passed to wpkg.js.
+
+					Example:
+
+					'pidgin'
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
 		<xsd:attribute name="name" type="xsd:string" use="required">
 			<xsd:annotation>
 				<xsd:documentation>
-					Descriptive name of the package. e.g. "Pidgin
-					multi-protocol instant messenger"
+					Descriptive name of the package. e.g. 'Pidgin
+					multi-protocol instant messenger'
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
-		<xsd:attribute name="revision" use="optional">
+		<xsd:attribute name="revision" type="xsd:string"
+			use="optional">
 			<xsd:annotation>
 				<xsd:documentation>
-					Revision of the package. in the format of
-					"\d+(\.\d+)*" which means actually integer digits
-					separated by
-					periods (x.y.z) with any number of
-					integer values. A pure integer
-					value is valid too.
-					Optional. Defaults to 0.
+					Revision of the package.
+
+					WPKG allows to specify a versions in quite flexible
+					format. It is important to know how versions are
+					compared in order to know whether WPKG needs to
+					perform an upgrade or a downgrade.
+
+					Here are some notes about version comparison:
+
+					Some version number contain appendices to the
+					version string indicating 'volatile' versions like
+					'pre releases'. For example some packages use
+					versions like '1.0RC1' or '1.0alpha2'. Usually a
+					version like '1.0RC1' would be considered to be
+					newer than '1.0' by the algorithm but in case of
+					'RC' versions this would be wrong. To handle such
+					cases a number of strings are defined in order to
+					define such volatile releases.
+
+					The list of prefixes is defined in the global
+					volatileReleaseMarker array.
+
+					Valid comparisons include: A B Result '1' '2' B is
+					newer '1' '15' B is newer '1.0' '1.2.b' B is newer
+					'1.35' '1.35-2' B is newer '1.35-2' '1.36' B is
+					newer '1.35R3' '1.36' B is newer '1' '1.0.00.0000'
+					Versions are equal '1' '1.0' Versions are equal
+					'1.35' '1.35-2' B is newer '1.35-2' '1.35' A is
+					newer '1.35R3' '1.36R4' B is newer '1.35-2'
+					'1.35-2.0' Versions are equal '1.35.1' '1.35.1.0'
+					Versions are equal '1.3RC2' '1.3' B is newer
+					(special case where A is an 'RC' version) '1.5'
+					'1.5I3656' A is newer (B is an 'I'/integration
+					version) '1.5' '1.5M3656' A is newer (B is an
+					'M'/milestone version) '1.5' '1.5u3656' B is newer
+					(B is an update version)
+
+					This attribute is optional. Defaults to 0.
 				</xsd:documentation>
 			</xsd:annotation>
-			<xsd:simpleType>
-				<xsd:restriction base="xsd:string">
-					<xsd:pattern value="\d+(\.\d+)*"></xsd:pattern>
-				</xsd:restriction>
-			</xsd:simpleType>
 		</xsd:attribute>
 		<xsd:attribute name="priority" type="xsd:int" use="optional">
 			<xsd:annotation>
@@ -212,15 +251,16 @@
 			<xsd:annotation>
 				<xsd:documentation>
 					Specify if a reboot should be initiated after
-					package installation. Valid values: true: reboot
-					immediately after
-					package actions have been executed
-					false: do not reboot after
-					executing commands
+					package installation. Valid values:
+
+					true: reboot immediately after package actions have
+					been executed.
+
+					false: do not reboot after executing commands.
+
 					postponed: reboot after all packages have been
 					installed (not after this one but schedule reboot to
-					WPKG
-					termination)
+					WPKG termination).
 				</xsd:documentation>
 			</xsd:annotation>
 			<xsd:simpleType>
@@ -237,31 +277,15 @@
 					Specify how the package should be executed:
 
 					always: Execute on each synchronization - regardless
-					of the current
-					install state or the result of any
+					of the current install state or the result of any
 					defined checks.
 
-					changed: Execute
-					on each synchronization but only if
-					there are other changes done to
-					the system.
+					changed: Execute on each synchronization but only if
+					there are other changes done to the system.
 
 					once: Execute only once. No checks will be executed
-					on
-					following synchronization requests unless the
-					package version on the
-					server side is changed.
-
-					default (or empty/non-existing): default,
-					execute
-					defined checks at each synchronization to verify
-					install
-					state. NOTE: If no checks are defined, then
-					the install state will
-					always return "false" which
-					means the package is re-installed
-					(similar effect as
-					specifying execute=always).
+					on following synchronization requests unless the
+					package version on the server side is changed.
 				</xsd:documentation>
 			</xsd:annotation>
 			<xsd:simpleType>
@@ -273,7 +297,8 @@
 				</xsd:restriction>
 			</xsd:simpleType>
 		</xsd:attribute>
-		<xsd:attribute name="notify" type="xsd:boolean" use="optional">
+		<xsd:attribute name="notify" type="xsd:boolean"
+			use="optional">
 			<xsd:annotation>
 				<xsd:documentation>
 					Specify if the user should be notified about the
@@ -281,48 +306,25 @@
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
-
-		<xsd:attribute name="installdate" type="xsd:dateTime"
-			use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Date from which the package should be installed
-					(this date or later). Date has to be specified in
-					ISO 8601 format
-					(see
-					http://www.w3.org/TR/NOTE-datetime).
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="uninstalldate" type="xsd:dateTime"></xsd:attribute>
 		<xsd:attribute name="precheck-install">
 			<xsd:annotation>
 				<xsd:documentation>
-					Defines how package checks are used during
-					package
+					Defines how package checks are used during package
 					installation.
 
 					Currently supported values:
 
-					"always" (default):
-					When a package is new to the
-					host then first the checks are run in
-					order to
-					verify whether the package is already installed. If
-					the
-					checks succeed then it is assumed that no
-					further installation is
-					needed. The package is
-					silently added to the host without executing
-					any
-					commands.
+					always (default): When a package is new to the host
+					then first the checks are run in order to verify
+					whether the package is already installed. If the
+					checks succeed then it is assumed that no further
+					installation is needed. The package is silently
+					added to the host without executing any commands.
 
-					"never": When a package is new to the host then the
+					never: When a package is new to the host then the
 					install commands are run in any case (without doing
-					checks first).
-					Note: Checks will still be done after
-					package installation to verify
-					whether installation
+					checks first). Note: Checks will still be done after
+					package installation to verify whether installation
 					was successful.
 				</xsd:documentation>
 			</xsd:annotation>
@@ -336,32 +338,23 @@
 		<xsd:attribute name="precheck-remove">
 			<xsd:annotation>
 				<xsd:documentation>
-					Defines how package checks are used during
-					package
+					Defines how package checks are used during package
 					removal.
 
 					Currently supported values:
 
-					&quot;always&quot;: When
-					a package is removed from a
-					host then the checks will be executed
-					before removal
-					is processes. If the checks fail this potentially
-					means that the package has been removed already. In
-					such case the
-					package remove commands will be
-					skipped.
+					always: When a package is removed from a host then
+					the checks will be executed before removal is
+					processes. If the checks fail this potentially means
+					that the package has been removed already. In such
+					case the package remove commands will be skipped.
 
-					&quot;never&quot; (default):
-					When a package is about
-					to be removed from the host then WPKG will
-					execute
-					the remove commands in any case without executing
-					the checks
-					first. Note: Checks will still be done
-					after package removal to
-					verify whether the removal
-					was successful.
+					never (default): When a package is about to be
+					removed from the host then WPKG will execute the
+					remove commands in any case without executing the
+					checks first. Note: Checks will still be done after
+					package removal to verify whether the removal was
+					successful.
 				</xsd:documentation>
 			</xsd:annotation>
 			<xsd:simpleType>
@@ -374,39 +367,28 @@
 		<xsd:attribute name="precheck-upgrade">
 			<xsd:annotation>
 				<xsd:documentation>
-					Defines how package checks are used during
-					package
+					Defines how package checks are used during package
 					upgrade.
 
 					Currently supported values:
 
-					&quot;always&quot;: When
-					a package is upgraded the
-					checks specified will be be executed
-					before the
-					upgrade takes place. If checks succeed, then the
-					upgrade
-					will not be performed (WPKG just assumes
-					that the new version is
-					already applied correctly.
-					Please note that your checks shall verify
-					a specific
+					always: When a package is upgraded the checks
+					specified will be be executed before the upgrade
+					takes place. If checks succeed, then the upgrade
+					will not be performed (WPKG just assumes that the
+					new version is already applied correctly. Please
+					note that your checks shall verify a specific
 					software version and not just a generic check which
-					is
-					true for all versions. If your checks are true
-					for the old version
-					too then WPKG would never
+					is true for all versions. If your checks are true
+					for the old version too then WPKG would never
 					perform the upgrade in this mode.
 
-					&quot;never&quot; (default): When a package is about
-					to be upgraded
-					then WPKG will execute the upgrade
-					commands in any case without
-					executing the checks
-					first. This is the recommended behavior. Note:
-					Checks will still be done after package upgrade to
-					verify whether
-					the upgrade was successful.
+					never (default): When a package is about to be
+					upgraded then WPKG will execute the upgrade commands
+					in any case without executing the checks first. This
+					is the recommended behavior. Note: Checks will still
+					be done after package upgrade to verify whether the
+					upgrade was successful.
 				</xsd:documentation>
 			</xsd:annotation>
 			<xsd:simpleType>
@@ -419,41 +401,28 @@
 		<xsd:attribute name="precheck-downgrade">
 			<xsd:annotation>
 				<xsd:documentation>
-					Defines how package checks are used during
-					package
+					Defines how package checks are used during package
 					downgrade.
 
 					Currently supported values:
 
-					&quot;always&quot;:
-					When a package is downgraded the
-					checks specified will be be
-					executed before the
-					downgrade takes place. If checks succeed, then
-					the
-					downgrade will not be performed (WPKG just assumes
-					that the old
-					version is already applied correctly.
-					Please note that your checks
-					shall verify a specific
-					software version and not just a generic
-					check which
+					always: When a package is downgraded the checks
+					specified will be be executed before the downgrade
+					takes place. If checks succeed, then the downgrade
+					will not be performed (WPKG just assumes that the
+					old version is already applied correctly. Please
+					note that your checks shall verify a specific
+					software version and not just a generic check which
 					is true for all versions. If your checks are true
-					for the
-					new/current version too then WPKG would
-					never perform the downgrade
-					in this mode.
+					for the new/current version too then WPKG would
+					never perform the downgrade in this mode.
 
-					&quot;never&quot; (default): When a package is about
-					to be downgraded then WPKG will execute the
-					downgrade commands in
-					any case without executing the
-					checks first. This is the recommended
-					behavior.
-					Note: Checks will still be done after package
-					downgrade to
-					verify whether the downgrade was
-					successful.
+					never (default): When a package is about to be
+					downgraded then WPKG will execute the downgrade
+					commands in any case without executing the checks
+					first. This is the recommended behavior. Note:
+					Checks will still be done after package downgrade to
+					verify whether the downgrade was successful.
 				</xsd:documentation>
 			</xsd:annotation>
 			<xsd:simpleType>
@@ -464,635 +433,218 @@
 			</xsd:simpleType>
 		</xsd:attribute>
 	</xsd:complexType>
-	<xsd:element name="package" type="package">
-		<xsd:annotation>
-			<xsd:documentation>
-				Specifies a package element including all values
-				required for WPKG to
-				install/upgrade/downgrade/uninstall, checks and
-				downloads.
-			</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-	<xsd:element name="check" type="check">
-		<xsd:annotation>
-			<xsd:documentation>
-				Defines a check to determine if the package is
-				installed
-				on the system or not.
-			</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-	<xsd:complexType name="check">
-		<xsd:annotation>
-			<xsd:documentation>
-				Generic check definition - used for compatibility.
-				Does
-				not verify correct combination of attributes for all
-				kind of
-				checks. If you would like to verify the
-				attributes in more detail
-				please specify the
-				xsi:type="checkFile" attribute where "checkFile"
-				can be
-				replaced with any more-specific check type of check*.
-				Valid
-				types include - checkFile - checkRegistry -
-				checkExecute -
-				checkUninstall - checkLogical
-			</xsd:documentation>
-		</xsd:annotation>
-		<xsd:sequence minOccurs="0" maxOccurs="unbounded">
-			<xsd:element ref="check" minOccurs="0" maxOccurs="unbounded">
+
+	<xsd:complexType name="commands">
+		<xsd:sequence minOccurs="1" maxOccurs="unbounded">
+			<xsd:element name="command" type="command">
 				<xsd:annotation>
 					<xsd:documentation>
-						For logical checks sub-checks are
-						allowed/required.
+						Specify any numer of commands for any type of
+						command.
 					</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
-		<xsd:attribute name="type" type="xsd:string" use="required">
-			<xsd:annotation>
-				<xsd:documentation>
-					Type of check, valid values are: - file -
-					registry -
-					uninstall - execute - logical
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="condition" type="xsd:string" use="required">
-			<xsd:annotation>
-				<xsd:documentation>
-					Check condition. Valid values are: - equals -
-					exists
-					- sizeequals - versionsmallerthan -
-					versionlessorequal -
-					versionequalto -
-					versiongreaterorequal - versiongreaterthan -
-					exitcodesmallerthan - exitcodelessorequal -
-					exitcodeequalto -
-					exitcodegreaterorequal -
-					exitcodegreaterthan - not - and - or -
-					atleast -
-					atmost
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="path" type="xsd:string" use="optional"
-			default="%SystemRoot%\explorer.exe">
-			<xsd:annotation>
-				<xsd:documentation>
-					Path to be used for checks (registry path, file
-					path).
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="value" type="xsd:string" use="optional"
-			default="1.0">
-			<xsd:annotation>
-				<xsd:documentation>
-					A value is required for some check conditions
-					like
-					VERSION, SIZE or EQUALS checks.
-
-					Note for registry equals checks:
-					The value should
-					contain a string representing the data within the
-					registry value. In case the value is a DWORD just
-					enter a numeric
-					string. The values will be compared
-					in their string representation
-					(DWORD converted to
-					String). In case you compare to a REG_MULTI_SZ
-					value
-					all data fields will be concatnated to a single
-					string
-					separated by newline characters. Example:
-					REG_MULTI_SZ = a b c value
-					= "a b c" will match.
-					REG_BINARY values will be converted to
-					multiline
-					string as well. Each octett of the binary value is
-					converted to its decimal representation. REG_BINARY
-					= "11 22 33 44"
-					value = "17 34 51 68" will match.
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
 	</xsd:complexType>
-	<xsd:complexType name="checkFile">
+
+
+	<xsd:complexType name="commandInstall">
 		<xsd:annotation>
 			<xsd:documentation>
-				Check type for file specific tests.
+				Defines an installation command.
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:complexContent>
-			<xsd:restriction base="check">
-				<xsd:attribute name="type" use="required" fixed="file">
-					<xsd:annotation>
-						<xsd:documentation>
-							File checks need to specify 'file' as the
-							TYPE
-							of check.
-						</xsd:documentation>
-					</xsd:annotation>
-					<xsd:simpleType>
-						<xsd:restriction base="xsd:string">
-							<xsd:enumeration value="file"></xsd:enumeration>
-						</xsd:restriction>
-					</xsd:simpleType>
+			<xsd:restriction base="command">
+				<xsd:attribute name="type" type="xsd:string"
+					fixed="install" use="required">
 				</xsd:attribute>
-				<xsd:attribute name="condition" use="required">
-					<xsd:annotation>
-						<xsd:documentation>
-							Specify what should be tested on the file
-							specified within the 'path' property. -
-							exists: Check for file
-							existence -
-							sizeequals: Check for file size (exact size
-							in Bytes
-							specified within the 'value'
-							attribute) - version*: Compare file
-							version
-							to version specified within the 'value'
-							attribute.
-						</xsd:documentation>
-					</xsd:annotation>
-					<xsd:simpleType>
-						<xsd:restriction base="xsd:string">
-							<xsd:enumeration value="exists"></xsd:enumeration>
-							<xsd:enumeration value="equals"></xsd:enumeration>
-							<xsd:enumeration value="versionsmallerthan">
-							</xsd:enumeration>
-							<xsd:enumeration value="versionlessorequal">
-							</xsd:enumeration>
-							<xsd:enumeration value="versionequalto"></xsd:enumeration>
-							<xsd:enumeration value="versiongreaterorequal">
-							</xsd:enumeration>
-							<xsd:enumeration value="versiongreaterthan">
-							</xsd:enumeration>
-						</xsd:restriction>
-					</xsd:simpleType>
-				</xsd:attribute>
-				<xsd:attribute name="path" type="xsd:string" use="required">
-					<xsd:annotation>
-						<xsd:documentation>
-							Path to the file to be checked. You might
-							use
-							environment variables as well:
-							"C:\Windows\explorer.exe"
-							"%TEMP%\somefile.txt"
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:attribute>
-				<xsd:attribute name="value" type="xsd:string" use="optional">
-					<xsd:annotation>
-						<xsd:documentation>
-							This value is optional only for existence
-							check. For all other checks it it is
-							required.
-						</xsd:documentation>
-					</xsd:annotation>
+				<xsd:attribute name="cmd" type="xsd:string"
+					use="required">
 				</xsd:attribute>
 			</xsd:restriction>
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name="checkRegistry">
+	<xsd:complexType name="commandRemove">
 		<xsd:annotation>
 			<xsd:documentation>
-				Use this type to specify a check for registry
-				values.
+				Defines a remove command.
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:complexContent>
-			<xsd:restriction base="check">
-
-				<xsd:attribute name="type" use="required" fixed="registry">
-					<xsd:annotation>
-						<xsd:documentation>
-							Registry checks need to specify 'registry'
-							as
-							the the TYPE of check.
-						</xsd:documentation>
-					</xsd:annotation>
-					<xsd:simpleType>
-						<xsd:restriction base="xsd:string">
-							<xsd:enumeration value="registry"></xsd:enumeration>
-						</xsd:restriction>
-					</xsd:simpleType>
+			<xsd:restriction base="command">
+				<xsd:attribute name="type" type="xsd:string"
+					fixed="remove">
 				</xsd:attribute>
-				<xsd:attribute name="condition" use="required">
-					<xsd:annotation>
-						<xsd:documentation>
-							- exist: Check for existence of the
-							key/value
-							supplied within the 'path'
-							attribute. - equals: Check if the
-							specified
-							value contains the data entered within the
-							'value'
-							attribute.
-						</xsd:documentation>
-					</xsd:annotation>
-					<xsd:simpleType>
-						<xsd:restriction base="xsd:string">
-							<xsd:enumeration value="exists"></xsd:enumeration>
-							<xsd:enumeration value="equals"></xsd:enumeration>
-						</xsd:restriction>
-					</xsd:simpleType>
-				</xsd:attribute>
-				<xsd:attribute name="path" type="xsd:string" use="required">
-					<xsd:annotation>
-						<xsd:documentation>
-							Enter registry path to a key which you like
-							to
-							check. Valid examples: "HKLM\Software"
-							(NOTE: Only existence
-							checks are avalid on
-							registry KEYS.) "HKLM\Software\WPKG\running"
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:attribute>
-				<xsd:attribute name="value" type="xsd:string" use="optional">
-					<xsd:annotation>
-						<xsd:documentation>
-							Data to check te specified registry value
-							against. NOTE: This attribute is optional
-							only for registry
-							existence checks. It is
-							REQUIRED if you use equal checks.
-						</xsd:documentation>
-					</xsd:annotation>
+				<xsd:attribute name="cmd" type="xsd:string"
+					use="required">
 				</xsd:attribute>
 			</xsd:restriction>
 		</xsd:complexContent>
 	</xsd:complexType>
-
-
-
-
-	<xsd:complexType name="checkUninstall">
+	<xsd:complexType name="commandUpgrade">
 		<xsd:annotation>
 			<xsd:documentation>
-				Use this type to specify a check for uninstall
-				entries
-				(Control Panel => Add/Remove programs).
+				Defines an upgrade command.
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:complexContent>
-			<xsd:restriction base="check">
-				<xsd:attribute name="type" fixed="uninstall" use="required">
-					<xsd:annotation>
-						<xsd:documentation>
-							Uninstall checks need to specify 'uninstall'
-							as
-							the the TYPE of check.
-						</xsd:documentation>
-					</xsd:annotation>
-					<xsd:simpleType>
-						<xsd:restriction base="xsd:string">
-							<xsd:enumeration value="uninstall"></xsd:enumeration>
-						</xsd:restriction>
-					</xsd:simpleType>
+			<xsd:restriction base="command">
+				<xsd:attribute name="type" type="xsd:string"
+					fixed="upgrade">
 				</xsd:attribute>
-				<xsd:attribute name="condition" use="required">
-					<xsd:annotation>
-						<xsd:documentation>
-							- exist: Check if an uninstall entry equal
-							to
-							the value within the 'value' attribute
-							exists (see Control Panel
-							=> Add/Remove
-							software) - version*: Compares the uninstall
-							entry
-							version to the value within the
-							'value' attribute. NOTE: This only
-							works if
-							the application specifies a "DisplayVersion"
-							value within
-							the Windows registry. Valid
-							values: - versionsmallerthan -
-							versionlessorequal - versionequalto -
-							versiongreaterorequal -
-							versiongreaterthan
-						</xsd:documentation>
-					</xsd:annotation>
-					<xsd:simpleType>
-						<xsd:restriction base="xsd:string">
-							<xsd:enumeration value="exists"></xsd:enumeration>
-							<xsd:enumeration value="versionsmallerthan">
-							</xsd:enumeration>
-							<xsd:enumeration value="versionlessorequal">
-							</xsd:enumeration>
-							<xsd:enumeration value="versionequalto"></xsd:enumeration>
-							<xsd:enumeration value="versiongreaterorequal">
-							</xsd:enumeration>
-							<xsd:enumeration value="versiongreaterthan">
-							</xsd:enumeration>
-						</xsd:restriction>
-					</xsd:simpleType>
-				</xsd:attribute>
-				<xsd:attribute name="path" type="xsd:string" use="required">
-					<xsd:annotation>
-						<xsd:documentation>
-							Name of the uninstall entry as it appears
-							within Control Panel => Add/Remove software.
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:attribute>
-				<xsd:attribute name="value" type="xsd:string" use="optional">
-					<xsd:annotation>
-						<xsd:documentation>
-							Specifies a version if any of the version*
-							checks are used
-						</xsd:documentation>
-					</xsd:annotation>
+				<xsd:attribute name="cmd" type="xsd:string"
+					use="required">
 				</xsd:attribute>
 			</xsd:restriction>
 		</xsd:complexContent>
 	</xsd:complexType>
-
-	<xsd:complexType name="checkExecute">
+	<xsd:complexType name="commandDowngrade">
 		<xsd:annotation>
 			<xsd:documentation>
-				Use this type of check to execute a script. Its
-				exit
-				code can be evaluated by rules then.
+				Defines a downgrade command.
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:complexContent>
-			<xsd:restriction base="check">
-				<xsd:attribute name="type" use="required" fixed="execute">
-					<xsd:annotation>
-						<xsd:documentation>
-							Execute checks need to specify 'execute'
-							here.
-						</xsd:documentation>
-					</xsd:annotation>
-					<xsd:simpleType>
-						<xsd:restriction base="xsd:string">
-							<xsd:enumeration value="execute"></xsd:enumeration>
-						</xsd:restriction>
-					</xsd:simpleType>
+			<xsd:restriction base="command">
+				<xsd:attribute name="type" type="xsd:string"
+					fixed="downgrade">
 				</xsd:attribute>
-				<xsd:attribute name="condition" use="required">
-					<xsd:annotation>
-						<xsd:documentation>
-							Verify the exit code of the script executed.
-							Please specify the exit code to compare to
-							within the 'value'
-							attribute. Valid values:
-							- exitcodesmallerthan: true in case the
-							script exit code is numerically less than
-							the value specified -
-							exitcodelessorequal:
-							true in case the script exit code is
-							numerically less or equal than the value
-							specified -
-							exitcodeequalto: true in case
-							the script exit code is numerically
-							equal to
-							the value specified -
-							exitcodegreaterorequal: true in case
-							the
-							script exit code is numerically greater or
-							equal to the value
-							specified -
-							exitcodegreaterthan: true in case the script
-							exit code
-							is numerically larger than the
-							value specified
-						</xsd:documentation>
-					</xsd:annotation>
-					<xsd:simpleType>
-						<xsd:restriction base="xsd:string">
-							<xsd:enumeration value="exitcodesmallerthan">
-							</xsd:enumeration>
-							<xsd:enumeration value="exitcodelessorequal">
-							</xsd:enumeration>
-							<xsd:enumeration value="exitcodeequalto"></xsd:enumeration>
-							<xsd:enumeration value="exitcodegreaterorequal">
-							</xsd:enumeration>
-							<xsd:enumeration value="exitcodegreaterthan">
-							</xsd:enumeration>
-						</xsd:restriction>
-					</xsd:simpleType>
-				</xsd:attribute>
-				<xsd:attribute name="path" type="xsd:string" use="required">
-					<xsd:annotation>
-						<xsd:documentation>
-							Path to the script to be executed. The
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:attribute>
-				<xsd:attribute name="value" type="xsd:string" use="required">
-					<xsd:annotation>
-						<xsd:documentation>
-							Value used in exit code comparison.
-						</xsd:documentation>
-					</xsd:annotation>
+				<xsd:attribute name="cmd" type="xsd:string"
+					use="required">
 				</xsd:attribute>
 			</xsd:restriction>
 		</xsd:complexContent>
 	</xsd:complexType>
-
-	<xsd:complexType name="checkLogical">
-		<xsd:annotation>
-			<xsd:documentation>
-				Use this check for logical chaining of other
-				checks.
-			</xsd:documentation>
-		</xsd:annotation>
-		<xsd:complexContent>
-			<xsd:restriction base="check">
-				<xsd:sequence minOccurs="1" maxOccurs="unbounded">
-					<xsd:element ref="check">
-						<xsd:annotation>
-							<xsd:documentation>
-								Insert any sub-check here. Note: The
-								logical
-								"not" check requires to specify
-								1 (exactly one) sub-check while
-								others
-								like the "atleast" check makes no sense
-								with less checks
-								than specified for the
-								corresponding value.
-							</xsd:documentation>
-						</xsd:annotation>
-					</xsd:element>
-				</xsd:sequence>
-				<xsd:attribute name="type" use="required" fixed="logical">
-					<xsd:annotation>
-						<xsd:documentation>
-							Type of check has to be set to 'logical' for
-							logical checks.
-						</xsd:documentation>
-					</xsd:annotation>
-					<xsd:simpleType>
-						<xsd:restriction base="xsd:string">
-							<xsd:enumeration value="logical"></xsd:enumeration>
-						</xsd:restriction>
-					</xsd:simpleType>
-				</xsd:attribute>
-				<xsd:attribute name="condition" use="required">
-					<xsd:annotation>
-						<xsd:documentation>
-							Check condition: - not: Requires exactly one
-							single sub-element of type "check" whose
-							exit code boolean value
-							is inverted. - and:
-							Returns "false" immediately if one of the
-							contained checks returns false. Only
-							evaluates true in case ALL
-							checks contained
-							evaluate true. - or: Returns true
-							immediately as
-							soon as one of the checks
-							return true. Only evaluates false if ALL
-							checks contained evaluate false. - atleast:
-							Returns true only if
-							at least the specified
-							amount of checks contained return true. For
-							example if you specify 5 checks and the
-							value for 'atleast' is set
-							to 3 then it
-							returns true as soon as 3 checks out of 5
-							evaluated
-							true. - atmost: Returns true if
-							maximum the specified amount of
-							checks
-							return true. For example if you specify 5
-							checks and the
-							value for 'atmost' is set to
-							3 it will return true only if no more
-							than 3
-							checks evaluate true.
-						</xsd:documentation>
-					</xsd:annotation>
-					<xsd:simpleType>
-						<xsd:restriction base="xsd:string">
-							<xsd:enumeration value="not"></xsd:enumeration>
-							<xsd:enumeration value="and"></xsd:enumeration>
-							<xsd:enumeration value="or"></xsd:enumeration>
-							<xsd:enumeration value="atleast"></xsd:enumeration>
-							<xsd:enumeration value="atmost"></xsd:enumeration>
-						</xsd:restriction>
-					</xsd:simpleType>
-				</xsd:attribute>
-				<xsd:attribute name="value" type="xsd:string" use="optional">
-					<xsd:annotation>
-						<xsd:documentation>
-							Number of checks required for 'atleast' and
-							'atmost' checks. Unused for all other
-							conditions.
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:attribute>
-			</xsd:restriction>
-		</xsd:complexContent>
-	</xsd:complexType>
-
-	<xsd:element name="download" type="download">
-		<xsd:annotation>
-			<xsd:documentation>
-				Defines a file to be downloaded in order to
-				install the
-				package.
-			</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-
-	<xsd:complexType name="download">
-		<xsd:annotation>
-			<xsd:documentation>
-				Specifies how a download node looks like including
-				all
-				attributes.
-			</xsd:documentation>
-		</xsd:annotation>
-		<xsd:attribute name="url" type="xsd:string" use="required">
-			<xsd:annotation>
-				<xsd:documentation>
-					URL where the file is downloaded:
-					http://server.example.org/path/to/file.exe
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="target" type="xsd:string" use="required">
-			<xsd:annotation>
-				<xsd:documentation>
-					Target path to store the file to. The path has to
-					be
-					specified relative to the downloadDir property
-					within config.xml.
-					By default relative to %TEMP%.
-					For example specify
-					"pidgin\pidgin.exe" to download
-					the file at the specified URL to
-					"%TEMP%\pidgin\pigin.exe". The file is removed after
-					the commands
-					are executed.
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="timeout" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Optional download timeout (specified in seconds).
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-	</xsd:complexType>
-
-	<xsd:element name="install" type="command">
-		<xsd:annotation>
-			<xsd:documentation>
-				Install command definition.
-			</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
 
 	<xsd:complexType name="command">
 		<xsd:annotation>
 			<xsd:documentation>
-				Type definition used for all commands (install,
-				upgrade,
+				Type definition used for all commands (install, upgrade,
 				downgrade, remove)
 			</xsd:documentation>
 		</xsd:annotation>
-		<xsd:choice minOccurs="0" maxOccurs="unbounded">
-			<xsd:element ref="exit">
-				<xsd:annotation>
-					<xsd:documentation>
-						Specify any number of exit codes to handle
-						unusual (mostly non-zero) exit codes of the
-						commands.
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element ref="download">
-				<xsd:annotation>
-					<xsd:documentation>
-						Specifis a downloaad which is downloaded only if
-						the surrounding command definition is executed
-						(local download).
-						Compare also to the "global
-						download" specified on the package
-						node.
-					</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-		</xsd:choice>
-		<xsd:attribute name="cmd" type="xsd:string" use="required">
+		<xsd:sequence minOccurs="0" maxOccurs="1">
+			<xsd:sequence minOccurs="0" maxOccurs="1">
+				<xsd:element name="condition" type="wpkg:condition"></xsd:element>
+			</xsd:sequence>
+			<xsd:choice minOccurs="0" maxOccurs="unbounded">
+				<xsd:element name="exit" type="exit">
+					<xsd:annotation>
+						<xsd:documentation>
+							Specify exit code handling for this command.
+
+							This allows you to define some exit codes as
+							successful even if they are non-zero.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+				<xsd:element name="download" type="download">
+					<xsd:annotation>
+						<xsd:documentation>
+							Specify downloads which are executed only
+							for this command to be run.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:element>
+			</xsd:choice>
+		</xsd:sequence>
+		<xsd:attribute name="type" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					This attribute allows command grouping. All commands
+					with the same type are executed at the specified
+					package stage. The following types are supported by
+					WPKG currently:
+
+					install: Commands of type install are executed
+					during package installation.
+
+					upgrade: Commands of type upgrade are executed if a
+					package revision is incremented and therefore the
+					package is updated to a new version.
+
+					downgrade: Commands of type downgrade are executed
+					if a package revision is decremented and therefore
+					the package is downgraded to an older version.
+
+					remove: Commands of type remove are executed when a
+					package is uninstalled from the system.
+
+					You can also specify any other type identifier here.
+					WPKG however will not execute these commands
+					automatically during any package phase. But you can
+					use these package types in include references. For
+					example this allows you to define packages of type
+					'prepare' and then refer to it by includes by
+					specifying include='prepare' within another command
+					node.
+
+					Example:
+
+					&lt;command type='prepare' cmd='do-something' /&gt;
+
+					&lt;command type='prepare' cmd='do-something-else'
+					/&gt;
+
+					&lt;command type='install' include='prepare' /&gt;
+
+					&lt;command type='install' cmd='install-command'
+					/&gt;
+
+					&lt;command type='remove' include='prepare' /&gt;
+
+					&lt;command type='remove' cmd='install-command'
+					/&gt;
+
+					This will include the 'prepare' commands during
+					installation and during remove.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="include">
+			<xsd:annotation>
+				<xsd:documentation>
+					Specify to inherit all commands from a specific type
+					of commands. For example specify 'install' to
+					include all install commands. The package will be
+					processed the same way as if the specified type of
+					commands would be duplicated and inserted exactly
+					where you specified the include command.
+
+					It is allowed to specify multiple include commands.
+
+					Be careful no to create inclusion loops. For example
+					including all install commands within the upgrade
+					node and including the upgrade node within the
+					install node.
+				</xsd:documentation>
+			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="install"></xsd:pattern>
+					<xsd:pattern value="upgrade"></xsd:pattern>
+					<xsd:pattern value="downgrade"></xsd:pattern>
+					<xsd:pattern value="remove"></xsd:pattern>
+					<xsd:pattern value="\w+"></xsd:pattern>
+				</xsd:restriction>
+			</xsd:simpleType>
+		</xsd:attribute>
+		<xsd:attribute name="cmd" type="xsd:string" use="optional">
 			<xsd:annotation>
 				<xsd:documentation>
 					Specify the command to be executed in order to
-					install the application in silent mode. Example:
-					&quot;%SOFTWARE%\pidgin\pidgin.exe /L=1033 /DS=1
-					/NOUI&quot;.
+					install the application in silent mode.
+
+					Example:
+
+					'%SOFTWARE%\pidgin\pidgin.exe /L=1033 /DS=1 /NOUI'.
+
+					Note that a command is required in order to perform
+					any action. Although this attribute is optional it
+					is required for normal commands. Either the include
+					or the cmd attribute shall be filled.
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
@@ -1100,10 +652,13 @@
 			<xsd:annotation>
 				<xsd:documentation>
 					Specify timeout for command (in seconds).
+
+					Timeout has no effect on inheritance.
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
-		<xsd:attribute name="workdir" type="xsd:string" use="optional">
+		<xsd:attribute name="workdir" type="xsd:string"
+			use="optional">
 			<xsd:annotation>
 				<xsd:documentation>
 					Specify working directory in which the command is
@@ -1111,121 +666,10 @@
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
-		<xsd:attribute name="hostname" type="xsd:string">
-			<xsd:annotation>
-				<xsd:documentation>Regular expression which matches host name.
-					If
-					hostname attribute is specified then this node is only applied if
-					the host name is matched by the specified attribute regular
-					expression.
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="os" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression which matches host operating
-					system. e.g. "microsoft windows 7 professional" Host
-					OS description
-					string will have the following
-					format: "&gt;OS-caption&lt;,
-					&gt;OS-description&lt;,
-					&gt;CSD-version&lt;, &gt;OS-version&lt;"
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="ipaddresses" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching machine IP address.
-					Any
-					IP address of the host (if it has multiple) will
-					have to match
-					this expression. e.g. ^192\.168\.1\..*
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="domainname" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching domain name of the
-					host.
-					e.g. ^domain$
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="groups" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching group membership of
-					host. At least one group has to match the regular
-					expression. e.g.
-					^group.*$
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="architecture" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching the host
-					architecture.
-					Currently the following architecture are supported:
-					x86: 32-bit Windows operating system running on x86 instruction set 
-					x64: 64-bit	Windows operating system running on x86-64 instruction set
-					ia64: 64-bit Windows operating system running on IA64 instruction set
 
-					Note: Note: You will have to match x86 also if you
-					run Windows
-					32-bit on AMD64/EMT64/x64 hardware.
-				</xsd:documentation>
-			</xsd:annotation>
-			<xsd:simpleType>
-				<xsd:restriction base="xsd:string">
-					<xsd:enumeration value="x86"></xsd:enumeration>
-					<xsd:enumeration value="x64"></xsd:enumeration>
-					<xsd:enumeration value="ia64"></xsd:enumeration>
-				</xsd:restriction>
-			</xsd:simpleType>
-		</xsd:attribute>
-		<xsd:attribute name="environment" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>Define environment variables which have to match
-					in order to match the host. Environment variables need to be
-					specified in the following format:
-					environment="variable1=^regexp$|variable2=regexp..."
+		<xsd:attributeGroup ref="wpkg:HostMatch"></xsd:attributeGroup>
 
-					Please note
-					that regular expressions are matched case-insensitive and
-					multiple
-					variables have to be separated by the pipe ('|')
-					character.
-					Please
-					also note that in case you use WPKG-client the system-user
-					environment might differ from the environment you see when opening
-					a command prompt and typing 'set'. Some variables might be missing
-					and others might have different content. So use with caution.
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="lcid" type="xsd:string">
-			<xsd:annotation>
-				<xsd:documentation>Comma-separated list of LCID values to be matched
-					against executing host.
-					A full list of LCIDs might be found at:
-					http://www.microsoft.com/globaldev/reference/lcid-all.mspx
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
 	</xsd:complexType>
-
-
-	<xsd:element name="exit" type="exit">
-		<xsd:annotation>
-			<xsd:documentation>
-				Exit code specification for command nodes.
-			</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
 
 	<xsd:complexType name="exit">
 		<xsd:annotation>
@@ -1233,30 +677,37 @@
 				Definition for exit code specification.
 			</xsd:documentation>
 		</xsd:annotation>
-		<xsd:attribute name="code" type="xsd:string" use="required">
+		<xsd:attribute name="code" use="required">
 			<xsd:annotation>
 				<xsd:documentation>
-					Specify integer value which matches the exit code
-					of
-					the installer. Or specify the string "any" to match
-					any exit code.
+					Specify integer value which matches the exit code of
+					the installer. Or specify the string 'any' or '*' to
+					match any exit code.
 				</xsd:documentation>
 			</xsd:annotation>
+			<xsd:simpleType>
+				<xsd:restriction base="xsd:string">
+					<xsd:pattern value="any"></xsd:pattern>
+					<xsd:pattern value="\d+"></xsd:pattern>
+					<xsd:pattern value="\*"></xsd:pattern>
+				</xsd:restriction>
+			</xsd:simpleType>
 		</xsd:attribute>
 		<xsd:attribute name="reboot" use="optional">
 			<xsd:annotation>
 				<xsd:documentation>
 					Specify this attribute if the exit code should
-					initiate/shedule any type of reboot. Valid values: -
-					true: Reuire
-					immediate reboot after this command. -
-					delayed: Schedule reboot
-					after execution of all
-					commands has been finished (after-package
-					reboot) -
+					initiate/shedule any type of reboot. Valid values:
+
+					false: Do not require any reboot.
+
+					true: Reuire immediate reboot after this command.
+
+					delayed: Schedule reboot after execution of all
+					commands of this package has been finished.
+
 					postponed: Schedule reboot after execution of all
-					packages
-					(after-wpkg reboot)
+					packages (when WPKG terminates).
 				</xsd:documentation>
 			</xsd:annotation>
 			<xsd:simpleType>
@@ -1270,213 +721,74 @@
 		</xsd:attribute>
 	</xsd:complexType>
 
-	<xsd:element name="remove" type="command">
+	<xsd:complexType name="download">
 		<xsd:annotation>
 			<xsd:documentation>
-				Remove command definition.
+				Specifies how a download node looks like, including all
+				attributes.
 			</xsd:documentation>
 		</xsd:annotation>
-	</xsd:element>
+		<xsd:sequence minOccurs="0">
+			<xsd:element name="condition" type="wpkg:condition"></xsd:element>
+		</xsd:sequence>
 
-	<xsd:element name="upgrade" type="command">
-		<xsd:annotation>
-			<xsd:documentation>
-				Upgrade command definition.
-			</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-
-	<xsd:element name="downgrade" type="command">
-		<xsd:annotation>
-			<xsd:documentation>
-				Downgrade command definition.
-			</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-
-	<xsd:element name="depends" type="packageReference">
-		<xsd:annotation>
-			<xsd:documentation>
-				Specify package dependencies.
-			</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-
-
-	<xsd:element name="variable" type="variable">
-		<xsd:annotation>
-			<xsd:documentation>Variable definition.</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-
-	<xsd:complexType name="variable">
-		<xsd:attribute name="name" type="xsd:string" use="required">
-			<xsd:annotation>
-				<xsd:documentation>Variable name.</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="value" type="xsd:string" use="required">
-			<xsd:annotation>
-				<xsd:documentation>Variable value.</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>		<xsd:attribute name="hostname" type="xsd:string">
-			<xsd:annotation>
-				<xsd:documentation>Regular expression which matches host name.
-					If
-					hostname attribute is specified then this node is only applied if
-					the host name is matched by the specified attribute regular
-					expression.
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="os" type="xsd:string" use="optional">
+		<xsd:attribute name="url" type="xsd:string" use="required">
 			<xsd:annotation>
 				<xsd:documentation>
-					Regular expression which matches host operating
-					system. e.g. "microsoft windows 7 professional" Host
-					OS description
-					string will have the following
-					format: "&gt;OS-caption&lt;,
-					&gt;OS-description&lt;,
-					&gt;CSD-version&lt;, &gt;OS-version&lt;"
+					URL where the file is downloaded:
+					'http://server.example.org/path/to/file.exe'
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
-		<xsd:attribute name="ipaddresses" type="xsd:string" use="optional">
+		<xsd:attribute name="expandURL" type="xsd:boolean">
 			<xsd:annotation>
 				<xsd:documentation>
-					Regular expression matching machine IP address.
-					Any
-					IP address of the host (if it has multiple) will
-					have to match
-					this expression. e.g. ^192\.168\.1\..*
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="domainname" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching domain name of the
-					host.
-					e.g. ^domain$
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="groups" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching group membership of
-					host. At least one group has to match the regular
-					expression. e.g.
-					^group.*$
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="architecture" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching the host
-					architecture.
-					Currently the following architecture are supported:
-					x86: 32-bit Windows operating system running on x86 instruction set 
-					x64: 64-bit	Windows operating system running on x86-64 instruction set
-					ia64: 64-bit Windows operating system running on IA64 instruction set
+					Defines whether the url attribute is expanded (ie.
+					environment variables are replaced).
 
-					Note: Note: You will have to match x86 also if you
-					run Windows
-					32-bit on AMD64/EMT64/x64 hardware.
+					Note: As URLs are used to contain some percentage
+					characters (like '%20' for spaces) these might be
+					expanded too if the URL matches an environment
+					variable which is defined. For example downloading
+					from an URL like
+					url='http://host/softwareX%20release%20.exe' would
+					try to expand the environment'20release' as well.
+					It's very unlikely that this collides with an
+					environment variable you have actually defined but
+					keep it in mind when defining download URLs. If you
+					really need to disable expansion because the URL
+					collides with existing environment variables then
+					use the expandURL='false' attribute:
+
+					&lt;download expandURL='false'
+					url='http://host/softwareX%20release%20.exe'
+					target='release.exe' /&gt;
 				</xsd:documentation>
 			</xsd:annotation>
-			<xsd:simpleType>
-				<xsd:restriction base="xsd:string">
-					<xsd:enumeration value="x86"></xsd:enumeration>
-					<xsd:enumeration value="x64"></xsd:enumeration>
-					<xsd:enumeration value="ia64"></xsd:enumeration>
-				</xsd:restriction>
-			</xsd:simpleType>
 		</xsd:attribute>
-		<xsd:attribute name="environment" type="xsd:string" use="optional">
+		<xsd:attribute name="target" type="xsd:string" use="required">
 			<xsd:annotation>
 				<xsd:documentation>
-					Define environment variables which have to match
-					in
-					order to match the host. Environment variables need
-					to be
-					specified in the following format:
-					environment="variable1=^regexp$|variable2=regexp..."
-
-					Please note
-					that regular expressions are matched
-					case-insensitive and multiple
-					variables have to be
-					separated by the pipe ('|') character. Please
-					also
-					note that in case you use WPKG-client the
-					system-user
-					environment might differ from the
-					environment you see when opening a
-					command prompt
-					and typing 'set'. Some variables might be missing
-					and
-					others might have different content. So use with
-					caution.
+					Target path to store the file to. The path has to be
+					specified relative to the downloadDir property
+					within config.xml. By default relative to %TEMP%.
+					For example specify 'pidgin\pidgin.exe' to download
+					the file at the specified URL to
+					'%TEMP%\pidgin\pigin.exe'. The file is removed after
+					the commands are executed.
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
-		<xsd:attribute name="lcid" type="xsd:string">
+		<xsd:attribute name="timeout" type="xsd:string"
+			use="optional">
 			<xsd:annotation>
-				<xsd:documentation>Comma-separated list of LCID values to be matched
-					against executing host.
-					A full list of LCIDs might be found at:
-					http://www.microsoft.com/globaldev/reference/lcid-all.mspx
+				<xsd:documentation>
+					Optional download timeout (specified in seconds).
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
+
+		<xsd:attributeGroup ref="wpkg:HostMatch"></xsd:attributeGroup>
 	</xsd:complexType>
-
-	<xsd:complexType name="packageReference">
-		<xsd:annotation>
-			<xsd:documentation>
-				Reference to a package.
-			</xsd:documentation>
-		</xsd:annotation>
-
-		<xsd:attribute name="package-id" type="xsd:string" use="required">
-			<xsd:annotation>
-				<xsd:documentation>
-					Equal to the ID attribute of any existing
-					package.
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-	</xsd:complexType>
-
-
-
-	<xsd:element name="include" type="packageReference">
-		<xsd:annotation>
-			<xsd:documentation>
-				Specifies a package which is included. An included
-				package is added to the list of packages as specified by
-				the profile.
-				Please note that the install order of an
-				included package depends on
-				its priority. If an included
-				package has high priority it will be
-				installed early
-				during synchronization. If the included package has
-				low
-				priority it will be installed late. If you would like to
-				enforce a
-				certain installation order please consider to
-				specify a dependency!
-			</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-
-	<xsd:element name="chain" type="packageReference"></xsd:element>
-
-
-
 
 </xsd:schema>

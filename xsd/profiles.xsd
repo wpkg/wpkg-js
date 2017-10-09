@@ -1,325 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema targetNamespace="http://www.wpkg.org/profiles"
-	elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns="http://www.wpkg.org/profiles">
+	elementFormDefault="unqualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.wpkg.org/profiles" xmlns:wpkg="http://www.wpkg.org/wpkg">
+
+	<xsd:import namespace="http://www.wpkg.org/wpkg" schemaLocation="wpkg.xsd">
+		<xsd:annotation>
+			<xsd:documentation>Include WPKG master definition.</xsd:documentation>
+		</xsd:annotation>
+	</xsd:import>
 
 	<xsd:element name="profiles" type="profiles">
 		<xsd:annotation>
-			<xsd:documentation>Root node containing all profile definitions.
+			<xsd:documentation>Root element for profile definitions.
 			</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
-	<xsd:complexType name="profiles">
-		<xsd:choice minOccurs="1" maxOccurs="unbounded">
-			<xsd:element ref="profile">
-				<xsd:annotation>
-					<xsd:documentation>Defines a concrete profile.</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-		</xsd:choice>
-	</xsd:complexType>
 
-	<xsd:element name="profile" type="profile">
-		<xsd:annotation>
-			<xsd:documentation>Profile definition which defines a single profile
-				and allows assigning of packages to it.
-			</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
+	<xsd:complexType name="profiles">
+		<xsd:sequence maxOccurs="unbounded" minOccurs="1">
+			<xsd:element name="profile" type="profile"></xsd:element>
+		</xsd:sequence>
+	</xsd:complexType>
 
 	<xsd:complexType name="profile">
 		<xsd:annotation>
 			<xsd:documentation></xsd:documentation>
 		</xsd:annotation>
-		<xsd:sequence>
-			<xsd:choice minOccurs="0" maxOccurs="unbounded">
-				<xsd:element ref="package">
-					<xsd:annotation>
-						<xsd:documentation>Assigns a package to the profile.
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:element>
-				<xsd:element ref="depends">
-					<xsd:annotation>
-						<xsd:documentation>Dependency definition. Allows to refer to
-							another profile which is "included".
-						</xsd:documentation>
-					</xsd:annotation>
-				</xsd:element>
-				<xsd:element ref="variable">
-					<xsd:annotation>
-						<xsd:documentation>Variable definition.</xsd:documentation>
-					</xsd:annotation>
-				</xsd:element>
-			</xsd:choice>
-		</xsd:sequence>
+		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+			<xsd:element name="depends" type="depends"></xsd:element>
+			<xsd:element name="variable" type="wpkg:variable"></xsd:element>
+			<xsd:element name="package" type="packageReference"></xsd:element>
+		</xsd:choice>
 		<xsd:attribute name="id" type="xsd:string" use="required">
 			<xsd:annotation>
-				<xsd:documentation>Name of the profile (as referenced within
-					hosts.xml).
+				<xsd:documentation>
+Name of the profile (as referenced within hosts.xml).
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
 	</xsd:complexType>
 
-	<xsd:element name="package" type="package">
-		<xsd:annotation>
-			<xsd:documentation>References a package.</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-
-	<xsd:complexType name="package">
-		<xsd:attribute name="package-id" type="xsd:string" use="required">
-			<xsd:annotation>
-				<xsd:documentation>References the package ID of the package to
-					assign to the profile.
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="hostname" type="xsd:string">
-			<xsd:annotation>
-				<xsd:documentation>Regular expression which matches host name.
-					If
-					hostname attribute is specified then this node is only applied if
-					the host name is matched by the specified attribute regular
-					expression.
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="os" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression which matches host operating
-					system. e.g. "microsoft windows 7 professional" Host
-					OS description
-					string will have the following
-					format: "&gt;OS-caption&lt;,
-					&gt;OS-description&lt;,
-					&gt;CSD-version&lt;, &gt;OS-version&lt;"
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="ipaddresses" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching machine IP address.
-					Any
-					IP address of the host (if it has multiple) will
-					have to match
-					this expression. e.g. ^192\.168\.1\..*
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="domainname" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching domain name of the
-					host.
-					e.g. ^domain$
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="groups" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching group membership of
-					host. At least one group has to match the regular
-					expression. e.g.
-					^group.*$
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="architecture" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching the host
-					architecture.
-					Currently the following architecture are supported:
-					x86: 32-bit Windows operating system running on x86 instruction set 
-					x64: 64-bit	Windows operating system running on x86-64 instruction set
-					ia64: 64-bit Windows operating system running on IA64 instruction set
-
-					Note: Note: You will have to match x86 also if you
-					run Windows
-					32-bit on AMD64/EMT64/x64 hardware.
-				</xsd:documentation>
-			</xsd:annotation>
-			<xsd:simpleType>
-				<xsd:restriction base="xsd:string">
-					<xsd:enumeration value="x86"></xsd:enumeration>
-					<xsd:enumeration value="x64"></xsd:enumeration>
-					<xsd:enumeration value="ia64"></xsd:enumeration>
-				</xsd:restriction>
-			</xsd:simpleType>
-		</xsd:attribute>
-		<xsd:attribute name="environment" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>Define environment variables which have to match
-					in order to match the host. Environment variables need to be
-					specified in the following format:
-					environment="variable1=^regexp$|variable2=regexp..."
-
-					Please note
-					that regular expressions are matched case-insensitive and
-					multiple
-					variables have to be separated by the pipe ('|')
-					character.
-					Please
-					also note that in case you use WPKG-client the system-user
-					environment might differ from the environment you see when opening
-					a command prompt and typing 'set'. Some variables might be missing
-					and others might have different content. So use with caution.
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="lcid" type="xsd:string">
-			<xsd:annotation>
-				<xsd:documentation>Comma-separated list of LCID values to be matched
-					against executing host.
-					A full list of LCIDs might be found at:
-					http://www.microsoft.com/globaldev/reference/lcid-all.mspx
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
+	<xsd:complexType name="packageReference">
+		<xsd:complexContent>
+			<xsd:extension base="wpkg:packageReference">
+				<xsd:attribute name="installdate" type="xsd:dateTime"
+					use="optional">
+					<xsd:annotation>
+						<xsd:documentation>
+Date from which the package should be installed (this date or later). Date has to
+be specified in ISO 8601 format (see http://www.w3.org/TR/NOTE-datetime).
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:attribute name="uninstalldate" type="xsd:dateTime"
+					use="optional">
+					<xsd:annotation>
+						<xsd:documentation>
+Date from which the package should be removed (this date or later). Date has to be
+specified in ISO 8601 format (seehttp://www.w3.org/TR/NOTE-datetime).
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+			</xsd:extension>
+		</xsd:complexContent>
 	</xsd:complexType>
 
 	<xsd:complexType name="depends">
-		<xsd:attribute name="profile-id" type="xsd:string" use="required">
+		<xsd:sequence minOccurs="0" maxOccurs="1">
+			<xsd:element name="condition" type="wpkg:condition"></xsd:element>
+		</xsd:sequence>
+		<xsd:attribute name="profile-id" type="xsd:string"
+			use="required">
 			<xsd:annotation>
-				<xsd:documentation>ID of the profile which this profile depends on
-					(in fact it works similar to an include - all packages from the
-					referenced profile are installed too).
+				<xsd:documentation>
+ID of the profile which this profile depends on (in
+fact it works similar to an include - all packages
+from the referenced profile are installed too).
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
+		<xsd:attributeGroup ref="wpkg:HostMatch"></xsd:attributeGroup>
 	</xsd:complexType>
-
-	<xsd:element name="depends" type="depends">
-		<xsd:annotation>
-			<xsd:documentation>Define profile dependencies.</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
-
-	<xsd:complexType name="variable">
-		<xsd:attribute name="name" type="xsd:string" use="required">
-			<xsd:annotation>
-				<xsd:documentation>Variable name.</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="value" type="xsd:string" use="required">
-			<xsd:annotation>
-				<xsd:documentation>Variable value.</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="hostname" type="xsd:string">
-			<xsd:annotation>
-				<xsd:documentation>Regular expression which matches host name.
-					If hostname attribute is specified then this node is only applied if
-					the host name is matched by the specified attribute regular
-					expression.
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="os" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression which matches host operating
-					system. e.g. "microsoft windows 7 professional" Host
-					OS description
-					string will have the following
-					format: "&gt;OS-caption&lt;,
-					&gt;OS-description&lt;,
-					&gt;CSD-version&lt;, &gt;OS-version&lt;"
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="ipaddresses" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching machine IP address.
-					Any
-					IP address of the host (if it has multiple) will
-					have to match
-					this expression. e.g. ^192\.168\.1\..*
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="domainname" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching domain name of the
-					host.
-					e.g. ^domain$
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="groups" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching group membership of
-					host. At least one group has to match the regular
-					expression. e.g.
-					^group.*$
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="architecture" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>
-					Regular expression matching the host
-					architecture.
-					Currently the following architecture are supported:
-					x86: 32-bit Windows operating system running on x86 instruction set 
-					x64: 64-bit	Windows operating system running on x86-64 instruction set
-					ia64: 64-bit Windows operating system running on IA64 instruction set
-
-					Note: Note: You will have to match x86 also if you
-					run Windows
-					32-bit on AMD64/EMT64/x64 hardware.
-				</xsd:documentation>
-			</xsd:annotation>
-			<xsd:simpleType>
-				<xsd:restriction base="xsd:string">
-					<xsd:enumeration value="x86"></xsd:enumeration>
-					<xsd:enumeration value="x64"></xsd:enumeration>
-					<xsd:enumeration value="ia64"></xsd:enumeration>
-				</xsd:restriction>
-			</xsd:simpleType>
-		</xsd:attribute>
-		<xsd:attribute name="environment" type="xsd:string" use="optional">
-			<xsd:annotation>
-				<xsd:documentation>Define environment variables which have to match
-					in order to match the host. Environment variables need to be
-					specified in the following format:
-					environment="variable1=^regexp$|variable2=regexp..."
-
-					Please note
-					that regular expressions are matched case-insensitive and
-					multiple
-					variables have to be separated by the pipe ('|')
-					character.
-					Please
-					also note that in case you use WPKG-client the system-user
-					environment might differ from the environment you see when opening
-					a command prompt and typing 'set'. Some variables might be missing
-					and others might have different content. So use with caution.
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-		<xsd:attribute name="lcid" type="xsd:string">
-			<xsd:annotation>
-				<xsd:documentation>Comma-separated list of LCID values to be matched
-					against executing host.
-					A full list of LCIDs might be found at:
-					http://www.microsoft.com/globaldev/reference/lcid-all.mspx
-				</xsd:documentation>
-			</xsd:annotation>
-		</xsd:attribute>
-	</xsd:complexType>
-
-	<xsd:element name="variable" type="variable">
-		<xsd:annotation>
-			<xsd:documentation>Variable definition.</xsd:documentation>
-		</xsd:annotation>
-	</xsd:element>
 </xsd:schema>

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<packages:packages
+        xmlns:packages="http://www.wpkg.org/packages" xmlns:wpkg="http://www.wpkg.org/wpkg" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.wpkg.org/packages ../../xsd/packages.xsd" >
+
+    <!-- documentation of the Inno Setup command line switches can be found at http://www.jrsoftware.org/ishelp/
+        Installer ..... http://www.jrsoftware.org/ishelp/index.php?topic=setupcmdline
+            and
+        Uninstaller ... http://www.jrsoftware.org/ishelp/index.php?topic=uninstcmdline -->
+
+    <package id="ShortPackageID"
+            name="Long Package Description"
+            revision="%PKG_VERSION%rc1"
+            reboot="false"
+            priority="10">
+
+        <depends package-id="PreRequisitePackageID"/>
+        <include package-id="AdditionalPackageID"/>
+
+        <variable name="PKG_VERSION"        value="" />
+        <variable name="PKG_NAME"           value="" />
+        <variable name="PKG_SOURCE"         value="%SOFTWARE%\"/>
+        <variable name="PKG_DESTINATION"    value="%ProgramFiles%\"      architecture="x86"/>
+        <variable name="PKG_DESTINATION"    value="%ProgramFiles(x86)%\" architecture="x64"/>
+        <variable name="PKG_INSTALL_SWITCH" value="/SP- /VERYSILENT /SUPPRESSMSGBOXES /LOG /NORESTART"/>
+        <variable name="PKG_REMOVE_SWITCH"  value="/VERYSILENT /SUPPRESSMSGBOXES /LOG /NORESTART"/>
+
+        <check type="uninstall" condition="versiongreaterorequal" path="UninstallRegistryKeyName" value="%PKG_VERSION%" />
+        <check type="file"      condition="versiongreaterorequal" path="%PKG_DESTINATION%\.exe"   value="%PKG_VERSION%" />
+
+        <install cmd='"%PKG_SOURCE%" %PKG_INSTALL_SWITCH% ' />
+
+        <upgrade include="install" />
+
+        <remove cmd='"%PKG_DESTINATION%\unins000.exe" %PKG_REMOVE_SWITCH% ' />
+    </package>
+</packages:packages>
