@@ -10,20 +10,10 @@ Or make it configurable:
     <host order="hostname,ip" />
 
 
-- Add variable checking to "file check" conditions (like %PROGRAMFILES%)
-
-
 - Make possible to use additional config files (something like "include hosts-custom.xml" would
   include this additional .xml files, or "include hosts\*" would include all files in hosts folder)
   
   
-- Add querying for ALL software that is available in Software Add/Remove. This should also list "Uninstall command"
-  Something like wpkg.js /query:all, which would show packages installed by WPKG + everything that
-  is in Software Add/Remove.
-  This way we could add "cscript wpkg.js /query:all > \\server\inventory\%computername%.txt" to startup scripts,
-  and we would have a "Software Inventory" for all our machines.
-  
-
 - Make possible installing and uninstalling on a certain date (like "installdate = 23.07.2005", "uninstalldate = 01.02.2006")
 
 

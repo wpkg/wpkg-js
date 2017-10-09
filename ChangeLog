@@ -1,3 +1,17 @@
+Sat Feb 05 2006
+-----------------------------
+V 0.9.3
+
+WPKG-0.9.3 released as 0.9.3 (stable) - no changes.
+
+
+Sat Jan 28 2006
+-----------------------------
+V 0.9.3-test1
+
+- fixed bug 13 (execute=always packages get added to the wpkg.xml file on every run)
+
+
 Sat Dec 09 2005
 -----------------------------
 V 0.9.2

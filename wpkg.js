@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- * WPKG 0.9.2 - Windows Packager
+ * WPKG 0.9.3 - Windows Packager
  * Copyright 2003 Jerry Haltom
  * Copyright 2005 Tomasz Chmielewski <tch (at) wpkg . org>
  * Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>
@@ -347,7 +347,7 @@ function main(argv) {
  */
 function showUsage() {
     var message = "";
-    message += "WPKG 0.9.2 - Windows Packager\n";
+    message += "WPKG 0.9.3 - Windows Packager\n";
     message += "Copyright 2004 Jerry Haltom\n";
     message += "Copyright 2005 Tomasz Chmielewski <tch (at) wpkg . org>\n";
     message += "Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>\n";
@@ -1025,6 +1025,7 @@ function checkInstalled(packageNode) {
  */
 function executeOnce(packageNode) {
     var packageName = packageNode.getAttribute("name");
+    var packageId = packageNode.getAttribute("id");
     
     info("Executing commands for " + packageName + "...");
         
@@ -1083,6 +1084,14 @@ function executeOnce(packageNode) {
             throw new Error("Could not execute " + packageName + ". " +
                 e.description);       
         }
+    }
+    
+    // check for old node and remove it if there, to avoid duplicate setttings
+    // file entries when execution=always
+    var nodeOld = settings.selectSingleNode("package[@id='" + packageId + "']");
+    if (nodeOld != null) {
+       info("Replacing settings entry " + packageName);
+       settings.removeChild(nodeOld);
     }
     
     // append new node to local xml
