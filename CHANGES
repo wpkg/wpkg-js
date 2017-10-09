@@ -4,7 +4,23 @@
 
 Change notes
 ============
-NOT RELEASED YET - NOT RELEASED YET - NOT RELEASED YET - NOT RELEASED YET
+WPKG Version: 1.0.2
+Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
+Date        : 2008-04-21
+
+Changes/fixes visible to the user:
+
+Summary:
+- Improved handling of event log system errors. Fixes Bug 109.
+
+NEW: Improved handling of event log system errors. In case writing to event log
+     causes an exception WPKG will not exit silently any more but fall back to
+     write to STDOUT and log to the log file as appropriate (depending on log
+     level). Thanks to Brian May for reporting and debugging.
+     This fixes Bug 109.
+
+Change notes
+============
 WPKG Version: 1.0.1
 Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
 Date        : 2008-04-10

@@ -1,5 +1,5 @@
 /** Version as it appears within the log file */
-var WPKG_VERSION = "1.0.1";
+var WPKG_VERSION = "1.0.2";
 /*******************************************************************************
  *
  * WPKG - Windows Packager
@@ -396,6 +396,9 @@ var quiet = null;
 
 /** current value of quiet operation flag */
 var quietMode = false;
+
+/** set to true to skip write attempts to event log */
+var skipEventLog = false;
 
 /** holds an array of packages which were not removed due to the /noremove flag */
 var skippedRemoveNodes = null;
@@ -2891,6 +2894,15 @@ function isQuitOnError() {
 }
 
 /**
+ * Returns current value of skip event log setting.
+ *
+ * @return true in case event log logging is enabled, false if it is disabled (boolean).
+ */
+function isSkipEventLog() {
+	return skipEventLog;
+}
+
+/**
  * Checks if a package is a zombie package which means that it exists within
  * the locale package database (wpkg.xml) but not on server database
  * (packages.xml)
@@ -3506,6 +3518,15 @@ function setSettings(newSettings) {
 			setPackageID(packageNode, getPackageID(packageNode).toLowerCase());
 		}
 	}
+}
+
+/**
+ * Set new value for the boolean flag to disable/enable event log logging.
+ * 
+ * @param newValue value to be used for the skip event log flag from now on.
+ */
+function setSkipEventLog(newValue) {
+	skipEventLog = newValue;
 }
 
 /**
@@ -4555,9 +4576,24 @@ function log(type, description) {
 	// just log information level to event log or everything in case debug is
 	// enabled.
 	if ((type & 7) > 0 || isDebug()) {
-		if(isQuiet()) {
-			WshShell = WScript.CreateObject("WScript.Shell");
-			WshShell.logEvent(type, description);
+		if(isQuiet() && !isSkipEventLog()) {
+			try {
+				WshShell = WScript.CreateObject("WScript.Shell");
+				WshShell.logEvent(type, description);
+			} catch (e) {
+				// skip future event log entries and log an error
+				setSkipEventLog(true);
+				var message = "Error when writing to event log, falling back" +
+							" to standard output (STDOUT).\n" +
+							"Description: " + e.description + "\n" +
+							"Error number: " + hex(e.number) + "\n" +
+							"Stack: " + e.stack  + "\n" +
+							"Line: " + e.lineNumber + "\n";
+				error(message);
+
+				// write message to STDOUT to ensure it is not lost
+				alert(description);
+			}
 		} else {
 			alert(description);
 		}
