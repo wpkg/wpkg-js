@@ -13,10 +13,6 @@ Or make it configurable:
     <host order="hostname,ip" />
 
 
-- Make possible to use additional config files (something like "include hosts-custom.xml" would
-  include this additional .xml files, or "include hosts\*" would include all files in hosts folder)
-  
-  
 - Make possible installing and uninstalling on a certain date (like "installdate = 23.07.2005", "uninstalldate = 01.02.2006")
 
 

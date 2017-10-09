@@ -1,3 +1,39 @@
+Mon Jul 10 2006
+-----------------------------
+V 0.9.10
+
+- fixed bug 31
+
+
+Fri Jun 30 2006
+-----------------------------
+V 0.9.10-test3
+
+- lots of code cleanup
+
+Thanks to Falko Trojahn and Gordon Klimm for patches.
+
+
+Thu Jun 22 2006
+-----------------------------
+V 0.9.10-test2
+
+- fixed bug 28 (Accidentally removing installed packages)
+- fixed bug 29 (Syntax error in xml file in subdir stops wpkg)
+- fixed 'reboot="true" doesn't work for upgrade and remove cmd'
+- some code cleanup
+
+Thanks to Falko Trojahn and Gordon Klimm for patches.
+
+
+Thu Jun 15 2006
+-----------------------------
+V 0.9.10-test1
+
+- fixed bug 8 (WPKG shouldn't interrupt the installation if installation of one package failed)
+- code cleanup
+
+
 Wed Jun 14 2006
 -----------------------------
 V 0.9.9

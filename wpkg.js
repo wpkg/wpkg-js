@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- * WPKG 0.9.9 - Windows Packager
+ * WPKG 0.9.10 - Windows Packager
  * Copyright 2003 Jerry Haltom
  * Copyright 2005-2006 Tomasz Chmielewski <tch (at) wpkg . org>
  * Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>
@@ -68,6 +68,10 @@
  * /norunningstate
  *     Do not export the running state to the registry.
  *
+ * /quitonerror
+ *     Quits execution if installation of any package was unsuccessful
+ *     (default: install next package and show the error summary).
+ *
  * /debug
  * /verbose
  *     Prints some debugging info.
@@ -87,13 +91,16 @@
  ******************************************************************************/
 
 // script wide properties
-var force;        // when true: doesn't consider wpkg.xml but checks existence of packages.
-var forceInstall; // forces instalation over existing packages
+var force = false;        // when true: doesn't consider wpkg.xml but checks existence of packages.
+var forceInstall = false; // forces instalation over existing packages
 
-var debug;
-var dryrun;
+var quitonerror = false;
 
-var quiet;
+var err_summary = "";
+var debug = false;
+var dryrun = false;
+
+var quiet = false;
 var profile;
 var host;
 var base;
@@ -169,16 +176,12 @@ function main(argv) {
     // process property named arguments that set values
     if (isArgSet(argv, "/debug") || isArgSet(argv, "/verbose")) {
         debug = true;
-    } else {
-        debug = false;
     }
     
     // process property named arguments that set values
     if (isArgSet(argv, "/dryrun")) {
         dryrun = true;
         debug = true;
-    } else {
-        dryrun = false;
     }
     
     // if the user is wanting command help, give it to him
@@ -190,8 +193,6 @@ function main(argv) {
     // process property named arguments that set values
     if (isArgSet(argv, "/quiet")) {
         quiet = true;
-    } else {
-        quiet = false;
     }
 
     // if the user passes /nonotify, we don't want to notify the user
@@ -207,21 +208,22 @@ function main(argv) {
     // process property named arguments that set values
     if (isArgSet(argv, "/force")) {
         force = true;
-    } else {
-        force = false;
+    }
+
+    // process property named arguments that set values
+    if (isArgSet(argv, "/quitonerror")) {
+        quitonerror = true;
     }
     
     // process property named arguments that set values
     if (isArgSet(argv, "/forceinstall")) {
         forceInstall = true;
-    } else {
-        forceInstall = false;
     }
     
     if (argn("rebootcmd") != null) {
         rebootCmd=(argn("rebootcmd"));
-        if (debug)  info("Reboot-Cmd is " + rebootCmd +".");
     }
+    dinfo("Reboot-Cmd is " + rebootCmd +".");
     
     // want to export the state of WPKG to registry?
     if (isArgSet(argv, "/norunningstate")) {
@@ -238,13 +240,14 @@ function main(argv) {
     host = WshNetwork.ComputerName.toLowerCase();
 
     if (argn("base") != null) {
-        base = argn("base");
-        var base = fso.GetAbsolutePathName(base);
+        var base = argn("base");
+        base = fso.GetAbsolutePathName(base);
     } else {
         // use the executing location of the script as the default base path
         var path = WScript.ScriptFullName;
         base = fso.GetParentFolderName(path);
     }
+    dinfo("base directory " + base + ".");
     
 
     // append the settingsfile names to the end of the base path
@@ -258,16 +261,14 @@ function main(argv) {
     settings_file = fso.BuildPath(settings_folder, settings_file_name);
 
 
-/*-------------------------------code changed start------------------------------------*/
     // load packages and profiles
 	hosts = loadXml( hosts_file, createXsl( base, "hosts" ) );
 	profiles = loadXml( profiles_file, createXsl( base, "profiles" ) );
 	packages = loadXml( packages_file, createXsl( base, "packages" ) );
-/*-------------------------------code changed end------------------------------------*/
 
 
     if (force  &&  isArgSet(argv, "/synchronize")) {
-        if (debug)  info("Skipping current settings. Checking for actually installed packages.");
+        dinfo("Skipping current settings. Checking for actually installed packages.");
 
         settings = createXml("wpkg");
 
@@ -276,7 +277,7 @@ function main(argv) {
     } else {
         // load or create settings file
         if (!fso.fileExists(settings_file)) {
-            if (debug)  info("Settings file does not exist. Creating a new file.");
+            dinfo("Settings file does not exist. Creating a new file.");
 
             settings = createXml("wpkg");
             saveXml(settings, settings_file);
@@ -290,7 +291,7 @@ function main(argv) {
 		info( "Hosts file contains " + hst.length + " hosts:" );
 		var dsds = 0;
 		for( dsds = 0; dsds < hst.length; ++dsds ) {
-			info( hst[dsds].getAttribute( "profile-id" ) );
+			info( hst[dsds].getAttribute( "name" ) );
 		}
 		info( "" );
 	}
@@ -306,8 +307,6 @@ function main(argv) {
         }
         info("");
     }
-
-
 
     if (debug) {
         var packs = packages.selectNodes("package");
@@ -334,7 +333,6 @@ function main(argv) {
 	}
 	
 
-
     // set the profile from either the command line or the hosts file
     if (argn("profile") != null) {
         profile = argn("profile");
@@ -346,7 +344,7 @@ function main(argv) {
         }
     }
 
-    if (debug)  info("Using profile: " + profile);
+    dinfo("Using profile: " + profile);
 
     
     // check for existance of the current profile
@@ -393,7 +391,7 @@ function main(argv) {
  */
 function showUsage() {
     var message = "";
-    message += "WPKG 0.9.9 - Windows Packager\n";
+    message += "WPKG 0.9.10 - Windows Packager\n";
     message += "Copyright 2004 Jerry Haltom\n";
     message += "Copyright 2005-2006 Tomasz Chmielewski <tch (at) wpkg . org>\n";
     message += "Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>\n";
@@ -454,6 +452,10 @@ function showUsage() {
     message += "\n";
     message += "/norunningstate\n";
     message += "   Do not export the running state to the registry.\n";
+    message += "\n";
+    message += "/quitonerror\n";
+    message += "   Quits execution if installation of any package was unsuccessful\n";
+    message += "   (default: installs next package and shows the error summary).\n";
     message += "\n";
     message += "/debug\n";
     message += "/verbose\n";
@@ -548,38 +550,64 @@ function synchronizeProfile() {
     // accquire packages that should be present
     var packageArray = getAvailablePackages();
 
-    if (debug) { info("number of available packages: " + packageArray.length); }
+    dinfo("number of available packages: " + packageArray.length);
 
     
     // grab currently installed package nodes
     var installedPackages = settings.selectNodes("package");
+    var removablesArray = new Array();
     
     // loop over each installed package and check whether it still applies
     for (var i = 0; i < installedPackages.length; i++) {
         var installedPackageNode = installedPackages(i);
-        if (debug) { info("found installed package: " + installedPackageNode.getAttribute("id")); }
+        dinfo("found installed package: " + installedPackageNode.getAttribute("id"));
         
         // search for the installed package in available packages
         var found = false;
         for (j in packageArray) {
-            if (debug) { info("testing available package: " + packageArray[j].getAttribute("id")); }
+            dinfo("testing available package: " + packageArray[j].getAttribute("id"));
 
 
             if (packageArray[j].getAttribute("id") ==
                 installedPackageNode.getAttribute("id")) {
-                if (debug) { info("package: " + installedPackageNode.getAttribute("id") + " found in available packages."); }
+                dinfo("package: " + installedPackageNode.getAttribute("id") + " found in available packages.");
 
                 found = true;
                 break;
             }
         }
         
-        // if package is no longer present, remove it
+        // if package is no longer present, mark for remove
         if (!found) {
-            if (debug) { info("removing package: " + installedPackageNode.getAttribute("id")); }
+            dinfo("marking package: " + installedPackageNode.getAttribute("id") + " for remove");
+	    removablesArray.push(installedPackageNode);
+        }
+    }
 
+    var allPackagesArray = getAllPackages();
+    dinfo("number of packages to remove: " + removablesArray.length); 
+    // check for zombies, then really remove trashed packages
+    for (i in removablesArray) {
+	var packageName = removablesArray[i].getAttribute("id");
+	var found = false;
+        dinfo("Checking " + packageName + " to remove.");
+        for (j in allPackagesArray) {
+            if (allPackagesArray[j].getAttribute("id") == packageName)       found = true;
+	}
+	if (found) {
+            dinfo("Checked removal of package: " + packageName);
             notifyUserStart();
-            removePackage(installedPackageNode);
+            removePackage(removablesArray[i]);
+	} else {
+	      if (quitonerror) {
+                throw new Error("Installation error while synchronizing " +
+                    "package " + packageName + ", synchronization aborting." +
+                    "\n\n" + "Zombie found: package installed but not in packages database.");
+	      } else {
+err_summary += "\n\nPackage name: " + packageName +  
+                    "\n\n" + "Zombie found: package installed but not in packages database.";
+}
+	    
         }
     }
     
@@ -651,9 +679,14 @@ function synchronizeProfile() {
 
                     executeOnce(packageNode);
                 } catch (e) {
+		  if (quitonerror) {
                     throw new Error("Installation error while synchronizing " +
                         "package " + packageName + ", synchronization aborting." +
                         "\n\n" + e.description);
+		  } else {
+err_summary += "\n\nPackage name: " + packageName + "\n\n" + e.description; 
+}
+
                 }
             }
         } else if (executeAttr == "always") {
@@ -664,9 +697,14 @@ function synchronizeProfile() {
                 }
                 executeOnce(packageNode);
             } catch (e) {
+	      if (quitonerror) {
                 throw new Error("Installation error while synchronizing " +
                     "package " + packageName + ", synchronization aborting." +
                     "\n\n" + e.description);
+	      } else {
+err_summary += "\n\nPackage name: " + packageName + "\n\n" + e.description; 
+}
+
             }
 	    
         } else {
@@ -678,9 +716,14 @@ function synchronizeProfile() {
                     }
                     installPackage(packageNode);
                 } catch (e) {
+		  if (quitonerror) {
                     throw new Error("Installation error while synchronizing " +
                         "package " + packageName + ", synchronization aborting." +
                         "\n\n" + e.description);
+		  } else {
+err_summary += "\n\nPackage name: " + packageName + "\n\n" + e.description;
+}
+
                 }
             } else if (parseInt(installedPackage.getAttribute("revision")) <
                 packageRev) {
@@ -690,9 +733,14 @@ function synchronizeProfile() {
                     }
                     upgradePackage(installedPackage, packageNode);
                 } catch (e) {
+		  if(quitonerror) {
                     throw new Error("Upgrade error while synchronizing " +
                         "package " + packageName + ", synchronization aborting." +
                         "\n\n" + e.description);
+		  } else {
+err_summary += "\n\nPackage name: " + packageName + "\n\n" + e.description;
+}
+
                 }
             }
         }
@@ -1024,14 +1072,7 @@ function checkCondition(checkNode) {
         } // if checkCond == null || checkPath == null
 
         if (checkCond == "exists") {
-            // Display some debugging information
-            var WshShell = new ActiveXObject("WScript.Shell");
-            var val;
-            try {
-                val = WshShell.RegRead(checkPath);
-            } catch (e) {
-                val = null;
-            }
+            var val = getRegistryValue(checkPath);
 
             if (val != null) {
                 // Some debugging information
@@ -1043,13 +1084,7 @@ function checkCondition(checkNode) {
                 return false;
             }
         } else if (checkCond == "equals") {
-            var WshShell = new ActiveXObject("WScript.Shell");
-            var val;
-            try {
-                val = WshShell.RegRead(checkPath);
-            } catch (e) {
-                val = null;
-            }
+            var val = getRegistryValue(checkPath);
 
             if (val == checkValue) {
                 // Some debugging information
@@ -1059,6 +1094,9 @@ function checkCondition(checkNode) {
             } else {
                 info("The registry path '"+checkPath+"' did not contain the value: '"+
                          checkValue+"' : the check failed");
+// change: use a return false:
+                return false;
+// endChange
             }
         } else {
             throw new Error("Check condition " + checkCond + " unknown " +
@@ -1083,7 +1121,7 @@ function checkCondition(checkNode) {
                 return true;
             } else {
                 // Some debugging information
-                info("The path '"+checkPath+"' does not exist: the test failed");
+                dinfo("The path '"+checkPath+"' does not exist: the test failed");
                 return false;
             }
         } else if (checkCond == "sizeequals") {
@@ -1300,16 +1338,16 @@ function VersionCompare(a,b) {
 function GetFileVersion (file) {
     var version="UNKNOWN";
     try {
-        if (debug) { info ("Finding version of "+file+"\n");}
+        dinfo ("Finding version of "+file+"\n");
         var FSO = new ActiveXObject("Scripting.FileSystemObject");
         version = FSO.GetFileVersion(file);
-        if (debug) { info ("Obtained version \""+version+"\".");}
+        dinfo ("Obtained version \""+version+"\".");
     } catch (e) {
         version="UNKNOWN";
-        if (debug) { info ("Unable to find file version for "+file+" : "+
-                      e.description);}
+        dinfo ("Unable to find file version for "+file+" : "+
+                e.description);
     }
-    if (debug) { info ("Leaving GetFileVersion with version "+version); }
+    dinfo ("Leaving GetFileVersion with version "+version);
     return version;
 }
 
@@ -1320,16 +1358,16 @@ function GetFileVersion (file) {
 function GetFileSize (file) {
     var size="UNKNOWN";
     try {
-        if (debug) { info ("Finding size of "+file+"\n");}
+        dinfo ("Finding size of "+file+"\n");
         var FSO = new ActiveXObject("Scripting.FileSystemObject");
         var fsof = FSO.GetFile(file);
         size = fsof.Size;
     } catch (e) {
         size="UNKNOWN";
-        if (debug) {info("Unable to get file size for "+file+" : "+
-                         e.description);}
+        dinfo("Unable to get file size for "+file+" : "+
+               e.description);
     }
-    if (debug) { info ("Leaving GetFileSize with size "+size);}
+    dinfo ("Leaving GetFileSize with size "+size);
     return size;
 }
 
@@ -1339,11 +1377,10 @@ function GetFileSize (file) {
 function checkInstalled(packageNode) {
     var packageName = packageNode.getAttribute("name");
 
-    if (debug)  { info ("checking existence of package:" + packageName); }
+    dinfo ("checking existence of package:" + packageName);
     
     // get a list of checks to perform before installation.
     var checkNodes = packageNode.selectNodes("check");
-    var installed = true;
     
     // when there are no check conditions, say "not installed"
     if (checkNodes.length == 0) {
@@ -1354,12 +1391,11 @@ function checkInstalled(packageNode) {
     // if all are successful, we consider package as installed
     for (var i = 0; i < checkNodes.length; i++) {
         if (! checkCondition(checkNodes[i])) {
-            installed = false;
-            //break;
+            return false;
         } 
     }
 
-    return installed;
+    return true;
 }
 
 /**
@@ -1388,10 +1424,10 @@ function executeOnce(packageNode) {
             
         try {
 
-            if (debug) { info("executing command : " + cmd); }
+            dinfo("executing command : " + cmd);
             var result = 0;
             result = exec(cmd, timeout);
-            if (debug) { info("command returned result: " + result); }
+            dinfo("command returned result: " + result);
 
             // if exit code is 0, return successfully
             if (result == 0) {
@@ -1428,7 +1464,7 @@ function executeOnce(packageNode) {
         }
     }
     
-    // check for old node and remove it if there, to avoid duplicate setttings
+    // check for old node and remove it if there, to avoid duplicate settings
     // file entries when execution=always
     var nodeOld = settings.selectSingleNode("package[@id='" + packageId + "']");
     if (nodeOld != null) {
@@ -1482,10 +1518,8 @@ function installPackage(packageNode) {
 
 		if (nodeInst == null) {
 		  
-		  if (debug) { 
-		    info("Package " + packageName +
+		  dinfo("Package " + packageName +
 			 " missing from settings file, adding it now.");
-		  }
 		  
 		  settings.appendChild(packageNode);
 		  saveXml(settings, settings_file);
@@ -1516,11 +1550,11 @@ function installPackage(packageNode) {
             try {
 
 
-                if (debug) { info("executing command : " + cmd); }
+                dinfo("executing command : " + cmd);
 
                 var result = 0;
                 result = exec(cmd, timeout);
-                if (debug) { info("command returned result: " + result); }
+                dinfo("command returned result: " + result);
 
                 // if exit code is 0, return successfully
                 if (result == 0) {
@@ -1552,13 +1586,13 @@ function installPackage(packageNode) {
                 throw new Error(0, "Exit code returned non-successful value: " +
                     result + ".\n\n" + cmd);
             } catch (e) {
-                throw new Error("Could not install " + packageName + ". " +
+                throw new Error("Could not install " + packageName + ".\n" +
                     e.description);
             }
         }
 
         if (!checkInstalled(packageNode)) {
-            throw new Error("Could not install " + packageName + ". " +
+            throw new Error("Could not install " + packageName + ".\n" +
                             "Failed checking after installation.");
         }
 
@@ -1601,10 +1635,10 @@ function upgradePackage(oldPackageNode, newPackageNode) {
         }
         
         try {
-            if (debug) { info("executing command : " + cmd); }
+            dinfo("executing command : " + cmd);
             var result = 0;
             result = exec(cmd, timeout);
-            if (debug) { info("command returned result: " + result); }
+            dinfo("command returned result: " + result);
 
 
             // if exit code is 0, return successfully
@@ -1645,7 +1679,7 @@ function upgradePackage(oldPackageNode, newPackageNode) {
             throw new Error(0, "Exit code returned non-successful value: " +
                 result + ".\n\n" + cmd);
         } catch (e) {
-            throw new Error("Could not upgrade " + packageName + ". " +
+            throw new Error("Could not upgrade " + packageName + ".\n" +
                 e.description);
         }
     }
@@ -1670,7 +1704,7 @@ function upgradePackage(oldPackageNode, newPackageNode) {
     }
 
 
-    info("Upgrade of " + newPackageNode.getAttribute("name") + " successful.");
+    info("Upgrade of " + newPackageNode.getAttribute("name") + " to Rev. "+ newPackageNode.getAttribute("revision") + " successful.");
     
     // reboot the system if this package is suppose to
     if (newPackageNode.getAttribute("reboot") == "true") {
@@ -1703,10 +1737,10 @@ function removePackage(packageNode) {
         }
         
         try {
-            if (debug) { info("executing command : " + cmd); }
+            dinfo("executing command : " + cmd);
 
             var result = exec(cmd, timeout);
-            if (debug) { info("command returned result: " + result); }
+            dinfo("command returned result: " + result);
             
             // if exit code is 0, return successfully
             if (result == 0) {
@@ -1731,13 +1765,13 @@ function removePackage(packageNode) {
                     // this exit code forces a reboot
                     info("Command in removal of " + packageName + " returned " +
                         "non-zero exit code [" + result + "]. This exit code " +
-                        "is not an error.");
+                        "requires an immediate reboot.");
                     reboot();
                 } else {
                     // this exit code is successful
                     info("Command in removal of " + packageName + " returned " +
                         "non-zero exit code [" + result + "]. This exit code " +
-                        "requires an immediate reboot.");
+                        "is not an error.");
                     continue;
                 }
             }
@@ -1779,6 +1813,31 @@ function removePackage(packageNode) {
     if (packageNode.getAttribute("reboot") == "true") {
         reboot();
     }
+}
+
+/**
+ * Returns an array of all package nodes that can be installed
+ */
+function getAllPackages() {
+    // retrieve packages
+    var settingsNodes = settings.selectNodes("package");
+    var packagesNodes = packages.selectNodes("package");
+    
+    // concatenate both lists
+    var packageNodes = uniqueAttributeNodes(packagesNodes, "id");
+    
+    var packageArray = new Array();
+
+    for (var i = 0; i < packageNodes.length; i++) {
+        var packageNode     = packageNodes[i];
+            if (packageNode != null) {
+		if (!searchArray(packageArray, packageNode)) {
+                   // add the new node to the array 
+                   packageArray.push(packageNode);
+		}
+            }
+    }
+    return packageArray;
 }
 
 /**
@@ -1843,7 +1902,7 @@ function appendDependencies(appendArray, appendNode, sourceArray, sourceName) {
 	    // skip unknown entries 
 	    if (dependsId == null) continue;
 
-	    if (debug) info("Checking " + sourceName + " dependency: " + dependsId);
+	    dinfo("Checking " + sourceName + " dependency: " + dependsId);
 	    var dependsNode = sourceArray.selectSingleNode(sourceName + "[@id='" +
 		dependsId + "']");
 
@@ -1856,7 +1915,7 @@ function appendDependencies(appendArray, appendNode, sourceArray, sourceName) {
 	    if (searchArray(appendArray, dependsNode)) {
                         continue;
                     } else {
-		if (debug) info("Add " + sourceName + " dependecy: " + dependsId);
+		dinfo("Add " + sourceName + " dependecy: " + dependsId);
 		appendArray.push(dependsNode);
 		appendDependencies(appendArray, dependsNode, sourceArray, sourceName);
                 }
@@ -1876,7 +1935,7 @@ function getAvailableProfiles() {
     var profileNode = profiles.selectSingleNode("profile[@id='" + profile +
         "']");
 
-    if (debug) { info("profile: " + profile + " profileNode: " + profileNode); }
+    dinfo("profile: " + profile + " profileNode: " + profileNode);
         
     // add the current profile's node as the first element in the array
     profileArray.push(profileNode);
@@ -2101,11 +2160,21 @@ function loadXml( xmlPath, xslPath ) {
 	}
 	else {
 		if( xslPath != null ) {
+		  try {
 			var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0")
 			xmlDoc.async="false"
 			xmlDoc.validateOnParse = false;
 			xmlDoc.loadXML( source.transformNode( xslPath ) );
 			return xmlDoc.documentElement;
+		  } catch (e) {
+		  	if (quitonerror) {
+                  	  throw new Error("Error reading file: " + xmlPath +
+                          "\n\n" + e.description);
+		  	} else {
+err_summary += "\n\nError reading file: " + xmlPath + "\n\n" + e.description;
+				return source.documentElement;
+			}
+		   }
 		}
 		else {
 			return source.documentElement;
@@ -2133,11 +2202,11 @@ function createXsl( base, folder ) {
 	}
 
 	str = "<?xml version=\"1.0\"?>\r\n";
-	str = str + "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\r\n";
-	str = str + "	<xsl:output encoding=\"ISO-8859-1\" indent=\"yes\" method=\"xml\" version=\"1.0\"/>\r\n";
-	str = str + "	<xsl:template match=\"/\">\r\n";
-	str = str + "		<" + root + ">\r\n";
-	str = str + "			<xsl:copy-of select=\""+ root + "/child::*\"/>\r\n";
+	str += "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\r\n";
+	str += "	<xsl:output encoding=\"ISO-8859-1\" indent=\"yes\" method=\"xml\" version=\"1.0\"/>\r\n";
+	str += "	<xsl:template match=\"/\">\r\n";
+	str += "		<" + root + ">\r\n";
+	str += "			<xsl:copy-of select=\""+ root + "/child::*\"/>\r\n";
 	for( e.moveFirst(); ! e.atEnd(); e.moveNext() ) {
 		file = e.item();
 		var DotSpot = file.name.toString().lastIndexOf('.');
@@ -2149,9 +2218,9 @@ function createXsl( base, folder ) {
 					"')/" + root + "/child::*\"/>\r\n";
 		}
 	}
-	str = str + "		</" + root + ">\r\n";
-	str = str + "	</xsl:template>\r\n";
-	str = str + "</xsl:stylesheet>\r\n";
+	str += "		</" + root + ">\r\n";
+	str += "	</xsl:template>\r\n";
+	str += "</xsl:stylesheet>\r\n";
 	var xsl = new ActiveXObject( "Msxml2.DOMDocument.3.0" );
 	xsl.async = false;
 	xsl.loadXML( str );
@@ -2165,7 +2234,7 @@ function saveXml(root, path) {
     if (dryrun) {
         path += ".dryrun";
     }
-    if (debug) { info("saving XML : " + path); }
+    dinfo("saving XML : " + path);
     var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
     xmlDoc.appendChild(root);
     if (xmlDoc.save(path)) {
@@ -2265,7 +2334,7 @@ function exec(cmd, timeout) {
         return shellExec.exitCode;
     } catch (e) {
         throw new Error(0, "Command \"" + cmd
-            + "\" was not successful. " + e.description);
+            + "\" was not successful.\n" + e.description);
     }
 }
 
@@ -2308,7 +2377,6 @@ function notify(message) {
   */
 function reboot() {
     if (!noreboot ) {
-      var fso = new ActiveXObject("Scripting.FileSystemObject");
       switch (rebootCmd) {
         case "standard":
 		{	       
@@ -2328,6 +2396,7 @@ function reboot() {
                        psreboot();
                        break;
 	default:
+      var fso = new ActiveXObject("Scripting.FileSystemObject");
           	if (!fso.fileExists(rebootCmd)) {
                     var path = WScript.ScriptFullName;
                     base = fso.GetParentFolderName(path);
@@ -2410,6 +2479,11 @@ function exit(exitCode) {
 	// reset running state 
 	setRunningState("false");
     }
+
+if (err_summary != "") {
+info( "\n\nThere were the following errors:\n" + err_summary );
+exitCode = 1;
+}
     WScript.Quit(exitCode);
 }
 /**
@@ -2427,6 +2501,10 @@ function queryUpgradablePackages() {
         var installedNode       = installedNodes(i);
         var instPackageId       = installedNode.getAttribute("id");
         var instPackageRevision = installedNode.getAttribute("revision");
+	var instPackageExecAttr = installedNode.getAttribute("execute");
+	if (instPackageExecAttr == "") {
+	    instPackageExecAttr = "none";
+	}
         for (var j = 0; j < availableNodes.length; j++) {
             var availableNode        = availableNodes(j);
             var availPackageId       = availableNode.getAttribute("id");
@@ -2437,7 +2515,8 @@ function queryUpgradablePackages() {
                     message += "    ID:           " + instPackageId + "\n";
                     message += "    Old Revision: " + instPackageRevision + "\n";
                     message += "    New Revision: " + availableNode.getAttribute("revision") + "\n";
-                    message += "    Status:       updateable\n";
+			  message += "    ExecAttribs:  " + instPackageExecAttr + "\n";
+                    message += "    Status:       updatable\n";
                     message += "\n";
                 }
             }
@@ -2466,14 +2545,19 @@ function queryPackage(pack) {
         var packageReboot   = packageNode.getAttribute("reboot");
         var packageName     = packageNode.getAttribute("name");
         var packageId       = packageNode.getAttribute("id");
+	var packageExecAttr = packageNode.getAttribute("execute");
         if (packageReboot != "true") {
             packageReboot = "false";
         }
+	if (packageExecAttr == "") {
+	    packageExecAttr = "none";
+	}
         if (packageName == pack || packageId == pack) {
             message += packageName + "\n";
             message += "    ID:         " + packageId + "\n";
             message += "    Revision:   " + packageNode.getAttribute("revision") + "\n";
             message += "    Reboot:     " + packageReboot + "\n";
+	    message += "    ExecAttribs:" + packageExecAttr + "\n";
             if (searchList(settingsNodes, packageNode)) {
                 message += "    Status:     Installed\n";
             } else {

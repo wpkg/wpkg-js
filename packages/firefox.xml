@@ -9,7 +9,7 @@
    reboot="false"
    priority="10">
 
-   <check type="uninstall" condition="exists" path="Mozilla Firefox (1.5.0.4)" />
+   <check type="uninstall" condition="exists" path="Mozilla Firefox (1.5)" />
 
    <install cmd='"%SOFTWARE%\firefox\Firefox Setup 1.5.0.4.exe" -ms' />
 
