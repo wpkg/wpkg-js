@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Lists host names and associated profile. This file can be edited
+     directly, or even created automatically depending on your
+     environment. -->
+
+<wpkg>
+
+    <host name="hostname" profile-id="custom" />
+
+</wpkg>
