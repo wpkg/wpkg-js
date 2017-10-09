@@ -1,12 +1,12 @@
 /** Version as it appears within the log file */
-var WPKG_VERSION = "1.0.4";
+var WPKG_VERSION = "1.1.0";
 /*******************************************************************************
  *
  * WPKG - Windows Packager
  * Copyright 2003 Jerry Haltom
- * Copyright 2005-2006 Tomasz Chmielewski <tch (at) wpkg . org>
  * Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>
- * Copyright 2007 Rainer Meier <skybeam (at) users.sourceforge.net>
+ * Copyright 2005-2006 Tomasz Chmielewski <mangoo (at) wpkg . org>
+ * Copyright 2007-2009 Rainer Meier <r.meier (at) wpkg.org>
  *
  * Please report your issues to the list on http://wpkg.org/
  */
@@ -15,214 +15,223 @@ var WPKG_VERSION = "1.0.4";
  * Displays command usage.
  */
 function showUsage() {
-	var message = "\
-If you cannot read this since it is displayed within a dialog-window please \n\
-execute 'cscript wpkg.js /help' on the command line. This will print all \n\
-messages to the console. \n\n\
-Command Line Switches \n\
-===================== \n\
-Note: These command line switches overwrite parameters within config.xml. For \n\
-example the /quiet flag overwrites an eventually present quiet parameter within \n\
-config.xml. \n\
-Usually you should specify as few parameters as possible since changing \n\
-config.xml on the server might be much easier than changing all client-side \n\
-stored parameters. Typically you would use the following command-line in \n\
-production: \n\
-	wpkg.js /synchronize \n\
-\n\
-Frequently used parameters (package operations, you need to choose one): \n\
-======================================================================== \n\
-\n\
-/install:<package> \n\
-	Install the specified package on the system. \n\
-\n\
-/query:<option> \n\
-	Display a list of packages matching the specified criteria. Valid \n\
-	options are: \n\
-\n\
-	a - all packages \n\
-	i - packages that are currently installed on the system \n\
-	x - packages that are currently not installed on the system \n\
-	u - packages that can be upgraded \n\
-\n\
-/remove:<package> \n\
-	Remove the specified package from the system. \n\
-\n\
-/show:<package> \n\
-	Display a summary of the specified package, including it's state. \n\
-\n\
-/upgrade:<package> \n\
-	Upgrade the already installed package on the system. \n\
-\n\
-/synchronize \n\
-	Synchronize the current program state with the suggested program state \n\
-	of the specified profile. This is the action that should be called at \n\
-	system boot time for this program to be useful. \n\
-\n\
-/help \n\
-	Show this message. \n\
-\n\
-\n\
-Optional parameters (usually defined within config.xml): \n\
-======================================================== \n\
-\n\
-/base:<path> \n\
-	Set the local or remote path to find the xml input files. \n\
-	Can also be set to a web URL for direct XML retrieval from wpkg_web. \n\
-\n\
-/dryrun \n\
-	Do not execute any actions. Implicites /debug. \n\
-\n\
-/quiet \n\
-	Use the event log to record all error/status messages. Use this when \n\
-	running unattended. \n\
-\n\
-/nonotify \n\
-	Logged in users are not notified about impending updates. \n\
-\n\
-/noreboot \n\
-	System does not reboot regardless of need. \n\
-\n\
-/quitonerror \n\
-	Quit execution if the installation of any package was unsuccessful \n\
-	(default: install next package and show the error summary). \n\
-\n\
-\n\
-Rarely used parameters (mainly for testing): \n\
-============================================ \n\
-\n\
-/config:<path> \n\
-	Path to the configuration file to be used. The path might be absolute \n\
-	or relative but including the XML file name. This parameter is entirely \n\
-	OPTIONAL and should normally not be specified at all. \n\
-	If not specified the configuration will be searched at: \n\
-	<script-path>\\config.xml \n\
-	where <script-path> is the directory from which the script is executed. \n\
-		e.g. '\\\\server\\share\\directory\\config.xml'. \n\
-		e.g. 'directory\\config.xml'. \n\
-\n\
-/debug or /verbose \n\
-	Enable debug output. Please note that this parameter only influences \n\
-	notification and event log output. It does not affect the logging level. \n\
-	It is possible to get debug-level output even without using this \n\
-	switch. \n\
-\n\
-/force \n\
-	When used in conjunction with /synchronize WPKG will ignore the local \n\
-	settings file (wpkg.xml) and re-build the database with installed \n\
-	packages. \n\
-	When used in conjunction with /remove forces removal of the specified \n\
-	package even if not all packages which depend on the one to be removed \n\
-	could be removed. \n\
-\n\
-/forceinstall \n\
-	Force installation over existing packages. \n\
-\n\
-/host:<hostname> \n\
-	Use the specified hostname. This option is for testing purposes \n\
-	to test if a given hostname gets the correct profile assigned. \n\
-\n\
-/ignoreCase\n\
-	Disable case sensitivity of packages and profiles. Therefore you can\n\
-	assign the package 'myapp' to a profile while only a package 'MyApp' is\n\
-	defined within the packages.\n\
-	Note that this change requires modification of the package/profile/host nodes\n\
-	read from the XML files. All IDs are converted to lowercase.\n\
-	Note: This requires converting all profile/package IDs to lowercase.\n\
-		  Therefore you will only see lowercase entries within the log files\n\
-		  and also within the local package database.\n\
-\n\
-/logfilePattern:<pattern> \n\
-	Pattern for log file naming: \n\
-	Recognized patterns: \n\
-	 [HOSTNAME]  replaced by the executing hostname \n\
-	 [PROFILE]   replaced by the  name \n\
-	 [YYYY]      replaced by year (4 digits) \n\
-	 [MM]        replaced by month number (2 digits) \n\
-	 [DD]        replaced by the day of the month (2 digits) \n\
-	 [hh]        replaced by hour of the day (24h format, 2 digits) \n\
-	 [mm]        replaced by minutes (2 digits) \n\
-	 [ss]        replaced by seconds (2 digits) \n\
-\n\
-	 Examples: \n\
-	 'wpkg-[YYYY]-[MM]-[DD]-[HOSTNAME].log' \n\
-			 results in a name like 'wpkg-2007-11-04-myhost.log' \n\
-	NOTE: Using [PROFILE] causes all log messages before reading profiles.xml \n\
-			to be temporarily written to local %TEMP% folder. So they might \n\
-			appear on the final log file with some delay. \n\
-\n\
-/logLevel:[0-31] \n\
-	Level of detail for log file: \n\
-	use the following values: \n\
-	Log level is defined as a bitmask. Just sum up the values of each log \n\
-	severity you would like to include within the log file and add this value \n\
-	to your config.xml or specify it at /logLevel:<#>. \n\
-	Specify 0 to disable logging. \n\
-	  1: log errors only \n\
-	  2: log warnings \n\
-	  4: log information \n\
-	  8: log audit success \n\
-	 16: log audit failure \n\
-	Example: \n\
-	 31 log everything (1+2+4+8+16=31) \n\
-	 13 log errors, information and audit success (1+4+8=13) \n\
-	  3 log errors and warnings only (1+2=3) \n\
-	Default is 0 which will suppress all messages printed before log level is \n\
-	properly initialized by config.xml or by /logLevel:<#> parameter. \n\
-\n\
-/log_file_path:<path> \n\
-	Path where the log files will be stored. Also allows specifying an UNC \n\
-	path (e.g. '\\server\share\directory'). Make sure the path exists and \n\
-	that the executing user has write access to it. \n\
-	NOTE: If you set this parameter within config.xml please note that you \n\
-			need to escape backslashes: \n\
-			e.g. '\\\\server\\share\\directory'. \n\
-\n\
-/noforcedremove \n\
-	Do not remove packages from local package database if remove fails even \n\
-	if the package does not exist in the package database on the server and \n\
-	is not referenced within the profile. \n\
-	By default packages which have been removed from the server package \n\
-	database and the profile will be uninstalled and then removed \n\
-	from the local package database even if uninstall failed. \n\
-	This has been introduced to prevent a package whose uninstall script \n\
-	fails to repeat its uninstall procedure on each execution without the \n\
-	possibility to fix the problem since the package (including its \n\
-	uninstall string) is available on the local machine only. \n\
-	HINT: If you like the package to stay in the local database (including \n\
-	uninstall-retry on next boot) just remove it from the profile but do not \n\
-	completely delete it from the package database. \n\
-\n\
-/noremove \n\
-	Disable the removal of all packages. If used in conjunction with the \n\
-	/synchronize parameter it will just add packages but never remove them. \n\
-	Instead of removing a list of packages which would have been removed \n\
-	during that session is printed on exit. Packages are not removed from \n\
-	the local settings database (wpkg.xml). Therefore it will contain a list \n\
-	of all packages ever installed. \n\
-	Note that each package which is requested to be removed (manually or by \n\
-	a synchronization request) will be checked for its state by executing its \n\
-	included package checks. If the package has been removed manually it will \n\
-	also be removed from the settings database. Due to the fact that packages \n\
-	whithout checks always return 'false' for during the install-status check \n\
-	these packages will disappear from the local wpkg.xml. \n\
-\n\
-/norunningstate \n\
-	Do not export the running state to the registry. \n\
-\n\
-/profile:<profile> \n\
-	Force the name of the profile to use. If not specified, the profile to use \n\
-	is looked up in hosts.xml. \n\
-\n\
-/rebootcmd:<option> \n\
-	Use the specified boot command, either with full path or \n\
-	relative to the location of wpkg.js \n\
-	Specifying 'special' as option uses tools\psshutdown.exe \n\
-	from www.sysinternals.com - if it exists - and a notification loop \n\
-";
+var message = "" +
+"If you cannot read this since it is displayed within a dialog-window please \n" +
+"execute 'cscript wpkg.js /help' on the command line. This will print all \n" + 
+"messages to the console. \n\n" + 
+"Command Line Switches \n" + 
+"===================== \n" + 
+"Note: These command line switches overwrite parameters within config.xml. For \n" + 
+"example the /quiet flag overwrites an eventually present quiet parameter within \n" + 
+"config.xml. \n" + 
+"Usually you should specify as few parameters as possible since changing \n" + 
+"config.xml on the server might be much easier than changing all client-side \n" + 
+"stored parameters. Typically you would use the following command-line in \n" + 
+"production: \n" + 
+"	wpkg.js /synchronize \n" + 
+"\n" + 
+"Frequently used parameters (package operations, you need to choose one): \n" + 
+"======================================================================== \n" + 
+"\n" + 
+"/install:<package> \n" + 
+"	Install the specified package on the system. \n" + 
+"\n" + 
+"/query:<option> \n" + 
+"	Display a list of packages matching the specified criteria. Valid \n" + 
+"	options are: \n" + 
+"\n" + 
+"	a - all packages \n" + 
+"	i - packages that are currently installed on the system \n" + 
+"	x - packages that are currently not installed on the system \n" + 
+"	u - packages that can be upgraded \n" + 
+"\n" + 
+"/remove:<package> \n" + 
+"	Remove the specified package from the system. \n" + 
+"\n" + 
+"/show:<package> \n" + 
+"	Display a summary of the specified package, including it's state. \n" + 
+"\n" + 
+"/upgrade:<package> \n" + 
+"	Upgrade the already installed package on the system. \n" + 
+"\n" + 
+"/synchronize \n" + 
+"	Synchronize the current program state with the suggested program state \n" + 
+"	of the specified profile. This is the action that should be called at \n" + 
+"	system boot time for this program to be useful. \n" + 
+"\n" + 
+"/help \n" + 
+"	Show this message. \n" + 
+"\n" + 
+"\n" + 
+"Optional parameters (usually defined within config.xml): \n" + 
+"======================================================== \n" + 
+"\n" + 
+"/base:<path> \n" + 
+"	Set the local or remote path to find the xml input files. \n" + 
+"	Can also be set to a web URL for direct XML retrieval from wpkg_web. \n" + 
+"\n" + 
+"/dryrun \n" + 
+"	Do not execute any actions. Implicites /debug. \n" + 
+"\n" + 
+"/quiet \n" + 
+"	Use the event log to record all error/status messages. Use this when \n" + 
+"	running unattended. \n" + 
+"\n" + 
+"/nonotify \n" + 
+"	Logged in users are not notified about impending updates. \n" + 
+"\n" + 
+"/noreboot \n" + 
+"	System does not reboot regardless of need. \n" + 
+"\n" + 
+"/quitonerror \n" + 
+"	Quit execution if the installation of any package was unsuccessful \n" + 
+"	(default: install next package and show the error summary). \n" + 
+"\n" + 
+"/sendStatus \n" + 
+"	Send status messages on STDOUT which can be parsed by calling programm to \n" + 
+"	display status information to the user. \n" + 
+"\n" + 
+"\n" + 
+"Rarely used parameters (mainly for testing): \n" + 
+"============================================ \n" + 
+"\n" + 
+"/config:<path> \n" + 
+"	Path to the configuration file to be used. The path might be absolute \n" + 
+"	or relative but including the XML file name. This parameter is entirely \n" + 
+"	OPTIONAL and should normally not be specified at all. \n" + 
+"	If not specified the configuration will be searched at: \n" + 
+"	<script-path>\\config.xml \n" + 
+"	where <script-path> is the directory from which the script is executed. \n" + 
+"		e.g. '\\\\server\\share\\directory\\config.xml'. \n" + 
+"		e.g. 'directory\\config.xml'. \n" + 
+"\n" + 
+"/debug or /verbose \n" + 
+"	Enable debug output. Please note that this parameter only influences \n" + 
+"	notification and event log output. It does not affect the logging level. \n" + 
+"	It is possible to get debug-level output even without using this \n" + 
+"	switch. \n" + 
+"\n" + 
+"/force \n" + 
+"	When used in conjunction with /synchronize WPKG will ignore the local \n" + 
+"	settings file (wpkg.xml) and re-build the database with installed \n" + 
+"	packages. \n" + 
+"	When used in conjunction with /remove forces removal of the specified \n" + 
+"	package even if not all packages which depend on the one to be removed \n" + 
+"	could be removed. \n" + 
+"\n" + 
+"/forceinstall \n" + 
+"	Force installation over existing packages. \n" + 
+"\n" + 
+"/host:<hostname> \n" + 
+"	Use the specified hostname. This option is for testing purposes \n" + 
+"	to test if a given hostname gets the correct profile assigned. \n" + 
+"\n" + 
+"/ignoreCase\n" + 
+"	Disable case sensitivity of packages and profiles. Therefore you can\n" + 
+"	assign the package 'myapp' to a profile while only a package 'MyApp' is\n" + 
+"	defined within the packages.\n" + 
+"	Note that this change requires modification of the package/profile/host nodes\n" + 
+"	read from the XML files. All IDs are converted to lowercase.\n" + 
+"	Note: This requires converting all profile/package IDs to lowercase.\n" + 
+"		  Therefore you will only see lowercase entries within the log files\n" + 
+"		  and also within the local package database.\n" + 
+"\n" + 
+"/logAppend \n" + 
+"	Append log files instead of overwriting existing files. \n" + 
+"	NOTE: You can specify a log file pattern which will create a new file on \n" + 
+"	each run. Appending logs might cause problems with some log rotation \n" + 
+"	scripts as well. So use it with caution. \n" + 
+"\n" + 
+"/logfilePattern:<pattern> \n" + 
+"	Pattern for log file naming: \n" + 
+"	Recognized patterns: \n" + 
+"	 [HOSTNAME]  replaced by the executing hostname \n" + 
+"	 [PROFILE]   replaced by the  name \n" + 
+"	 [YYYY]      replaced by year (4 digits) \n" + 
+"	 [MM]        replaced by month number (2 digits) \n" + 
+"	 [DD]        replaced by the day of the month (2 digits) \n" + 
+"	 [hh]        replaced by hour of the day (24h format, 2 digits) \n" + 
+"	 [mm]        replaced by minutes (2 digits) \n" + 
+"	 [ss]        replaced by seconds (2 digits) \n" + 
+"\n" + 
+"	 Examples: \n" + 
+"	 'wpkg-[YYYY]-[MM]-[DD]-[HOSTNAME].log' \n" + 
+"			 results in a name like 'wpkg-2007-11-04-myhost.log' \n" + 
+"	NOTE: Using [PROFILE] causes all log messages before reading profiles.xml \n" + 
+"			to be temporarily written to local %TEMP% folder. So they might \n" + 
+"			appear on the final log file with some delay. \n" + 
+"\n" + 
+"/logLevel:[0-31] \n" + 
+"	Level of detail for log file: \n" + 
+"	use the following values: \n" + 
+"	Log level is defined as a bitmask. Just sum up the values of each log \n" + 
+"	severity you would like to include within the log file and add this value \n" + 
+"	to your config.xml or specify it at /logLevel:<#>. \n" + 
+"	Specify 0 to disable logging. \n" + 
+"	  1: log errors only \n" + 
+"	  2: log warnings \n" + 
+"	  4: log information \n" + 
+"	  8: log audit success \n" + 
+"	 16: log audit failure \n" + 
+"	Example: \n" + 
+"	 31 log everything (1+2+4+8+16=31) \n" + 
+"	 13 log errors, information and audit success (1+4+8=13) \n" + 
+"	  3 log errors and warnings only (1+2=3) \n" + 
+"	Default is 0 which will suppress all messages printed before log level is \n" + 
+"	properly initialized by config.xml or by /logLevel:<#> parameter. \n" + 
+"\n" + 
+"/log_file_path:<path> \n" + 
+"	Path where the log files will be stored. Also allows specifying an UNC \n" + 
+"	path (e.g. '\\server\share\directory'). Make sure the path exists and \n" + 
+"	that the executing user has write access to it. \n" + 
+"	NOTE: If you set this parameter within config.xml please note that you \n" + 
+"			need to escape backslashes: \n" + 
+"			e.g. '\\\\server\\share\\directory'. \n" + 
+"\n" + 
+"/noforcedremove \n" + 
+"	Do not remove packages from local package database if remove fails even \n" + 
+"	if the package does not exist in the package database on the server and \n" + 
+"	is not referenced within the profile. \n" + 
+"	By default packages which have been removed from the server package \n" + 
+"	database and the profile will be uninstalled and then removed \n" + 
+"	from the local package database even if uninstall failed. \n" + 
+"	This has been introduced to prevent a package whose uninstall script \n" + 
+"	fails to repeat its uninstall procedure on each execution without the \n" + 
+"	possibility to fix the problem since the package (including its \n" + 
+"	uninstall string) is available on the local machine only. \n" + 
+"	HINT: If you like the package to stay in the local database (including \n" + 
+"	uninstall-retry on next boot) just remove it from the profile but do not \n" + 
+"	completely delete it from the package database. \n" + 
+"\n" + 
+"/noremove \n" + 
+"	Disable the removal of all packages. If used in conjunction with the \n" + 
+"	/synchronize parameter it will just add packages but never remove them. \n" + 
+"	Instead of removing a list of packages which would have been removed \n" + 
+"	during that session is printed on exit. Packages are not removed from \n" + 
+"	the local settings database (wpkg.xml). Therefore it will contain a list \n" + 
+"	of all packages ever installed. \n" + 
+"	Note that each package which is requested to be removed (manually or by \n" + 
+"	a synchronization request) will be checked for its state by executing its \n" + 
+"	included package checks. If the package has been removed manually it will \n" + 
+"	also be removed from the settings database. Due to the fact that packages \n" + 
+"	whithout checks always return 'false' for during the install-status check \n" + 
+"	these packages will disappear from the local wpkg.xml. \n" + 
+"\n" + 
+"/norunningstate \n" + 
+"	Do not export the running state to the registry. \n" + 
+"\n" + 
+"/profile:<profile> \n" + 
+"	Force the name of the profile to use. If not specified, the profile to use \n" + 
+"	is looked up in hosts.xml. \n" + 
+"\n" + 
+"/rebootcmd:<option> \n" + 
+"	Use the specified boot command, either with full path or \n" + 
+"	relative to the location of wpkg.js \n" + 
+"	Specifying 'special' as option uses tools\psshutdown.exe \n" + 
+"	from www.sysinternals.com - if it exists - and a notification loop \n";
+
 	alert(message);
 }
-
 
 /*******************************************************************************
  *
@@ -259,7 +268,7 @@ var nonotify = false;
 var noreboot = false;
 
 /** stores if package removal should be skipped - see /noremove flag */
-var noRemove = false
+var noRemove = false;
 
 /** allows disabling/enabling of running state export to registry */
 var noRunningState = false;
@@ -283,10 +292,31 @@ var profiles_file_name = "profiles.xml";
 /** name of hosts definitnion database file */
 var hosts_file_name = "hosts.xml";
 
+/** specify if manually installed packages should be kept during synchronization
+ * true:  keep manually installed packages
+ * false: remove any manually installed package which does not belong to the profile
+ */
+var keepManual = true;
+
 /** path where log-files are stored
  * Defaults to "%TEMP%" if empty.
  */
 var log_file_path = "%TEMP%";
+
+/** path where downloads are stored, defaults to %TEMP% if not defined */
+var downloadDir = "%TEMP%";
+
+/** timeout for downloads */
+var downloadTimeout = 7200;
+
+/** if set to true logfiles will be appended, otherwise they are overwritten */
+var logAppend = false;
+
+/**
+ * set to true to enable sending of status messages to STDOUT, regardless of
+ * the status of /debug
+ */
+var sendStatus = false;
 
 /** use the following values:
  * Log level is defined as a bitmask. Just add sum up the values of each log
@@ -357,11 +387,18 @@ var logfilePath = null;
 /** stores if the user was notified about start of actions */
 var was_notified = false;
 
-/* holds a list of packages which have been installed during this execution
+/** holds a list of packages which have been installed during this execution
  * this is used to prevent dependency packages without checks and always
- * execution to be executed several times.
+ * execution to be executed several times as well as preventing infinite-
+ * loops on recursive package installation.
  */
 var packagesProcessed = new Array();
+
+/** holds a list of packages which have been removed during this execution
+ * This is used to prevent removing packages multiple times during a session
+ * because they are referenced as dependencies by multiple other packages.
+ */
+var packagesRemoved = new Array();
 
 /** hostname used within script */
 var hostname = null;
@@ -369,6 +406,7 @@ var hostname = null;
 /** FS object where the settings are stored */
 var settings_file = null;
 
+/** declare variables for data storage */
 var packages = null;
 var profiles = null;
 var hosts = null;
@@ -381,17 +419,14 @@ var applyingProfiles = null;
 /** caches the host node entry in order not to be re-evaluated each time */
 var applyingHostNode = null;
 
-/** holds name of profiles applying to current host  */
-var profilesApplying = null;
-
-/** set to true when a reboot is in progress */
-var rebooting = false;
-
 /** stores the locale ID (LCID) which applies for the local machine */
 var LCID = null;
 
 /** caches the language node applying to the current system locale */
 var languageNode = null;
+
+/** declare log level variable */
+var logLevel = null;
 
 /** actual value for log level */
 var logLevelValue = 0x03;
@@ -399,20 +434,23 @@ var logLevelValue = 0x03;
 /** declare quet mode variable */
 var quiet = null;
 
+/** holds name of profiles applying to current host  */
+var profilesApplying = null;
+
 /** current value of quiet operation flag */
 var quietMode = false;
+
+/** stores if a postponed reboot is scheduled */
+var postponedReboot = false;
+
+/** set to true when a reboot is in progress */
+var rebooting = false;
 
 /** set to true to skip write attempts to event log */
 var skipEventLog = false;
 
 /** holds an array of packages which were not removed due to the /noremove flag */
 var skippedRemoveNodes = null;
-
-/** declare log level variable */
-var logLevel = null;
-
-/** stores if a postponed reboot is scheduled */
-var postponedReboot = false;
 
 /** stores if system is running on a 64-bit OS */
 var x64 = null;
@@ -461,6 +499,9 @@ function main() {
 	}
 	initialize();
 
+	// Save a snapshot of the current environment
+	saveEnv();
+	
 	// Process command line arguments to determine course of action.
 	// Get special purpose argument lists.
 	var argv = getArgv();
@@ -477,7 +518,6 @@ function main() {
 		} else if (arg == "u") {
 			queryUpgradablePackages();
 		}
-		exit(0);
 	} else if (argn("show") != null) {
 		var requestedPackageName = argn("show");
 		// if case sensitive mode is disabled convert package name to lower case
@@ -488,20 +528,17 @@ function main() {
 		info(message);
 	} else if (argn("install") != null) {
 		installPackageName(argn("install"));
-		exit(0);
 	} else if (argn("remove") != null) {
 		removePackageName(argn("remove"));
-		exit(0);
 	} else if (argn("upgrade") != null) {
 		installPackageName(argn("upgrade"));
-		exit(0);
 	} else if (isArgSet(argv, "/synchronize")) {
 		synchronizeProfile();
-		exit(0);
 	} else {
 		showUsage();
 		throw new Error("No action specified.");
 	}
+	exit(0);
 }
 
 
@@ -562,37 +599,6 @@ function addSkippedRemoveNodes(packageNode) {
 }
 
 /**
- * Nearly the same as appendProfileDependencies() but more relaxed on unknown
- * or invalid dependencies.
- */
-function appendPackageDependencies(packageArray, packageNode) {
-	var depPackageIDs = getPackageDependencies(packageNode);
-
-	// add nodes if they are not yet part of the array
-	for (var i=0; i < depPackageIDs.length; i++) {
-		var currentNode = getPackageNodeFromAnywhere(depPackageIDs[i]);
-		if (currentNode != null) {
-			if(!searchArray(packageArray, currentNode)) {
-				dinfo("Adding package dependencies '" + getPackageName(currentNode) + "' (" +
-						getPackageID(currentNode) + ") for package '" +
-						getPackageName(packageNode) + "' (" + getPackageID(packageNode) +
-						")");
-				// add dependencies of these profiles as well (before adding the package itself)
-				appendPackageDependencies(packageArray, currentNode);
-				// add the package _after_
-				packageArray.push(currentNode);
-			} else {
-				dinfo("Package dependency '"  + getPackageName(currentNode) + "' (" +
-						getPackageID(currentNode) + ") for package '" +
-						getPackageName(packageNode) + "' (" + getPackageID(packageNode) +
-						") already added.");
-			}
-		}
-	}
-}
-
-
-/**
  * Appends dependent profile nodes of the specified profile to the specifed
  * array. Recurses into self to get an entire dependency tree.
  */
@@ -603,21 +609,26 @@ function appendProfileDependencies(profileArray, profileNode) {
 	for (var i=0; i < profileNodes.length; i++) {
 		var currentNode = profileNodes[i];
 		if(!searchArray(profileArray, currentNode)) {
-			dinfo("Adding profile dependencies for profile '" +
+			dinfo("Adding profile dependencies of profile '" +
+					getProfileID(profileNode) + "': '" +
 					getProfileID(currentNode) + "'");
 			profileArray.push(currentNode);
 
 			// add dependencies of these profiles as well
 			appendProfileDependencies(profileArray, currentNode);
 		} else {
-			dinfo("No more dependencies for profile '" +
-					getProfileID(currentNode) + "'");
+			dinfo("Profile '" +
+					getProfileID(currentNode) + "' " +
+					"already exists in profile dependency tree. Skipping.");
 		}
 	}
 }
 
 /**
  * Checks for the success of a check condition for a package.
+ *
+ * @param checkNode XML check node to be evaluated
+ * @throws Error Thows error in case of invalid XML node definition
  */
 function checkCondition(checkNode) {
 	var checkType = checkNode.getAttribute("type");
@@ -637,7 +648,7 @@ function checkCondition(checkNode) {
 	case "registry":
 		// Sanity check: must have Cond and Path set for all registry checks.
 		if ((checkCond == null) || (checkPath == null)) {
-			throw new Error("condition and / or path is null for a registry check. Perhaps " +
+			throw new Error("Condition and / or path is null for a registry check. Perhaps " +
 							"a typo? To help find it, here are the other pieces of information: " +
 							"condition='"+checkCond+"', path='"+checkPath+"', value='"+checkValue+"'");
 		}
@@ -645,9 +656,7 @@ function checkCondition(checkNode) {
 		// branch on check condition
 		switch (checkCond) {
 		case "exists":
-			var val = getRegistryValue(checkPath);
-
-			if (val != null) {
+			if (getRegistryValue(checkPath) != null) {
 				// Some debugging information.
 				dinfo("The registry path '" + checkPath + "' exists: the check was successful");
 				return true;
@@ -656,7 +665,6 @@ function checkCondition(checkNode) {
 				dinfo("The registry path '" + checkPath + "' does not exist: the check failed");
 				return false;
 			}
-			break;
 		case "equals":
 			// read registry value and convert it to string in order to compare to supplied
 			// string within the 'value' attribute
@@ -669,47 +677,44 @@ function checkCondition(checkNode) {
 			}
 
 			// try treating the value as array
-			var val = "";
+			var registyValue = "";
 			try {
 				var readArray = readValue.toArray();
 				dinfo("The registry value received is an array, concatenating values for comparison.");
-				for (var i=0; i<readArray.length; i++) {
-					val = val + readArray[i] + "";
-					if ( (i+1) < readArray.length) {
-						val += "\n";
+				for (var iRegKey=0; iRegKey<readArray.length; iRegKey++) {
+					registyValue = registyValue + readArray[iRegKey] + "";
+					if ( (iRegKey+1) < readArray.length) {
+						registyValue += "\n";
 					}
 				}
 			} catch(notAnArray) {
 				dinfo("The registry value received is a scalar value");
-				val = readValue + "";
+				registyValue = readValue + "";
 			}
 
-			if (val == checkValue) {
+			if (registyValue == checkValue) {
 				// Some debugging information.
 				dinfo("The registry path '" + checkPath + "' contained the correct value: '" +
 						checkValue + "'. The check was successful");
 				return true;
 			} else {
 				// try if expanded value matches (case-insensitive)
-				var shell = new ActiveXObject("WScript.Shell");
-				expandedCheckValue = shell.ExpandEnvironmentStrings(checkValue);
-				if (val.toLowerCase() == expandedCheckValue.toLowerCase()) {
+				var registryCompareShell = new ActiveXObject("WScript.Shell");
+				expandedCheckValue = registryCompareShell.ExpandEnvironmentStrings(checkValue);
+				if (registyValue.toLowerCase() == expandedCheckValue.toLowerCase()) {
 					dinfo("The registry path '" + checkPath + "' contained the expanded value: '" +
 						  expandedCheckValue + "'. The check was successful");
 					  return true;
 				} else {
 					info("The registry path '" + checkPath + "' did not contain the value: '" +
-							 checkValue + "'. Instead it contained '" + val + "'. the check failed");
+							 checkValue + "'. Instead it contained '" + registyValue + "'. the check failed");
 					return false;
 				}
 			}
-			break;
 		default:
 			throw new Error("Check condition " + checkCond + " unknown " +
 							"for type registry.");
-			break;
 		}
-		break;
 
 	// check type: file
 	case "file":
@@ -721,8 +726,11 @@ function checkCondition(checkNode) {
 							"condition='"+checkCond+"', path='"+checkPath+"', value='"+checkValue+"'");
 		}
 
-		var shell = new ActiveXObject("WScript.Shell");
-		checkPath=shell.ExpandEnvironmentStrings(checkPath);
+		// expand environment variables
+		// TODO: Use this type of shell everywhere?
+		var fileCompareShell = WScript.CreateObject("WScript.Shell");
+		checkPath = fileCompareShell.ExpandEnvironmentStrings(checkPath);
+		
 		if (checkCond == "exists") {
 			var fso = new ActiveXObject("Scripting.FileSystemObject");
 			if (fso.FileExists(checkPath)) {
@@ -751,7 +759,7 @@ function checkCondition(checkNode) {
 				return true;
 			} else {
 				dinfo("The file '"+checkPath+"' has size "+filesize+" - wanted "+
-						checkValue+": the test fails")
+						checkValue+": the test fails");
 			}
 		} else if (checkCond.substring(0,7) == "version") {
 			// Sanity check: Must have a value set for version check.
@@ -762,55 +770,57 @@ function checkCondition(checkNode) {
 								"', value='" + checkValue + "'");
 			} // if checkValue == null
 
+			var fileVersion = getFileVersion(checkPath);
+
 			var CheckValFromFileSystem = getFileVersion(checkPath);
-			var CheckValFromWpkg       = checkValue;
-			if ((CheckValFromFileSystem == "UNKNOWN") || (CheckValFromFileSystem == "")) {
-				 // Didn't get a sensible version number from GetFileVersion.
+			if (fileVersion == null || fileVersion == "") {
+				 // no file version could be obtained
 				 dinfo("Unable to find the file version for " + checkPath);
 				 return false;
-			} else {
-				var versionresult = versionCompare(CheckValFromFileSystem,
-													 CheckValFromWpkg);
-				dinfo ("Checking file version " + CheckValFromFileSystem + " is " + checkCond +
-						 " (than) " + CheckValFromWpkg + " - got result "+versionresult);
-				switch (checkCond) {
-					case "versionsmallerthan":
-						retval=(versionresult == -1);
-						dinfo("Checking version of '"+checkPath+"' : Is "+CheckValFromFileSystem+
-								" < "+checkValue+" ? "+retval);
-						return retval;
-						break;
-					case "versionlessorequal":
-						retval=(   (versionresult == -1)
-								|| (versionresult == 0) );
-						dinfo("Checking version of '"+checkPath+"' : Is "+CheckValFromFileSystem+
-								" <= "+checkValue+" ? "+retval);
-						return retval;
-						break;
-					 case "versionequalto":
-						retval=(versionresult == 0);
-						dinfo("Checking version of '"+checkPath+"' : Is "+CheckValFromFileSystem+
-								" = "+checkValue+" ? "+retval);
-						return retval;
-						break;
-					 case "versiongreaterorequal":
-						retval=(   (versionresult == 1)
-								|| (versionresult == 0) );
-						dinfo("Checking version of '"+checkPath+"' : Is "+CheckValFromFileSystem+
-								" >= "+checkValue+" ? "+retval);
-						return retval;
-						break;
-					 case "versiongreaterthan":
-						retval=(versionresult == 1);
-						dinfo("Checking version of '"+checkPath+"' : Is "+CheckValFromFileSystem+
-								" >= "+checkValue+" ? "+retval);
-						return retval;
-						break;
-					 default:
-						 throw new Error("Unknown operation on file versions : " + checkCond);
-						 break;
-				 }
 			}
+
+			var fileVersionCompare = versionCompare(CheckValFromFileSystem, checkValue);
+			dinfo ("Checking file version " + CheckValFromFileSystem + " is " + checkCond +
+					 " (than) " + checkValue + " - got result " + fileVersionCompare);
+
+			var fileVersionCompResult = false;
+			switch (checkCond) {
+				case "versionsmallerthan":
+					if (fileVersionCompare < 0) {
+						fileVersionCompResult = true;
+					}
+					break;
+				case "versionlessorequal":
+					if (fileVersionCompare <= 0) {
+						fileVersionCompResult = true;
+					}
+					break;
+				case "versionequalto":
+					if (fileVersionCompare == 0) {
+						fileVersionCompResult = true;
+					}
+					break;
+				case "versiongreaterorequal":
+					if (fileVersionCompare >= 0) {
+						fileVersionCompResult = true;
+					}
+					break;
+				case "versiongreaterthan":
+					if (fileVersionCompare > 0) {
+						fileVersionCompResult = true;
+					}
+					break;
+				default:
+					error("Unknown operation on file versions : " + checkCond);
+					fileVersionCompResult = false;
+					break;
+			}
+
+			dinfo("File version check for file '" + checkPath + "' returned " +
+				fileVersionCompResult + " for operation type " + checkCond);
+			return fileVersionCompResult;
+
+
 		} else {
 			throw new Error("Check condition " + checkCond + " unknown for " +
 							"type file.");
@@ -824,87 +834,223 @@ function checkCondition(checkNode) {
 			(checkPath == null)) {
 			throw new Error("Condition and / or path is null for an uninstall check. Perhaps " +
 							"a typo? To help find it, here are the other pieces of information: " +
-							"condition='"+checkCond+"', path='"+checkPath+"', value='"+checkValue+"'");
-		} // if checkCond == null || checkPath == null
+							"condition='" + checkCond +
+							"', path='" + checkPath + "'");
+		}
+		var uninstallLocations = scanUninstallKeys(checkPath);
 
 		if (checkCond == "exists") {
-			if (scanUninstallKeys(checkPath)) {
+			if (uninstallLocations.length > 0) {
 				dinfo("Uninstall entry for " + checkPath + " was found: test successful");
 				return true;
 			} else {
 				dinfo("Uninstall entry for " + checkPath + " missing: test failed");
 				return false;
 			}
+		} else if (checkCond.substring(0,7) == "version") {
+			// check versions of all installed instances
+			// for version checks we need a value
+			if (checkValue == null) {
+				throw new Error ("Uninstall entry version check has been specified but no" +
+						"'value' is defined. Please add a 'value=<version>' sttribute.");
+			}
+
+			for (var iUninstKey=0; iUninstKey < uninstallLocations.length; iUninstKey++) {
+				var uninstallValue = getRegistryValue(uninstallLocations[iUninstKey] + "\\DisplayVersion");
+
+				dinfo("Found version of '" + checkPath + "' at " + uninstallLocations[iUninstKey] +
+					": " + uninstallValue + "\n" + "Comparing to expected version: " + checkValue);
+
+				// check if valid version value was returned
+				if (uninstallValue == null || uninstallValue == "") {
+					error("Check condition '" + checkCond + "' cannot be executed" +
+						" since no version information is available for '" + checkPath + "'" +
+						" at " + uninstallLocations[iUninstKey]);
+					return false;
+				}
+
+				var uninstallVersionCompare = versionCompare(uninstallValue, checkValue);
+				dinfo ("Comparing uninstall version '" + uninstallValue + "' to expected version '" +
+					checkValue + "' using condition '" + checkCond  + "' returned " + uninstallVersionCompare);
+
+				var uninstallVersionCompResult = false;
+				switch (checkCond) {
+					case "versionsmallerthan":
+						if (uninstallValue < 0) {
+							uninstallVersionCompResult = true;
+						}
+						break;
+					case "versionlessorequal":
+						if (uninstallVersionCompare <= 0) {
+							uninstallVersionCompResult = true;
+						}
+						break;
+					 case "versionequalto":
+						if (uninstallVersionCompare == 0) {
+							uninstallVersionCompResult = true;
+						}
+						break;
+					case "versiongreaterorequal":
+						if (uninstallVersionCompare >= 0) {
+							uninstallVersionCompResult = true;
+						}
+						break;
+					 case "versiongreaterthan":
+						if (uninstallVersionCompare > 0) {
+							uninstallVersionCompResult = true;
+						}
+						break;
+					default:
+						error("Unknown operation on uninstall version check: " + checkCond);
+						uninstallVersionCompResult = false;
+						break;
+				}
+
+				dinfo("Uninstall version check for package '" + checkPath + "' returned " +
+					uninstallVersionCompResult + " for operation type " + checkCond);
+
+				// in case the current entry does not match the condition, immediately return
+				// else the next uninstall entry might be checked
+				if (uninstallVersionCompResult == false) {
+					return uninstallVersionCompResult;
+				}
+			}
+
+			// it looks like all entries evaluated true
+			return true;
 		} else {
 			throw new Error("Check condition " + checkCond + " unknown for " +
 							"type uninstall.");
 		}
-		break;
+
+	// check type: execution
+	case "execute":
+		// check if path to script is given
+		if (checkPath == null) {
+			throw new Error("No path is specified for execute check!");
+		}
+		if (checkValue == null || checkValue == "") {
+			checkValue = 0;
+		} else {
+			checkValue = parseInt(checkValue);
+		}
+
+		// execute scit and catch return code
+		var shell = new ActiveXObject("WScript.Shell");
+		checkPath=shell.ExpandEnvironmentStrings(checkPath);
+		var exitCode = exec(checkPath, 3600, null);
+
+		var executeResult = false;
+		switch (checkCond) {
+			case "exitcodesmallerthan":
+				if (exitCode < checkValue) {
+					executeResult = true;
+				}
+				break;
+			case "exitcodelessorequal":
+				if (exitCode <= checkValue) {
+					executeResult = true;
+				}
+				break;
+			 case "exitcodeequalto":
+				if (exitCode == checkValue) {
+					executeResult = true;
+				}
+				break;
+			case "exitcodegreaterorequal":
+				if (exitCode >= checkValue) {
+					executeResult = true;
+				}
+				break;
+			 case "exitcodegreaterthan":
+				if (exitCode > checkValue) {
+					executeResult = true;
+				}
+				break;
+			default:
+				dinfo("No execute condition specified, assuming exit code of 0 to be" +
+					" successful, everything else to be unsuccessful");
+				if (exitCode == 0) {
+					executeResult = true;
+				} else {
+					executeResult = false;
+				}
+				break;
+		}
+
+		dinfo("Execute check for program '" + checkPath + "' returned '" +
+				exitCode + "'. Evaluating condition '" + checkCond +
+				"' revealed " + executeResult + " when comparing to expected" +
+				" value of '" + checkValue + "'");
+		return executeResult;
 
 	// check type: logical
 	case "logical":
 
-		// Sanity check: must have Cond set for logical checks.
+		// check if logical condition is set
 		if (checkCond == null) {
-			throw new Error("condition is null for a logical check." );
-		} // if checkCond == null
+			throw new Error("Condition is null for a logical check.");
+		}
 
 		var subcheckNodes = checkNode.selectNodes("check");
 
 		switch (checkCond) {
 		case "not":
 			if (subcheckNodes.length == 1) {
-				retval=! checkCondition(subcheckNodes[0]);
-				dinfo("Result of logical 'NOT' check therefore "+retval);
+				retval = !checkCondition(subcheckNodes[0]);
+				dinfo("Result of logical 'NOT' check therefore " + retval);
 				return retval;
 			} else {
 				throw new Error("Check condition 'not' requires one and only " +
-						 "one child check condition. I found " + checkNodes.length);
+						 "one child check condition. Instead " + checkNodes.length + " childs have been found");
 			}
-			break;
 		case "and":
-			for (var i = 0; i < subcheckNodes.length; i++) {
-				if (! checkCondition(subcheckNodes[i])) {
-					// Lazy execution here.
+			for (var iAndNodes = 0; iAndNodes < subcheckNodes.length; iAndNodes++) {
+				// check if one of the subchecks return false
+				if (!checkCondition(subcheckNodes[iAndNodes])) {
 					dinfo("Result of logical 'AND' check is false");
 					return false;
 				}
 			}
 			dinfo("Result of logical 'AND' check is true");
 			return true;
-			break;
 		case "or":
-			for (var i = 0; i < subcheckNodes.length; i++) {
-				if (checkCondition(subcheckNodes[i])) {
+			// check if one of the sub-checks returns true
+			for (var iOrNodes = 0; iOrNodes < subcheckNodes.length; iOrNodes++) {
+				if (checkCondition(subcheckNodes[iOrNodes])) {
 					dinfo("Result of logical 'OR' check is true");
 					return true;
 				}
 			}
 			dinfo("Result of logical 'OR' check is false");
 			return false;
-			break;
 		case "atleast":
 			if (checkValue == null) {
 				throw new Error("Check condition logical 'atleast' requires a value ");
 			}
-			var count=0;
-			for (var i = 0; i < subcheckNodes.length; i++) {
-				if (checkCondition(subcheckNodes[i])) count++;
-				// Lazy execution.
-				if (count >= checkValue) {
+
+			// count number of checks which return true
+			var numAtLeastNodes=0;
+			for (var iAtLeastNodes = 0; iAtLeastNodes < subcheckNodes.length; iAtLeastNodes++) {
+				if (checkCondition(subcheckNodes[iAtLeastNodes])) {
+					numAtLeastNodes++;
+				}
+				// check if at least x checks revealed true
+				if (numAtLeastNodes >= checkValue) {
 					dinfo("Result of logical 'AT LEAST' check is true");
 					return true;
 				}
-			} // For loop over subcheckNodes.
+			}
 			dinfo("Result of logical 'AT LEAST' check is false");
 			return false;
-			break;
 		case "atmost":
-			var count=0;
-			for (var i = 0; i < subcheckNodes.length; i++) {
-				if (checkCondition(subcheckNodes[i])) count++;
-				// Lazy execution.
-				if (count > checkValue) {
+			// check if maximum x checks return true
+			var numAtMostNodes = 0;
+			for (var iAtMostNodes = 0; iAtMostNodes < subcheckNodes.length; iAtMostNodes++) {
+				if (checkCondition(subcheckNodes[iAtMostNodes])) {
+					numAtMostNodes++;
+				}
+				if (numAtMostNodes > checkValue) {
 					dinfo("Result of logical 'AT MOST' check is false");
 					return false;
 				}
@@ -912,18 +1058,14 @@ function checkCondition(checkNode) {
 			// Result will be true now.
 			dinfo("Result of logical 'AT MOST' check is true");
 			return true;
-			break;
 		default:
 			throw new Error("Check condition " + checkCond + " unknown for " +
 			"type logical.");
-			break;
 		}
-		break;
 
 	// no such check type
 	default:
 		throw new Error("Check condition type " + checkType + " unknown.");
-		break;
 	}
 
 	return false;
@@ -978,6 +1120,82 @@ function createSettingsFromFile(fileName) {
 	var newSettings = loadXml(settings_file, null, null);
 	return newSettings;
 }
+
+/**
+ * Downloads a file as specified within a download node.
+ *
+ * @param downloadNode XML 'download' node to be used
+ * @return true in case of successful download, false in case of error
+ */
+function download(downloadNode) {
+	// get attributes
+	var url = getDownloadUrl(downloadNode);
+	var target = getDownloadTarget(downloadNode);
+	var timeout = getDownloadTimeout(downloadNode);
+
+	// initiate download
+	return downloadFile(url, target, timeout);
+}
+
+/**
+ * Downloads all files from the given array of download XML nodes
+ *
+ * @param downloadNodes Array of download XML nodes to be downloaded
+ * @return true in case of successful download, false in case of error
+ */
+function downloadAll(downloadNodes) {
+	var returnValue = true;
+	if (downloadNodes != null) {
+		for (var i=0; i<downloadNodes.length; i++) {
+			var result = download(downloadNodes[i]);
+			// stop downloading if
+			if (result != true) {
+				returnValue = false;
+			}
+		}
+	}
+	return returnValue;
+}
+
+/**
+ * Removes eventually existing temporary downloads of the specified XML node
+ *
+ * @param downloadNode XML node which contains the download definition to clean
+ */
+function downloadClean(downloadNode) {
+	// get download attributes
+	var target = getDownloadTarget(downloadNode);
+
+	// evaluate target directory
+	if (target == null || target == "") {
+			error("Invaid download target specified: " + target);
+		target = downloadDir;
+	} else {
+		target = downloadDir + "\\" + target;
+	}
+	target = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(target);
+	var fso = new ActiveXObject("Scripting.FileSystemObject");
+	// delete temporary file if it already exists
+	if (fso.fileExists(target)) {
+		fso.deleteFile(target);
+	}
+}
+
+
+/**
+ * Cleans all temporary files belonging to the download XML nodes within
+ * the passed array of download XML nodes
+ *
+ * @param downloadNodes Array of download XML nodes
+ */
+function downloadsClean(downloadNodes) {
+	if (downloadNodes != null) {
+		for (var i=0; i<downloadNodes.length; i++) {
+			downloadClean(downloadNodes[i]);
+		}
+	}
+}
+
 
 /**
  * Builds settings document tree containing actually installed packages.
@@ -1121,7 +1339,6 @@ function getConfig() {
 		} else {
 			// if config_file_name (config.xml) exists, use it
 			var fullScriptPATH = WScript.ScriptFullName;
-			var fso = new ActiveXObject("Scripting.FileSystemObject");
 			var base = fso.GetParentFolderName(fullScriptPATH);
 			config_file = fso.BuildPath(base, config_file_name);
 			// config is optional in this case
@@ -1134,7 +1351,6 @@ function getConfig() {
 				config = loadXml(config_file, null);
 				if (config == null) {
 					throw new Error("Unable to parse config file!");
-					exit(99);
 				}
 			} catch (e) {
 				// There was an error proccessing the config.xml file.  Alert the user
@@ -1142,7 +1358,7 @@ function getConfig() {
 				exit(99); // Exit code 99 means config.xml read error.
 			}
 		} else {
-			var message = config_file + " could not be found."
+			var message = config_file + " could not be found.";
 			if (exitIfNotFound) {
 				error(message);
 				exit(99); // Exit code 99 means config.xml read error.
@@ -1161,7 +1377,7 @@ function getConfig() {
 /**
  * Returns array of <param> nodes from the configuration.
  * Returns array of size 0 in case no parameter is defined.
- * 
+ *
  * @return <param> nodes
  */
 function getConfigParamArray() {
@@ -1169,17 +1385,86 @@ function getConfigParamArray() {
 }
 
 /**
- *  Gets the size of a file.
+ * Returns 'download XML node array on a given XML node
+ * @param xmlNode the xml node to read child-nodes of type download from
+ * @param downloadsArray array of downloads to be extended with the ones from
+ *             the given XML node, specify null to return a new array.
+ * @return XML node array on a given package XML node containing all package
+ *         downloads.
+ *         returns emtpy array if no downloads are defined
+ */
+function getDownloads(xmlNode, downloadsArray) {
+	if (downloadsArray == null) {
+		downloadsArray = new Array();
+	}
+	var downloads = xmlNode.selectNodes("download");
+	if (downloads != null && downloads.length > 0) {
+		for(var i=0; i<downloads.length; i++) {
+			downloadsArray.push(downloads[i]);
+		}
+	}
+	return downloadsArray;
+}
+
+/**
+ * Returns 'target' attribute from the given download XML node
+ *
+ * @param downloadNode download XML node
+ * @return value of 'target' attribute, null if attribute is not defined
+ */
+function getDownloadTarget(downloadNode){
+	return downloadNode.getAttribute("target");
+}
+
+/**
+ * Returns 'timeout' attribute from the given download XML node
+ *
+ * @param downloadNode download XML node
+ * @return value of 'timeout' attribute, returns value of downloadTimeout
+ *         if no timeout value exists or it cannot be parsed.
+ *         Returns integer.
+ */
+function getDownloadTimeout(downloadNode) {
+	var returnValue = downloadTimeout;
+	var timeout = downloadNode.getAttribute("timeout");
+	if (timeout != null) {
+		try {
+			returnValue = parseInt(timeout);
+		} catch(e) {
+			error("Erorr parsing timeout attribute: " + e.description);
+		}
+	}
+
+	return returnValue;
+}
+
+/**
+ * Returns 'url' attribute from the given download XML node
+ *
+ * @param downloadNode download XML node
+ * @return value of 'url' attribute, null if attribute is not defined
+ */
+function getDownloadUrl(downloadNode) {
+	return downloadNode.getAttribute("url");
+}
+
+/**
+ * Gets the size of a file (in Bytes). The path is allowed to contain
+ * environment variables like "%TEMP%\somefile.txt".
+ *
+ * @param path to the file whose size has to be returned
+ * @return size of the file (in Bytes), returns -1 if file size could not be determined
  */
 function getFileSize (file) {
-	var size="UNKNOWN";
+	var size = -1;
 	try {
 		dinfo ("Finding size of " + file + "\n");
+		var expandedPath = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(file);
 		var FSO = new ActiveXObject("Scripting.FileSystemObject");
-		var fsof = FSO.GetFile(file);
+		var fsof = FSO.GetFile(expandedPath);
 		size = fsof.Size;
 	} catch (e) {
-		size="UNKNOWN";
+		size = -1;
 		dinfo("Unable to get file size for " + file + " : " +
 				 e.description);
 	}
@@ -1188,21 +1473,22 @@ function getFileSize (file) {
 }
 
 /**
- *  Gets the version of a file.
+ * Returns the version of a file.
+ *
+ * @return string representation of version, null in case no version could be read.
  */
 function getFileVersion (file) {
-	var version="UNKNOWN";
+	var version = null;
 	try {
-		dinfo ("Finding version of " + file + "\n");
+		dinfo ("Trying to find version of " + file);
 		var FSO = new ActiveXObject("Scripting.FileSystemObject");
 		version = FSO.GetFileVersion(file);
-		dinfo ("Obtained version \"" + version + "\".");
+		dinfo ("Obtained version '" + version + "'.");
 	} catch (e) {
-		version="UNKNOWN";
-		dinfo ("Unable to find file version for " + file + " : " +
-				e.description);
+		version = null;
+		dinfo("Unable to find file version for " + file + " : " +
+			e.description);
 	}
-	dinfo ("Leaving getFileVersion with version " + version);
 	return version;
 }
 
@@ -1251,17 +1537,17 @@ function getHostNode() {
 		var hostNodes = getHostNodes();
 
 		// try non-regular-expression matching
-		for (var i=0; i < hostNodes.length; i++) {
-			var hostNode = hostNodes[i];
+		for (var iHosts=0; iHosts < hostNodes.length; iHosts++) {
+			var hostNodeDirectMatch = hostNodes[iHosts];
 
-			if (hostNode != null) {
-				var attrName = getHostNameAttribute(hostNode);
+			if (hostNodeDirectMatch != null) {
+				var hostNameAttribute = getHostNameAttribute(hostNodeDirectMatch);
 
-				if (attrName != null) {
+				if (hostNameAttribute != null) {
 
-					if (hostName.toUpperCase() == attrName.toUpperCase()) {
-						applyingHostNode = hostNode;
-						return hostNode;
+					if (hostName.toUpperCase() == hostNameAttribute.toUpperCase()) {
+						applyingHostNode = hostNodeDirectMatch;
+						return hostNodeDirectMatch;
 					}
 				}
 			}
@@ -1274,12 +1560,12 @@ function getHostNode() {
 
 			// check for each address if a host node matches
 			// try non-regular-expression matching
-			for (var i=0; i < ipAddresses.length; i++) {
-				var ipAddress = ipAddresses[i];
+			for (var iIPAdresses=0; iIPAdresses < ipAddresses.length; iIPAdresses++) {
+				var ipAddress = ipAddresses[iIPAdresses];
 
 				// check if any of the patterns within the hosts definition matches
-				for (var j=0; j < hostNodes.length; j++) {
-					var hostNode = hostNodes[j];
+				for (var iHostMatch=0; iHostMatch < hostNodes.length; iHostMatch++) {
+					var hostNode = hostNodes[iHostMatch];
 
 					if (hostNode != null) {
 						var matchPattern = getHostNameAttribute(hostNode);
@@ -1345,10 +1631,10 @@ function getHostNode() {
 			hostNode = hostNodes[i];
 
 			if (hostNode != null) {
-				var attrName = getHostNameAttribute(hostNode);
+				var hostNameAttrExpr = getHostNameAttribute(hostNode);
 
-				if (attrName != null) {
-					var reg = new RegExp("^" + attrName + "$", "i");
+				if (hostNameAttrExpr != null) {
+					var reg = new RegExp("^" + hostNameAttrExpr + "$", "i");
 
 					if (reg.test(hostName)) {
 						applyingHostNode = hostNode;
@@ -1402,8 +1688,8 @@ function getHostProfiles(hostNode) {
 
 	var profileNodes = hostNode.selectNodes("profile");
 	if (profileNodes != null) {
-		for (var i=0; i<profileNodes.length; i++) {
-			var profileNode = profileNodes[i];
+		for (var iProfile=0; iProfile<profileNodes.length; iProfile++) {
+			var profileNode = profileNodes[iProfile];
 			// get id attribute
 			var profileId = profileNode.getAttribute("id");
 
@@ -1418,8 +1704,8 @@ function getHostProfiles(hostNode) {
 
 	if (profileList.length > 0) {
 		var message = "Profiles applying to the current host:\n";
-		for (var i=0; i<profileList.length; i++) {
-			message += profileList[i] + "\n";
+		for (var iProfileIndex=0; iProfileIndex<profileList.length; iProfileIndex++) {
+			message += profileList[iProfileIndex] + "\n";
 		}
 		dinfo(message);
 	} else {
@@ -1451,12 +1737,17 @@ function getHosts() {
  */
 function getHostVariables(dictionary) {
 	dinfo("Reading variables from host " + getHostNameAttribute(getHostNode()));
-	// a new empty array of variables
+	// make sure variables is either assigned or created
+	var variables;
 	if (dictionary == null) {
-		dictionary = WScript.CreateObject("Scripting.Dictionary");
+		variables = new ActiveXObject("Scripting.Dictionary"); 
+	} else {
+		variables = dictionary;
 	}
-	dictionary = getVariables(getHostNode(), dictionary);
-	return dictionary;
+
+	// read variables from host XML node
+	variables = getVariables(getHostNode(), variables);
+	return variables;
 }
 
 /**
@@ -1518,45 +1809,125 @@ function getLocalizedString(stringID) {
 }
 
 /**
+ * Returns array of package IDs which includes package IDs of chained
+ * packages.
+ * Returns emtpy array in case the package does not have any chained packages.
+ *
+ * @param packageNode the package node to read the list of chained packages
+ *                    from
+ * @param packageList optional reference to an array which is used to insert
+ *                    the chaned packages to. Specify null to create a new
+ *                    Array
+ * @return Array specified in packageList parameter extended by package IDs
+ *         (string values) which represent the chained packages
+ */
+function getPackageChained(packageNode, packageList) {
+	// output array
+	if (packageList == null) {
+		packageList = new Array();
+	}
+
+	if(packageNode != null) {
+		var includeNodes = packageNode.selectNodes("chain");
+		if (includeNodes != null) {
+			for (var i=0; i < includeNodes.length; i++) {
+				var dependId = includeNodes[i].getAttribute("package-id");
+
+				// convert to lower case if case-insensitive mode is on
+				if (dependId != null) {
+					if (!isCaseSensitive()) {
+						dependId = dependId.toLowerCase();
+					}
+					packageList.push(dependId);
+				}
+			}
+		}
+	}
+
+	return packageList;
+}
+
+/**
  * Returns 'check' XML node array on a given package XML node
  * @return XML node array on a given package XML node containing all package
  *         checks.
  *         returns emtpy array if no checks are defined
  */
 function getPackageChecks(packageNode) {
-	return packageNode.selectNodes("check");;
+	return packageNode.selectNodes("check");
+}
+
+/**
+ * Returns 'downgrade' XML node array on a given package XML node
+ *
+ * @param packageNode package XML node which contains 'downgrade' nodes
+ * @return Array of 'downgrade' XML nodes, returns empty array if no nodes are defined
+ */
+function getPackageCmdDowngrade(packageNode) {
+	var nodes = packageNode.selectNodes("downgrade");
+	if (nodes == null) {
+		nodes = new Array();
+	}
+	return nodes;
 }
 
 /**
  * Returns 'install' XML node array on a given package XML node
+ *
+ * @param packageNode package XML node which contains 'install' nodes
+ * @return Array of 'install' XML nodes, returns empty array if no nodes are defined
  */
 function getPackageCmdInstall(packageNode) {
-	return packageNode.selectNodes("install");
+	var nodes = packageNode.selectNodes("install");
+	if (nodes == null) {
+		nodes = new Array();
+	}
+	return nodes;
 }
 
 /**
  * Returns 'remove' XML node array on a given package XML node
+ *
+ * @param packageNode package XML node which contains 'remove' nodes
+ * @return Array of 'remove' XML nodes, returns empty array if no nodes are defined
  */
 function getPackageCmdRemove(packageNode) {
-	return packageNode.selectNodes("remove");
+	var nodes = packageNode.selectNodes("remove");
+	if (nodes == null) {
+		nodes = new Array();
+	}
+	return nodes;
 }
 
 /**
  * Returns 'install' XML node array on a given package XML node
+ *
+ * @param packageNode package XML node which contains 'remove' nodes
+ * @return Array of 'remove' XML nodes, returns empty array if no nodes are defined
  */
 function getPackageCmdUpgrade(packageNode) {
-	return packageNode.selectNodes("upgrade");
+	var nodes = packageNode.selectNodes("upgrade");
+	if (nodes == null) {
+		nodes = new Array();
+	}
+	return nodes;
 }
 
 /**
  * Returns array of package IDs which represent the package dependencies.
  * Returns emtpy array in case the package does not have any dependency.
  *
- * @return Array of package IDs (string values) which represent the dependencies
+ * @param packageNode the package node to read the list of dependencies from
+ * @param packageList optional reference to an array which is used to insert
+ *                    the dependencies to. Specify null to create a new Array
+ * @return Array specified in packageList parameter extended by package IDs
+ *         (string values) which represent the dependencies
  */
-function getPackageDependencies(packageNode) {
+function getPackageDependencies(packageNode, packageList) {
 	// output array
-	var dependencyIDs = new Array();
+	if (packageList == null) {
+		packageList = new Array();
+	}
 
 	if(packageNode != null) {
 		var dependNodes = packageNode.selectNodes("depends");
@@ -1565,16 +1936,17 @@ function getPackageDependencies(packageNode) {
 				var dependId = dependNodes[i].getAttribute("package-id");
 
 				// convert to lower case if case-insensitive mode is on
-				if (dependId != null && !isCaseSensitive()) {
-					dependId = dependId.toLowerCase();
+				if (dependId != null) {
+					if (!isCaseSensitive()) {
+						dependId = dependId.toLowerCase();
+					}
+					packageList.push(dependId);
 				}
-
-				dependencyIDs.push(dependId);
 			}
 		}
 	}
 
-	return dependencyIDs;
+	return packageList;
 }
 
 /**
@@ -1593,13 +1965,64 @@ function getPackageExecute(packageNode) {
 
 /**
  * Returns the package ID string from the given package XML node.
- * The returned value is converted to lower-case since package IDs should
- * be handled case-independently.
  *
- * @return package ID converted to lowercase
+ * @return package ID
  */
 function getPackageID(packageNode) {
 	return packageNode.getAttribute("id");
+}
+
+/**
+ * Returns array of package IDs which represent the package includes.
+ * Returns emtpy array in case the package does not have any dependency.
+ *
+ * @param packageNode the package node to read the list of includes from
+ * @param packageList optional reference to an array which is used to insert
+ *                    the includes to. Specify null to create a new Array
+ * @return Array specified in packageList parameter extended by package IDs
+ *         (string values) which represent the includes
+ */
+function getPackageIncludes(packageNode, packageList) {
+	// output array
+	if (packageList == null) {
+		packageList = new Array();
+	}
+
+	if(packageNode != null) {
+		var includeNodes = packageNode.selectNodes("include");
+		if (includeNodes != null) {
+			for (var i=0; i < includeNodes.length; i++) {
+				var dependId = includeNodes[i].getAttribute("package-id");
+
+				// convert to lower case if case-insensitive mode is on
+				if (dependId != null) {
+					if (!isCaseSensitive()) {
+						dependId = dependId.toLowerCase();
+					}
+					packageList.push(dependId);
+				}
+			}
+		}
+	}
+
+	return packageList;
+}
+
+/**
+ * Returns Date representation of 'installdate' attribute from the given
+ * package.
+ * 
+ * @param packageNode the package node to read the 'installdate' attribute from
+ * @return Date object representing installation date of the given package.
+ *         Returns null in case the 'installdate' attribute is not set.
+ */
+function getPackageInstallDate(packageNode) {
+	var installDate = null;
+	var packageInstallDate = packageNode.getAttribute("installdate");
+	if (packageInstallDate != null) {
+		installDate = parseISODate(packageInstallDate, false);
+	}
+	return installDate;
 }
 
 /**
@@ -1608,9 +2031,12 @@ function getPackageID(packageNode) {
  * @return returns the package name attribute - empty string if no name is defined
  */
 function getPackageName(packageNode) {
-	var packageName = packageNode.getAttribute("name")
-	if (packageName == null) {
-		packageName = "";
+	var packageName = "";
+	if(packageNode != null) {
+		packageName = packageNode.getAttribute("name");
+		if (packageName == null) {
+			packageName = "";
+		}
 	}
 	return packageName;
 }
@@ -1661,7 +2087,7 @@ function getPackageNodeFromAnywhere(packageID) {
 	if(packageDBNode != null) {
 		// package found in package database, mark for installation/upgrade
 		dinfo("Found package node '" + getPackageName(packageDBNode) + "' (" +
-				getPackageID(packageDBNode) + ") in package database.");
+				getPackageID(packageDBNode) + ") in package database");
 		packageNode = packageDBNode;
 	} else {
 		// error package not in package database
@@ -1680,23 +2106,22 @@ function getPackageNodeFromAnywhere(packageID) {
 
 		// if no package definition has been found jet the package is not installed
 		if(packageSettingsNode != null) {
-			var message = "Profile inconsistency: Package with package ID '" +
-							packageID + "' listed in profile but missing in package " +
-							"database. Package information found on local installation:\n" +
+			var messageLocalOnly = "Database inconsistency: Package with package ID '" +
+							packageID + "' missing in package database. Package information " +
+							"found on local installation:\n" +
 							"Package ID: " + getPackageID(packageSettingsNode) + "\n" +
 							"Package Name: " + getPackageName(packageSettingsNode) + "\n" +
 							"Package Revision: " + getPackageRevision(packageSettingsNode) + "\n";
-			warning(message);
+			warning(messageLocalOnly);
 			packageNode = packageSettingsNode;
 		} else {
-			var message = "Profile inconsitency: Package with ID '" + packageID +
-					"' is listed in profile but does not exist within " +
-					" the package database or the local settings file. " +
+			var messageNotFound = "Database inconsistency: Package with ID '" + packageID +
+					"' is does not exist within the package database or the local settings file. " +
 					"Please contact your system administrator!";
 			if (isQuitOnError()) {
-				throw new Error(message);
+				throw new Error(messageNotFound);
 			} else {
-				error(message);
+				error(messageNotFound);
 			}
 		}
 	}
@@ -1709,6 +2134,8 @@ function getPackageNodeFromAnywhere(packageID) {
  * Returns an array of all package nodes that can be installed. This list
  * includes all packages found in the package database. It does not include
  * local packages from the settings file (currently installed ones).
+ * 
+ * @return Array containing XML nodes (package nodes). Array might be of size 0
  */
 function getPackageNodes() {
 	// Retrieve packages.
@@ -1820,6 +2247,55 @@ function getPackageReboot(packageNode) {
 }
 
 /**
+ * Adds all packages referenced by the specified package node to the given
+ * array. In other words all dependencies, chained packages and includes
+ * of the given node will be appended to the array. If you specify null or an
+ * empty array the array returned will contain all packages from the dependency
+ * tree of the given package node.
+ * 
+ * @param packageNode full dependency tree of the specified package will be
+ *                    added to the given array.
+ * @param packageArray Array to which all referenced packages are added to.
+ *                     Specify null to create a new array finally containing
+ *                     only the dependency tree of the specified package.
+ * @return array containing all referenced packages (full package nodes).
+ *         NOTE: The returned array is not sorted.
+ */
+function getPackageReferences(packageNode, packageArray) {
+	if (packageArray == null) {
+		packageArray = new Array();
+	}
+
+	// get dependencies, includes and chans
+	var linkedPackageIDs = getPackageDependencies(packageNode, null);
+	getPackageIncludes(packageNode, linkedPackageIDs);
+	getPackageChained(packageNode, linkedPackageIDs);
+
+	// add nodes if they are not yet part of the array
+	for (var i=0; i < linkedPackageIDs.length; i++) {
+		var currentNode = getPackageNodeFromAnywhere(linkedPackageIDs[i]);
+		if (currentNode != null) {
+			if(!searchArray(packageArray, currentNode)) {
+				dinfo("Adding referenced package '" + getPackageName(currentNode) + "' (" +
+						getPackageID(currentNode) + ") for package '" +
+						getPackageName(packageNode) + "' (" + getPackageID(packageNode) +
+						")");
+				// add the package first (so it's not added again, this prevents loops)
+				packageArray.push(currentNode);
+
+				// add dependencies of these package as well
+				getPackageReferences(currentNode, packageArray);
+			} else {
+				dinfo("Referenced package '"  + getPackageName(currentNode) + "' (" +
+						getPackageID(currentNode) + ") for package '" +
+						getPackageName(packageNode) + "' (" + getPackageID(packageNode) +
+						") already added.");
+			}
+		}
+	}
+}
+
+/**
  * Returns the package version string from the given package XML node.
  * Returns 0 if package has no revision specified.
  *
@@ -1832,6 +2308,24 @@ function getPackageRevision(packageNode) {
 		packageRevision = 0 + "";
 	}
 	return packageRevision;
+}
+
+/**
+ * Returns Date representation of 'uninstalldate' attribute from the given
+ * package.
+ * 
+ * @param packageNode the package node to read the 'uinstalldate'
+ *        attribute from
+ * @return Date object representing uninstall date of the given package.
+ *         Returns null in case the 'uninstalldate' attribute is not set.
+ */
+function getPackageUninstallDate(packageNode) {
+	var uninstallDate = null;
+	var packageUninstallDate = packageNode.getAttribute("uinstalldate");
+	if (packageUninstallDate != null) {
+		uninstallDate = parseISODate(packageUninstallDate, true);
+	}
+	return uninstallDate;
 }
 
 /**
@@ -1882,9 +2376,9 @@ function getProfileDependencies(profileNode) {
 			}
 
 			// get the profile node
-			var profileNode = getProfileNode(dependencyId);
-			if (profileNode != null) {
-				dependencyNodes.push(profileNode);
+			var dependencyNode = getProfileNode(dependencyId);
+			if (dependencyNode != null) {
+				dependencyNodes.push(dependencyNode);
 			} else {
 				error("Profile '" + dependencyId + "' referenced but not " +
 						"found. Ignoring profile.");
@@ -1966,7 +2460,7 @@ function getProfileNodes() {
  * by the currently applied profile.
  *
  * The list will contain all referenced IDs within profile.xml which apply to
- * the current profile (including profile dependencies). Packages which are
+ * the current profile(s) (including profile dependencies). Packages which are
  * referenced but do not exist within the package database (packages.xml) are
  * included as well. So be aware that in case of inconsistency between
  * profiles.xml and packages.xml it might be possible that the returned list
@@ -2006,16 +2500,14 @@ function getProfilePackageIDs() {
 			// get package ID
 			var packageNode = packageNodes[j];
 			var packageId = packageNode.getAttribute("package-id");
-			var packageInstallDate = packageNode.getAttribute("installdate");
-			var packageUninstallDate = packageNode.getAttribute("uninstalldate");
+			// use package methods for profile package node because the attribute it the same
+			var installDate = getProfilePackageInstallDate(packageNode);
+			var uninstallDate = getProfilePackageUninstallDate(packageNode);
 			var includePackage = true;
 
 			// check if the package should be included
-			if (packageInstallDate != null || packageUninstallDate != null) {
+			if (installDate != null || uninstallDate != null) {
 				// eiter install or uninstall date was defined
-				var installDate = parseISODate(packageInstallDate, false);
-				var uninstallDate = parseISODate(packageUninstallDate, true);
-
 				if (now >= installDate &&
 					now <= uninstallDate) {
 					includePackage = true;
@@ -2057,6 +2549,20 @@ function getProfilePackageIDs() {
 }
 
 /**
+ * Returns date object reflecting installation date defined in given node
+ * @param packageNode the package definition node as specified within the profile definition
+ * @return date object representing installation date
+ */
+function getProfilePackageInstallDate(packageNode) {
+	var installDate = null;
+	var packageInstallDate = packageNode.getAttribute("installdate");
+	if (packageInstallDate != null) {
+		installDate = parseISODate(packageInstallDate, false);
+	}
+	return installDate;
+}
+
+/**
  * Returns an array of package nodes that should be applied to the current
  * profile. This function returns full package nodes.
  * NOTE: Since the profile just contains the package IDs packages referenced
@@ -2066,36 +2572,55 @@ function getProfilePackageIDs() {
  * In case you like to get a list of package IDs referenced by the profile
  * (regardless if the package definition exists) have a look at
  * getProfilePackageIDs().
+ *
+ * @return array of packagenodes applying to the assigned profile(s)
  */
 function getProfilePackageNodes() {
 	if (profilePackageNodes == null) {
 		// Create a new empty package array.
 		var profilePackageNodes = new Array();
 
-		/* get package IDs which apply to the profile (without dependencies)
-		 * regardless if the package definition is available or not.
+		/* get package IDs which apply to the profile (without dependencies,
+		 * includes and chaned packages) regardless if the package definition
+		 * is available or not.
 		 */
 		var packageIDs = getProfilePackageIDs();
 
 		// get package definitions and all dependencies
-		var i=0;
-		while (i < packageIDs.length) {
+		for ( var i = 0; i < packageIDs.length; i++) {
 			var packageID = packageIDs[i];
 			dinfo("Adding package with ID '" + packageID + "' to profile packages.");
 			var packageNode = getPackageNodeFromAnywhere(packageID);
 
 			// add dependencies first
 			if (packageNode != null) {
-				appendPackageDependencies(profilePackageNodes, packageNode);
+				getPackageReferences(packageNode, profilePackageNodes);
 				if (!searchArray(profilePackageNodes, packageNode)) {
 					// Add the new node to the array _after_ adding dependencies.
 					profilePackageNodes.push(packageNode);
 				}
 			}
-			i++;
 		}
 	}
 	return profilePackageNodes;
+}
+
+/**
+ * Returns Date representation of 'uninstalldate' attribute from the given
+ * package definition as specified within the profile.
+ * 
+ * @param packageNode the package node to read the 'uinstalldate'
+ *        attribute from
+ * @return Date object representing uninstall date of the given package.
+ *         Returns null in case the 'uninstalldate' attribute is not set.
+ */
+function getProfilePackageUninstallDate(packageNode) {
+	var uninstallDate = null;
+	var packageUninstallDate = packageNode.getAttribute("uinstalldate");
+	if (packageUninstallDate != null) {
+		uninstallDate = parseISODate(packageUninstallDate, true);
+	}
+	return uninstallDate;
 }
 
 /**
@@ -2186,9 +2711,12 @@ function getProfileVariables(dictionary) {
 	var profileArray = getProfilesApplying();
 	dinfo(profileArray.length + " profiles apply to this host.");
 
-	// a new empty array of variables
+	var variables;
+	// make sure variables is either assigned or created
 	if (dictionary == null) {
-		dictionary = WScript.CreateObject("Scripting.Dictionary");
+		variables = new ActiveXObject("Scripting.Dictionary");
+	} else {
+		variables = dictionary;
 	}
 
 	/* add each profile's variables to the array in reverse order
@@ -2199,10 +2727,10 @@ function getProfileVariables(dictionary) {
 		var profileNode = profileArray[i];
 		dinfo("Reading variables from profile " + getProfileID(profileNode));
 
-		getVariables(profileNode, dictionary);
+		variables = getVariables(profileNode, variables);
 	}
 
-	return dictionary;
+	return variables;
 }
 
 /**
@@ -2268,8 +2796,13 @@ function getSkippedRemoveNodes() {
  */
 function getVariables(XMLNode, dictionary) {
 	// a new empty array of variables
+	var variables;
+
+	// make sure variables is either created or assigned
 	if(dictionary == null) {
-		dictionary = WScript.CreateObject("Scripting.Dictionary");
+		variables = new ActiveXObject("Scripting.Dictionary");
+	} else {
+		variables = dictionary;
 	}
 
 	var variableNodes = XMLNode.selectNodes("variable");
@@ -2277,10 +2810,10 @@ function getVariables(XMLNode, dictionary) {
 		var variableName = variableNodes[i].getAttribute("name");
 		var variableValue = variableNodes[i].getAttribute("value");
 		dinfo("Got variable '" + variableName + "' of value '" + variableValue + "'");
-		dictionary.Item(variableName)=variableValue;
+		variables.Add(variableName, variableValue);
 	}
 
-	return dictionary;
+	return variables;
 }
 
 /**
@@ -2291,7 +2824,7 @@ function getVariables(XMLNode, dictionary) {
  */
 function installPackage(packageNode) {
 	// return value
-	var success = false
+	var success = false;
 
 	var packageName = getPackageName(packageNode);
 	var packageID   = getPackageID(packageNode);
@@ -2313,6 +2846,7 @@ function installPackage(packageNode) {
 	// type of installation "install" or "upgrade"
 	var typeInstall = "install";
 	var typeUpgrade = "upgrade";
+	var typeDowngrade = "downgrade";
 	var installType = typeInstall;
 
 	// string to print in events which identifies the package
@@ -2345,6 +2879,8 @@ function installPackage(packageNode) {
 
 		}
 	} else {
+		// mark package as processed
+		packagesProcessed.push(packageNode);
 
 		dinfo(packageMessage + "Not yet processed during this session.");
 		bypass = false;
@@ -2374,7 +2910,7 @@ function installPackage(packageNode) {
 
 				if (isInstalled(packageNode)) {
 					info(packageMessage +
-						"Already installed (checks succeeded). Checking dependencies.");
+						"Already installed (checks succeeded). Checking dependencies and chained packages.");
 
 					// mark package as processed
 					// note: do this before dependency processing to avoid problems
@@ -2385,8 +2921,8 @@ function installPackage(packageNode) {
 					addSettingsNode(packageNode);
 
 					// install all dependencies
-					var success = installPackageDependencies(packageNode);
-					if (success) {
+					var depSuccess = installPackageReferences(packageNode, "dependencies");
+					if (depSuccess) {
 						info(packageMessage +
 							 "Package and all dependencies are already installed. Skipping.");
 
@@ -2394,6 +2930,18 @@ function installPackage(packageNode) {
 						info(packageMessage +
 							"Installed but at least one dependency is missing.");
 					}
+
+					// install all chained packages
+					var chainedSuccess = installPackageReferences(packageNode, "chained");
+					if (chainedSuccess) {
+						info(packageMessage +
+							 "Package and all chained packages are already installed. Skipping.");
+
+					} else {
+						info(packageMessage +
+						"Installed but at least one chained package is missing.");
+					}
+					
 					bypass = true;
 					installType = typeInstall;
 
@@ -2424,7 +2972,21 @@ function installPackage(packageNode) {
 				success = false;
 				installType = typeUpgrade;
 
-			// skip in case of exechte=once, otherwise check.
+			// downgrade
+			} else if (versionCompare(packageRev, getPackageRevision(installedPackage)) < 0) {
+				// ONE-TIME INSTALL PACKAGE, DOWNGRADE
+				info(packageMessage +
+					"Already installed but version mismatch.\n" +
+					"Installed revision '" + getPackageRevision(installedPackage) + "'\n" +
+					"Available revision: '" + packageRev + "'.\n" +
+					"Preparing downgrade."
+					);
+				// package needs to be downgraded
+				bypass = false;
+				success = false;
+				installType = typeDowngrade;
+
+			// skip in case of execute=once, otherwise check.
 			} else {
 				// ONE-TIME INSTALL PACKAGE, ALREADY INSTALLED
 
@@ -2470,10 +3032,7 @@ function installPackage(packageNode) {
 		}
 		try {
 			// install dependencies
-			var depInstallSuccess = installPackageDependencies(packageNode);
-
-			// mark package as prcessed
-			packagesProcessed.push(packageNode);
+			var depInstallSuccess = installPackageReferences(packageNode, "dependencies");
 
 			// abort installation in case dependencies could not be installed
 			if (!depInstallSuccess) {
@@ -2491,29 +3050,8 @@ function installPackage(packageNode) {
 
 			// Generate the correct environment.
 
-			// Package variables first...
-			dinfo("Reading variables from package");
-			var variables = getPackageVariables(packageNode, null);
-			dinfo("Stored "+ variables.Count + " variables from package");
-
-			// ...then profile variables...
-			getProfileVariables(variables);
-
-			// ...and lastly host variables.
-			getHostVariables(variables);
-
-			// Access current environment.
-			saveEnv();
-
-			var procEnv=new ActiveXObject("WScript.Shell").Environment("Process");
-			// apply variable keys to environment
-			var variableKeys = variables.keys().toArray();
-			for (var i=0; i < variableKeys.length; i++) {
-				var key = variableKeys[i];
-				var val = variables.Item(key);
-				dinfo("Variable " + key + " = " + val);
-				procEnv(key) = val;
-			}
+			// set package specific environment
+			loadPackageEnv(packageNode);
 
 			// Select command lines to install.
 			var cmds;
@@ -2522,20 +3060,41 @@ function installPackage(packageNode) {
 				// installation is an upgrade
 				cmds = getPackageCmdUpgrade(packageNode);
 				dinfo("Fetched " + cmds.length + " upgrade command(s).");
-			} else {
+			} else if (installType == typeDowngrade) {
+				// prepare downgrade
+				cmds = getPackageCmdDowngrade(packageNode);
+				dinfo("Fetched " + cmds.length + " downgrade command(s).");
+			}else {
 				// installation is default
 				cmds = getPackageCmdInstall(packageNode);
 				dinfo("Fetched " + cmds.length + " install command(s).");
 			}
 
+			// download files (if any)
+			var downloadNodes = getDownloads(packageNode, null);
+			// append command downloads
+			for (var iCommands = 0; iCommands < cmds.length; iCommands++) {
+				var commandNode = cmds[iCommands ];
+				getDownloads(commandNode, downloadNodes);
+			}
+
+			// download all specified downloads
+			var downloadResult = downloadAll(downloadNodes);
+			if (downloadResult != true) {
+				var failureMessage = "Failed to download all files.";
+				if (isQuitOnError()) {
+					throw new Error(failureMessage);
+				} else {
+					error(failureMessage);
+				}
+			}
+
 			// execute each command line
-			for (var i = 0; i < cmds.length; i++) {
-				var cmdNode = cmds[i];
+			for (var iCmd = 0; iCmd < cmds.length; iCmd++) {
+				var cmdNode = cmds[iCmd];
 				var cmd = getCommandCmd(cmdNode);
 				var timeout = getCommandTimeout(cmdNode);
 				var workdir = getCommandWorkdir(cmdNode);
-
-				dinfo("Executing command : " + cmd);
 
 				var result = 0;
 				result = exec(cmd, timeout, workdir);
@@ -2584,9 +3143,8 @@ function installPackage(packageNode) {
 					continue;
 				} else {
 					// command did not succeed, throw an error
-					var message = "Exit code returned non-successful value (" +
-						result + ") on command '" + cmd + "'";
-					throw new Error(message);
+					throw new Error("Exit code returned non-successful value (" +
+							result + ") on command '" + cmd + "'");
 				}
 			}
 
@@ -2607,19 +3165,30 @@ function installPackage(packageNode) {
 						packageName + ".\nHowever the package schedules a postponed reboot.");
 				} else {
 					// package installation failed
-					var message = "Could not process (" + installType + ") " + packageName + ".\n" +
+					var failMessage = "Could not process (" + installType + ") " + packageName + ".\n" +
 								"Failed checking after installation.";
 					if (isQuitOnError()) {
-						throw new Error(message);
+						throw new Error(failMessage);
 					} else {
-						error(message);
+						error(failMessage);
 					}
 				}
 			} else {
 				success = true;
 				// append new node to local xml
 				addSettingsNode(packageNode);
+				
+				// install chained packages
+				var chainedStatus = installPackageReferences(packageNode, "chained");
+				if (chainedStatus) {
+					info(packageMessage +
+						 "Package and all chained packages are already installed successfully.");
 
+				} else {
+					info(packageMessage +
+					"Package installed but at least one chaned package failed to install.");
+				}
+				
 				// Reboot the system if needed.
 				if (rebootRequired || rebootAttr == "true") {
 					info("Installation of " + packageName + " successful, system " +
@@ -2634,70 +3203,102 @@ function installPackage(packageNode) {
 			}
 		} catch (err) {
 			success = false;
-			var message = "Could not process (" + installType + ") package '" +
+			var errorMessage = "Could not process (" + installType + ") package '" +
 							 packageName + "' (" + packageID + "):\n" + err.description + ".";
 			if (isQuitOnError()) {
-				throw new Error(message);
+				throw new Error(errorMessage);
 			} else {
-				error(message);
+				error(errorMessage);
 			}
 		} finally {
+			// cleaning up temparary downloaded files
+			dinfo("Cleaning up temporary downloaded files");
+			// clean downloads
+			downloadsClean(downloadNodes);
+			
 			// restore old environment
 			dinfo("Restoring previous environment.");
+			// restore previous environment
 			loadEnv();
 		}
 	}
 	return success;
 }
 
-/**
- * Installs all dependencies of a package. Returns true in case all packages
- * could be installed. Returns false if at least one dependency failed.
- *
- * @param packageNode package to install the dependencies of (XML node)
- * 				NOTE: The package itself is not installed.
- * @return true=all dependencies installed successful;
- *         false=at least one dependency failed
- */
-function installPackageDependencies(packageNode) {
-	// verify that all dependencies are installed as well
-	// get dependencies
-	info("Installing dependencies of '" + getPackageName(packageNode) +
-			"' (" + getPackageID(packageNode) + ").");
-	var dependencies = getPackageDependencies(packageNode);
-	var depSuccess = true;
-	for (var i=0; i < dependencies.length; i++) {
-		var depPackage = getPackageNodeFromAnywhere(dependencies[i]);
-		if (depPackage == null) {
-			depSuccess = false;
-			break;
-		} else {
-			// install this package
-			var success = installPackage(depPackage);
-			if (!success) {
-				depSuccess = false;
-				// skip remaining dependencies
-				break;
-			}
-		}
-	}
-	if (depSuccess) {
-		var message = "Installation of dependencies for '" +
-						 getPackageName(packageNode) + "' (" +
-						 getPackageID(packageNode) + ") successfully finished.";
-	} else {
-		var message = "Installation of dependencies for '" +
-						 getPackageName(packageNode) + "' (" +
-						 getPackageID(packageNode) + ") failed.";
-		if (isQuitOnError()) {
-			throw new Error(message);
-		} else {
-			error(message);
-		}
-	}
+ /**
+  * Installs all packages references of the selected type.
+  * Returns true in case all references  could be installed.
+  * Returns false if at least one reference failed.
+  *
+  * @param packageNode package to install the references of (XML node)
+  * 				NOTE: The package itself is not installed.
+  * @param refrerenceType select "dependencies" or "chained".
+  * 		Defaults to "dependencies".
+  * @return true=all dependencies installed successful;
+  *         false=at least one dependency failed
+  */
+ function installPackageReferences(packageNode, referenceType) {
+ 	var problemDesc = "";
+ 	var refSuccess = true;
 
-	return depSuccess;
-}
+ 	// get references
+ 	var type;
+ 	var references = new Array();
+ 	switch (referenceType) {
+	case "chained":
+		type = "chained";
+	 	references = getPackageChained(packageNode, null);
+		break;
+
+	default:
+		type = "dependencies";
+		references = getPackageDependencies(packageNode, null);
+		break;
+	}
+ 	if (references.length > 0) {
+ 		info("Installing references (" + type + ") of '" +
+ 				getPackageName(packageNode) +
+ 				"' (" + getPackageID(packageNode) + ").");
+ 	}
+ 	for (var i=0; i < references.length; i++) {
+ 		var refPackage = getPackageNodeFromAnywhere(references[i]);
+ 		if (refPackage == null) {
+ 			problemDesc += "Package references '" + references[i] +
+ 						"' but no such package exists";
+ 			refSuccess = false;
+ 			break;
+ 		} else {
+ 			// install this package
+ 			var success = installPackage(refPackage);
+ 			if (!success) {
+ 				problemDesc += "Installation of reference (" + type + ") package '"
+ 					+ getPackageName(refPackage) + "' ("
+ 					+ getPackageID(refPackage) + ") failed";
+ 				refSuccess = false;
+ 				// skip remaining references
+ 				break;
+ 			}
+ 		}
+ 	}
+ 	if (refSuccess) {
+ 		var successMessage = "Installation of references (" + type + ") for '" +
+ 						 getPackageName(packageNode) + "' (" +
+ 						 getPackageID(packageNode) + ") successfully finished.";
+ 		dinfo(successMessage);
+ 	} else {
+ 		var failMessage = "Installation of references (" + type + ") for '" +
+ 						 getPackageName(packageNode) + "' (" +
+ 						 getPackageID(packageNode) + ") failed. " + problemDesc;
+ 		if (isQuitOnError()) {
+ 			throw new Error(failMessage);
+ 		} else {
+ 			error(failMessage);
+ 		}
+ 	}
+
+ 	return refSuccess;
+ }
+
 
 /**
  * Installs a package by name.
@@ -2800,10 +3401,24 @@ function isForceInstall() {
 }
 
 /**
- *  Check if package is installed.
+ * Returns if log should be appended or overwritten
+ *
+ * @return true in case log should be appended. false if it should be
+ * 		overwritten (boolean).
+ */
+function isLogAppend() {
+	return logAppend;
+}
+
+/**
+ * Check if package is installed.
+ *
+ * @return returns true in case the package is installed, false otherwise
+ * @throws Error in case checks could not be evaluated
  */
 function isInstalled(packageNode) {
 	var packageName = getPackageName(packageNode);
+	var result = true;
 
 	dinfo ("Checking existence of package: " + packageName);
 
@@ -2815,15 +3430,35 @@ function isInstalled(packageNode) {
 		return false;
 	}
 
+	// save current environment
+	saveEnv();
+	// load package specific environment
+	loadPackageEnv(packageNode);
+
 	// Loop over every condition check.
 	// If all are successful, we consider package as installed.
-	for (var i = 0; i < checkNodes.length; i++) {
-		if (! checkCondition(checkNodes[i])) {
-			return false;
+	for (var i = 0; i < checkNodes.length && result != false; i++) {
+		try {
+			if (!checkCondition(checkNodes[i])) {
+				result = false;
+			}
+		} catch (err) {
+			message = "Error evaluating package check for package '" + packageName +
+						"': " + err.description;
+			if (isQuitOnError()) {
+				// restore environment
+				loadEnv();
+				throw new Error(message);
+			} else {
+				error(message);
+				result = false;
+			}
 		}
 	}
+	// restore environment
+	loadEnv();
 
-	return true;
+	return result;
 }
 
 /**
@@ -2882,6 +3517,24 @@ function isPostponedReboot() {
 }
 
 /**
+ * Returns current value of the sendStatus flag
+ *
+ * @return true in case status schould be sent, otherwise returns false
+ */
+function isSendStatus() {
+	return sendStatus;
+}
+
+/**
+ * Returns current value of skip event log setting.
+ *
+ * @return true in case event log logging is enabled, false if it is disabled (boolean).
+ */
+function isSkipEventLog() {
+	return skipEventLog;
+}
+
+/**
  * Returns true if quiet mode is on. False otherwise.
  *
  * @return true if quiet flag is set, false if it is unset (boolean)
@@ -2897,15 +3550,6 @@ function isQuiet() {
  */
 function isQuitOnError() {
 	return quitonerror;
-}
-
-/**
- * Returns current value of skip event log setting.
- *
- * @return true in case event log logging is enabled, false if it is disabled (boolean).
- */
-function isSkipEventLog() {
-	return skipEventLog;
 }
 
 /**
@@ -2928,18 +3572,15 @@ function isZombie(packageNode) {
 
 	// print message for zombie packages
 	if (zombie) {
+		var errorMessage = "Error while synchronizing package " + packageName +
+		"\nZombie found: package installed but not in packages database.";
 		if (isQuitOnError()) {
-			var errormessage = "Error while synchronizing package " + packageName +
-			", synchronization aborting.\nZombie found: package installed but" +
-			"not in packages database.";
-			error(errormessage);
-			throw new Error(errormessage);
+			errorMessage += " Aborting synchronization.";
+			error(errorMessage);
+			throw new Error(errorMessage);
 		} else {
-			var errormessage = "Error while synchronizing package " + packageName +
-				"\nZombie found: package installed but not in packages database. " +
-				"Removing."
-			error(errormessage);
-			// err_summary += errormessage;
+			errorMessage += " Removing package.";
+			error(errorMessage);
 		}
 	}
 
@@ -3019,13 +3660,10 @@ function queryPackage(packageNode) {
  */
 function queryUninstalledPackages() {
 	// create a string to append package descriptions to
-	var message = new String();
+	var message = "Packages not installed:\n";
 
 	// get list of all available packages from package database
 	var packageNodes = getPackageNodes();
-
-	// output message
-	var message = "Packages not installed:\n";
 
 	// check for each package if it is installed
 	for (var i = 0; i < packageNodes.length; i++) {
@@ -3045,7 +3683,7 @@ function queryUpgradablePackages() {
 	var availableNodes = getPackageNodes();
 
 	// Create a string to append package descriptions to.
-	var message = new String();
+	var message = "";
 
 	for (var i = 0; i < installedNodes.length; i++) {
 		var installedNode       = installedNodes[i];
@@ -3076,203 +3714,388 @@ function queryUpgradablePackages() {
 }
 
 /**
- * Removes the specified package node from the system.
+ * Removes the specified package node from the system. This function will
+ * remove all packages which depend on the one to be removed prior to the package
+ * itself. In case the /force parameter is set the function will even remove the
+ * requested package if not all packages depending on it could be removed. Note
+ * that these packages might probably not work any more in such case.
+ *
+ * @param packageNode Package to be removed
+ * @return True in case of successful remove of package and all packages depending on it.
+ *         False in case of failed package uninstall of failed uninstall of package depending on it.
  */
 function removePackage(packageNode) {
 	var packageName = getPackageName(packageNode);
 	var packageID = getPackageID(packageNode);
 
-	if (isNoRemove()) {
-		var message = "Package removal disabled: ";
-		// check if the package is still installed
-		if (isInstalled(packageNode)) {
-			// the package is installed - keep it and add to skipped nodes
-			dinfo(message + "Package " + packageName +  " (" + packageID +
-				") will not be removed.");
-			addSkippedRemoveNodes(packageNode);
+	var success = true;
+	var bypass = false;
+
+	// string to print in events which identifies the package
+	var packageMessage = "Package '" + packageName + "' (" + packageID + ")" +
+						": ";
+	
+	// check if package has been processed already
+	if(searchArray(packagesRemoved, packageNode)) {
+		// package has been removed during this session already
+		dinfo(packageMessage +
+				"Already removed once during this session.\n" +
+				"Checking if package has been removed properly.");
+		bypass=true;
+
+		// check if installation of package node was successful
+		var installedPackage = getSettingNode(packageID);
+		if (installedPackage == null) {
+			// package successfully removed
+			dinfo(packageMessage + "Verified; " +
+				"package successfully removed during this session.");
+
+			success = true;
+
 		} else {
-			// package not installed - remove from local settings file
-			dinfo(message + "Package " + packageName +  " (" + packageID +
-				") will be removed from local settings because it is not installed.");
-			removeSetingsNode(packageNode);
+			dinfo(packageMessage +
+				"Package removal failed during this session.");
+			// package removal must have failed
+
+			success = false;
 		}
 	} else {
-		info("Removing " + packageName + " (" + packageID + ")...");
+		dinfo(packageMessage + "Not yet processed during this session.")
+	}
 
-		// select command lines to remove
-		var cmds = getPackageCmdRemove(packageNode);
+	
+	if (!bypass) {
+		// set package as processed in order to prevent processing multiple times
+		packagesRemoved.push(packageNode);
 
-		// stores if the package needs a reboot after removing
-		var rebootRequired = false;
-
-		// stores if a postponed reboot should be scheduled
-		var rebootPostponed = false;
-
-		// execute all remove commands
-		for (var i=0; i < cmds.length; i++) {
-			var cmdNode = cmds[i];
-			var cmd = getCommandCmd(cmdNode);
-			var timeout = getCommandTimeout(cmdNode);
-			var workdir = getCommandWorkdir(cmdNode);
-
-			notifyUserStart();
-
-			dinfo("Executing command: " + cmd);
-
-			var result = exec(cmd, timeout, workdir);
-
-			dinfo("Command returned result: " + result);
-
-			// check if there is an exit code defined
-			var exitAction = getCommandExitCodeAction(cmdNode, result);
-
-			// Check for special exit codes.
-			if (exitAction != null) {
-				if (exitAction == "reboot") {
-					// This exit code forces a reboot.
-					info("Command in removal of " + packageName + " returned " +
-						"exit code [" + result + "]. This exit code " +
-						"requires an immediate reboot.");
-
-					if(isZombie(packageNode)) {
-						// check if still referenced within the profile
-						var packageArray = getProfilePackageNodes();
-						var referenced = false;
-						for (var i=0; i < packageArray.length; i++) {
-							if (packageID == getPackageID(packageArray[i])) {
-								referenced = true;
-								break;
-							}
-						}
-						// if package is a zombie and not referenced within the profile
-						// remove the settings entry
-						if(!referenced && !isNoForcedRemove()) {
-							removeSetingsNode(packageNode);
-							info("Removed '" + packageName + "' ("
-								+ packageID + ") from local settings.\n" +
-									"Package initiated immediate reboot and is a zombie.");
-						}
-					}
-
-					reboot();
-				} else if(exitAction == "delayedReboot") {
-					// This exit code schedules a reboot
-							info("Command in removal of " + packageName +
-								" returned exit code [" + result + "]. This " +
-								"exit code schedules a reboot.");
-					// schedule reboot
-					rebootRequired = true;
-					// execute next command
-					continue;
-				} else if(exitAction == "postponedReboot") {
-					info("Command in removal of " + packageName +
-						" returned exit code [" + result + "]. This " +
-						"exit code schedules a postponed reboot.");
-					rebootPostponed = true;
-					setPostponedReboot(rebootPostponed);
-					// execute next command
-					continue;
-				} else {
-					// This exit code is successful.
-					info("Command in removal of " + packageName + " returned " +
-						" exit code [" + result + "]. This exit code " +
-						"indicates success.");
-					continue;
-				}
-			} else if(result == 0) {
-				// if exit code is 0, return success
-				// execute next command
-				dinfo("Command in removal of " + packageName +
-					" returned exit code [" + result + "]. Success.");
-				continue;
+		if (isNoRemove()) {
+			var message = "Package removal disabled: ";
+			// check if the package is still installed
+			if (isInstalled(packageNode)) {
+				// the package is installed - keep it and add to skipped nodes
+				dinfo(message + "Package " + packageName +  " (" + packageID +
+					") will not be removed.");
+				addSkippedRemoveNodes(packageNode);
+	
+				// package is not effectively removed
+				success = false;
 			} else {
-				// command did not succeed, log error
-				var errorMessage = "Exit code returned non-successful value: " +
-					result + "\nPackage: " + packageName + ".\nCommand:\n" + cmd;
-
-				if (isQuitOnError()) {
-					throw new Error(0, errorMessage);
-				} else {
-					error(errorMessage);
-				}
-			}
-		}
-
-		// read reboot attribute
-		var rebootAttr = getPackageReboot(packageNode);
-
-		// Use package checks to prove if package has been removed.
-		// Zombies are removed in any case (even if uninstall failed) except if the
-		// "/noforcedremoval" parameter was set
-		if (!isInstalled(packageNode)) {
-			// Remove package node from local xml.
-			removeSetingsNode(packageNode);
-
-			if (rebootRequired || rebootAttr == "true") {
-				info("Removal of " + packageName + " successful, system " +
-					"rebooting.");
-				reboot();
-			} else if (rebootPostponed || rebootAttr == "postponed") {
-				info("Removal of " + packageName + " successful, postponed reboot scheduled.");
-			} else {
-				info("Removal of '" + packageName + " successful.");
+				// package not installed - remove from local settings file
+				dinfo(message + "Package " + packageName +  " (" + packageID +
+					") will be removed from local settings because it is not installed.");
+				removeSetingsNode(packageNode);
+	
+				// package seems to be removed
+				success = true;
 			}
 		} else {
-			// check if package is a zombie
-			if(isZombie(packageNode)) {
-				// check if still referenced within the profile
-				var packageArray = getProfilePackageNodes();
-				var referenced = false;
-				for (var i=0; i < packageArray.length; i++) {
-					if (packageID == getPackageID(packageArray[i])) {
-						referenced = true;
-						break;
-					}
-				}
-				// if package is a zombie and not referenced within the profile
-				// remove the settings entry
-				if(!referenced && !isNoForcedRemove()) {
-					removeSetingsNode(packageNode);
-					warning("Errors occurred while removing '" + packageName + "' ("
-						+ packageID + ").\nPackage has been removed anyway because it was a zombie " +
-						"and not referenced within the profile.");
-				}
-			} else if (rebootRequired || rebootAttr == "true") {
-				warning("Package processing (remove) failed for package " +
-					packageName + ".\nHowever the package requires a reboot to complete. Rebooting.");
-				// reboot system without adding to local settings yet
-				reboot();
-			} else if (rebootPostponed || rebootAttr == "postponed") {
-				warning("Package processing (remove) failed for package " +
-					packageName + ".\nHowever the package schedules a postponed reboot.");
-			} else {
-				// package installation failed
+			// remove dependent packages first
+			var allSuccess = removePackagesDependent(packageNode);
+			if (!allSuccess && !isForce()) {
+				// removing of at least one dependent package failed
+				var failedRemove = "Failed to remove package which depends on '"
+						+ packageName + " (" + packageID + "), skipping removal.\n"
+						+ "You might use the /force flag to force removal but "
+						+ "remember that the package depending on this one might "
+						+ "stop working.";
 				success = false;
-				message = "Could not process (remove) " + packageName + ".\n" +
-							"Package still installed.";
+	
 				if (isQuitOnError()) {
-					throw new Error(message);
+					throw new Error(0, failedRemove);
 				} else {
-					error(message);
+					error(failedRemove);
+				}
+			} else {
+				try {
+					info("Removing " + packageName + " (" + packageID + ")...");
+		
+					// select command lines to remove
+					var cmds = getPackageCmdRemove(packageNode);
+		
+					// stores if the package needs a reboot after removing
+					var rebootRequired = false;
+		
+					// stores if a postponed reboot should be scheduled
+					var rebootPostponed = false;
+		
+					// set package specific environment
+					loadPackageEnv(packageNode);
+		
+					// execute all remove commands
+					for (var iCommand = 0; iCommand  < cmds.length; iCommand++) {
+						var cmdNode = cmds[iCommand ];
+						var cmd = getCommandCmd(cmdNode);
+						var timeout = getCommandTimeout(cmdNode);
+						var workdir = getCommandWorkdir(cmdNode);
+		
+						notifyUserStart();
+		
+						var result = exec(cmd, timeout, workdir);
+		
+						dinfo("Command returned result: " + result);
+		
+						// check if there is an exit code defined
+						var exitAction = getCommandExitCodeAction(cmdNode, result);
+		
+						// Check for special exit codes.
+						if (exitAction != null) {
+							if (exitAction == "reboot") {
+								// This exit code forces a reboot.
+								info("Command in removal of " + packageName + " returned " +
+									"exit code [" + result + "]. This exit code " +
+									"requires an immediate reboot.");
+		
+								if(isZombie(packageNode)) {
+									// check if still referenced within the profile
+									var profilePackageArray = getProfilePackageNodes();
+									var referenceFound = false;
+									for (var iPackage = 0; iPackage < profilePackageArray.length; iPackage++) {
+										if (packageID == getPackageID(profilePackageArray[iPackage])) {
+											referenceFound = true;
+											break;
+										}
+									}
+									// if package is a zombie and not referenced within the profile
+									// remove the settings entry
+									if(!referenceFound && !isNoForcedRemove()) {
+										removeSetingsNode(packageNode);
+										info("Removed '" + packageName + "' ("
+											+ packageID + ") from local settings.\n" +
+												"Package initiated immediate reboot and is a zombie.");
+									}
+								}
+		
+								reboot();
+							} else if(exitAction == "delayedReboot") {
+								// This exit code schedules a reboot
+										info("Command in removal of " + packageName +
+											" returned exit code [" + result + "]. This " +
+											"exit code schedules a reboot.");
+								// schedule reboot
+								rebootRequired = true;
+								// execute next command
+								continue;
+							} else if(exitAction == "postponedReboot") {
+								info("Command in removal of " + packageName +
+									" returned exit code [" + result + "]. This " +
+									"exit code schedules a postponed reboot.");
+								rebootPostponed = true;
+								setPostponedReboot(rebootPostponed);
+								// execute next command
+								continue;
+							} else {
+								// This exit code is successful.
+								info("Command in removal of " + packageName + " returned " +
+									" exit code [" + result + "]. This exit code " +
+									"indicates success.");
+								continue;
+							}
+						} else if(result == 0) {
+							// if exit code is 0, return success
+							// execute next command
+							dinfo("Command in removal of " + packageName +
+								" returned exit code [" + result + "]. Success.");
+							continue;
+						} else {
+							// command did not succeed, log error
+							var failedCmd = "Exit code returned non-successful value: " +
+								result + "\nPackage: " + packageName + ".\nCommand:\n" + cmd;
+							// error occured during remove
+							success = false;
+		
+							if (isQuitOnError()) {
+								throw new Error(0, failedCmd);
+							} else {
+								error(failedCmd);
+							}
+						}
+					}
+				} catch (err) {
+					success = false;
+					var errorMessage = "Could not process (remove) package '" +
+					 					packageName + "' (" + packageID + "):\n" + err.description + ".";
+					if (isQuitOnError()) {
+						throw new Error(errorMessage);
+					} else {
+						error(errorMessage);
+					}
+				} finally {
+					// restore old environment
+					dinfo("Restoring previous environment.");
+	
+					// restore previous environment
+					loadEnv();
+				}
+			}
+	
+			// read reboot attribute
+			var rebootAttr = getPackageReboot(packageNode);
+	
+			// Use package checks to prove if package has been removed.
+			// Zombies are removed in any case (even if uninstall failed) except if the
+			// "/noforcedremoval" parameter was set
+			if (!isInstalled(packageNode)) {
+				// Remove package node from local xml.
+				removeSetingsNode(packageNode);
+	
+				if (rebootRequired || rebootAttr == "true") {
+					info("Removal of " + packageName + " successful, system " +
+						"rebooting.");
+					reboot();
+				} else if (rebootPostponed || rebootAttr == "postponed") {
+					info("Removal of " + packageName + " successful, postponed reboot scheduled.");
+				} else {
+					info("Removal of " + packageName + " successful.");
+				}
+			} else {
+				// check if package is a zombie
+				if(isZombie(packageNode)) {
+					// check if still referenced within the profile
+					var packageArray = getProfilePackageNodes();
+					var referenced = false;
+					for (var i=0; i < packageArray.length; i++) {
+						if (packageID == getPackageID(packageArray[i])) {
+							referenced = true;
+							break;
+						}
+					}
+					// if package is a zombie and not referenced within the profile
+					// remove the settings entry
+					if(!referenced && !isNoForcedRemove()) {
+						removeSetingsNode(packageNode);
+						warning("Errors occurred while removing '" + packageName + "' ("
+							+ packageID + ").\nPackage has been removed anyway because it was a zombie " +
+							"and not referenced within the profile.");
+					}
+				} else if (rebootRequired || rebootAttr == "true") {
+					warning("Package processing (remove) failed for package " +
+						packageName + ".\nHowever the package requires a reboot to complete. Rebooting.");
+					// reboot system without adding to local settings yet
+					reboot();
+				} else if (rebootPostponed || rebootAttr == "postponed") {
+					warning("Package processing (remove) failed for package " +
+						packageName + ".\nHowever the package schedules a postponed reboot.");
+				} else {
+					// package installation failed
+					success = false;
+					message = "Could not process (remove) " + packageName + ".\n" +
+								"Package still installed.";
+					if (isQuitOnError()) {
+						throw new Error(message);
+					} else {
+						error(message);
+					}
 				}
 			}
 		}
 	}
+
+	// return status
+	return success;
 }
 
 /**
  * Removes a package by name.
  * @param name name of the package to be removed (package ID).
+ * @return True in case of successful remove of package and all packages depending on it.
+ *         False in case of failed package uninstall of failed uninstall of package depending on it.
  */
 function removePackageName(name) {
 	// Query the package node.
 	var node = getSettingNode(name);
 
+	// return code
+	var success = false;
+	
+	dinfo("Removing package '" + name + "'.");
+	
 	if (node == null) {
-		info("Package " + name + " not currently installed.");
+		
+		// check if the package has been removed during this session
+		var alreadyRemoved = false;
+		for (var iRemovedPkg = 0; iRemovedPkg < packagesRemoved.length; iRemovedPkg++) {
+			var removedPackage = packagesRemoved[iRemovedPkg];
+			if (name == getPackageID(removedPackage)) {
+				alreadyRemoved = true;
+				break;
+			}
+		}
+		if (alreadyRemoved) {
+			dinfo("Package '" + name + "' already removed during this session.");
+			success = true;
+		} else {
+			info("Package '" + name + "' currently not installed.");
+			success = false;
+		}
 	} else {
-		removePackage(node);
+		success = removePackage(node);
 	}
+	return success;
+}
+
+/**
+ * Removes all packages which depends on the given package.
+ * Returns true in case all packages could be removed. Returns false if
+ * at least one dependent package failed to remove.
+ *
+ * @param packageNode package to install the dependencies of (XML node)
+ * 				NOTE: The package itself is not installed.
+ * @return true=all dependencies installed successful;
+ *         false=at least one dependency failed
+ */
+function removePackagesDependent(packageNode) {
+	var packageID = getPackageID(packageNode);
+	var packageName = getPackageName(packageNode);
+
+	var problemDesc = "";
+	// search for all packages which depend on the one to be removed
+	var dependencies = new Array();
+	var installedPackages = getSettingNodes();
+	for (var iInstPkg = 0; iInstPkg<installedPackages.length; iInstPkg++) {
+		// get dependencies of this package
+		var pkgDeps = getPackageDependencies(installedPackages[iInstPkg]);
+		for (var j=0; j<pkgDeps.length; j++) {
+			if (pkgDeps[j] == packageID) {
+				dependencies.push(installedPackages[iInstPkg]);
+				break;
+			}
+		}
+	}
+	if (dependencies.length > 0) {
+		info("Removing packages depending on '" + packageName +
+			"' (" + packageID + ").");
+	}
+	var depSuccess = true;
+	for (var iDependencies = 0; iDependencies < dependencies.length; iDependencies++) {
+		var dependingPackage = dependencies[iDependencies];
+		// install this package
+		var success = removePackage(dependingPackage);
+		if (!success) {
+			problemDesc += "Removal of depending package '"
+				+ getPackageName(dependingPackage) + "' ("
+				+ getPackageID(dependingPackage) + ") failed";
+			depSuccess = false;
+			// skip remaining dependencies
+			break;
+		}
+	}
+
+	if (depSuccess) {
+		dinfo("Removal of depending packages for '" +
+				 packageName + "' (" +
+				 packageID + ") successfully finished.");
+	} else {
+		var failMessage = "Removal of depending packages for '" +
+						 packageName + "' (" +
+						packageID + ") failed. " + problemDesc;
+		if (isQuitOnError()) {
+			throw new Error(failMessage);
+		} else {
+			error(failMessage);
+		}
+	}
+
+	return depSuccess;
 }
 
 /**
@@ -3509,6 +4332,16 @@ function setRunningState(statename) {
 }
 
 /**
+ * Sets new value for the sendStatus flag which defines if status messages
+ * are sent to the calling program using STDOUT
+ *
+ * @param newStatus new value for the sendStatus flag (boolean)
+ */
+function setSendStatus(newStatus) {
+	sendStatus = newStatus;
+}
+
+/**
  * Set a new settings node
  *
  * @param newSettings the new settings XML node to be used fro now on
@@ -3551,12 +4384,12 @@ function setSkipEventLog(newValue) {
 function sortPackageNodes(packageNodes, sortBy, sortOrder) {
 	// create array to do the sorting on
 	var sortedPackages = new Array();
-	for (var i=0; i < packageNodes.length; i++) {
-		sortedPackages.push(packageNodes[i]);
+	for (var iPkgNodes = 0; iPkgNodes < packageNodes.length; iPkgNodes++) {
+		sortedPackages.push(packageNodes[iPkgNodes]);
 	}
 	// Classic bubble-sort algorithm on selected attribute
-	for (var i=0; i < sortedPackages.length - 1; i++) {
-		for (var j=0; j < sortedPackages.length - 1 - i; j++) {
+	for (var iSortedPkg = 0; iSortedPkg < sortedPackages.length - 1; iSortedPkg++) {
+		for (var j=0; j < sortedPackages.length - 1 - iSortedPkg; j++) {
 			var prio1;
 			var prio2;
 			var priVal1 = null;
@@ -3642,6 +4475,9 @@ function synchronizeProfile() {
 	 */
 	// var profilePackageIDs = getProfilePackageIDs();
 
+	// send message to client
+	logStatus("Starting software synchronization");
+
 	/**
 	 * Get package nodes referenced within the profile (and profile
 	 * dependencies). This includes package dependencies as well.
@@ -3656,8 +4492,8 @@ function synchronizeProfile() {
 	var removablesArray = new Array();
 
 	// Loop over each installed package and check whether it still applies.
-	for (var i = 0; i < installedPackages.length; i++) {
-		var installedPackageNode = installedPackages[i];
+	for (var iInstalledPkg = 0; iInstalledPkg < installedPackages.length; iInstalledPkg++) {
+		var installedPackageNode = installedPackages[iInstalledPkg];
 		dinfo("Found installed package '" + getPackageName(installedPackageNode) + "' (" +
 				getPackageID(installedPackageNode) + ").");
 
@@ -3683,6 +4519,7 @@ function synchronizeProfile() {
 	}
 
 	dinfo("Number of packages to remove: " + removablesArray.length);
+	logStatus("Number of packages to be removed: " + removablesArray.length);
 	/* upgrade packages to be removed to latest version first. This allows
 	 * system administrators to provide a fixed version of the package which
 	 * allows clean uninstall.
@@ -3699,11 +4536,13 @@ function synchronizeProfile() {
 	 */
 	// sort packages to upgrade the ones with highest priority first
 	var sortedUpgradeList = sortPackageNodes(removablesArray, "PRIORITY", 2);
-	for (var i=0; i < sortedUpgradeList.length; i++) {
-		var packageNode = sortedUpgradeList[i];
+	for (var iSortedPkg = 0; iSortedPkg < sortedUpgradeList.length; iSortedPkg++) {
+		var upgradePkgNode = sortedUpgradeList[iSortedPkg];
 		// upgrade package if package is available on server database
-		var serverPackage = getPackageNode(getPackageID(packageNode));
+		var serverPackage = getPackageNode(getPackageID(upgradePkgNode));
 		if (serverPackage != null) {
+			logStatus("Remove: Checking status of '" + getPackageName(serverPackage) +
+					"' (" + (iSortedPkg+1) + "/" + sortedUpgradeList.length + ")");
 			// start upgrade first
 			installPackage(serverPackage);
 		}
@@ -3713,12 +4552,15 @@ function synchronizeProfile() {
 	// to the profile
 	// reverse-sort packages to remove the one with lowest priority first
 	var sortedRemovablesArray = sortPackageNodes(removablesArray, "PRIORITY", 1);
-	for (var i=0; i < sortedRemovablesArray.length; i++) {
-		var packageNode = sortedRemovablesArray[i];
+	for (var iRomovables = 0; iRomovables < sortedRemovablesArray.length; iRomovables++) {
+		var removePkgNode = sortedRemovablesArray[iRomovables];
 		// remove package from system
 		// the settings node might have  been changed during update before
 		// reload it.
-		removePackage(getSettingNode(getPackageID(packageNode)));
+		logStatus("Remove: Removing package '" + getPackageName(removePkgNode) +
+				"' (" + (iRomovables+1) + "/" + sortedRemovablesArray.length + ")");
+		// removePackage(getSettingNode(getPackageID(removePkgNode)));
+		removePackageName(getPackageID(removePkgNode));
 	}
 
 	// create array to do the sorting on
@@ -3731,8 +4573,12 @@ function synchronizeProfile() {
 	 */
 	for (var i=0; i < sortedPackages.length; i++) {
 		// install/upgrade package
+		logStatus("Install: Verifying package '" + getPackageName(sortedPackages[i]) +
+				"' (" + (i+1) + "/" + sortedPackages.length + ")");
 		installPackage(sortedPackages[i]);
 	}
+
+	logStatus("Finished software synchronization");
 
 	// If we had previously warned the user about an impending installation, let
 	// them know that all action is complete.
@@ -3794,17 +4640,17 @@ function loadXml(xmlPath, xmlDirectory, rootNode) {
 
 		// check if there was an error when loading XML
 		if (source.parseError.errorCode != 0) {
-			var myErr = source.parseError;
-			var message = "Error parsing xml '" + xmlPath + "': " + myErr.reason + "\n" +
+			var loadError = source.parseError;
+			var errorMessage = "Error parsing xml '" + xmlPath + "': " + loadError.reason + "\n" +
 							"File      " + xmlPath + "\n" +
-							"Line      " + myErr.line + "\n" +
-							"Linepos   " + myErr.linepos + "\n" +
-							"Filepos   " + myErr.filepos + "\n" +
-							"srcText   " + myErr.srcText + "\n";
+							"Line      " + loadError.line + "\n" +
+							"Linepos   " + loadError.linepos + "\n" +
+							"Filepos   " + loadError.filepos + "\n" +
+							"srcText   " + loadError.srcText + "\n";
 			if (isQuitOnError()) {
-				throw new Error(message);
+				throw new Error(errorMessage);
 			} else {
-				error(message);
+				error(errorMessage);
 			}
 		} else {
 			dinfo("Successfully loaded XML file: " + xmlPath);
@@ -3818,7 +4664,6 @@ function loadXml(xmlPath, xmlDirectory, rootNode) {
 		var fso = new ActiveXObject("Scripting.FileSystemObject");
 		if( fso.folderExists( xmlDirectory ) ) {
 			var folder = fso.GetFolder(xmlDirectory);
-			var filePath = "";
 			var e = new Enumerator(folder.files);
 			var root = rootNode;
 			if (root == null) {
@@ -3862,17 +4707,17 @@ function loadXml(xmlPath, xmlDirectory, rootNode) {
 
 					// check if load was successful
 					if (xsl.parseError.errorCode != 0) {
-						var myErr = xsl.parseError;
-						var message = "Error parsing xml '" + filePath + "': " + myErr.reason + "\n" +
+						var loadErr = xsl.parseError;
+						var errMsg = "Error parsing xml '" + filePath + "': " + loadErr.reason + "\n" +
 										"File      " + file.name + "\n" +
-										"Line      " + myErr.line + "\n" +
-										"Linepos   " + myErr.linepos + "\n" +
-										"Filepos   " + myErr.filepos + "\n" +
-										"srcText   " + myErr.srcText + "\n";
+										"Line      " + loadErr.line + "\n" +
+										"Linepos   " + loadErr.linepos + "\n" +
+										"Filepos   " + loadErr.filepos + "\n" +
+										"srcText   " + loadErr.srcText + "\n";
 						if (isQuitOnError()) {
-							throw new Error(message);
+							throw new Error(errMsg);
 						} else {
-							error(message);
+							error(errMsg);
 						}
 					} else {
 						// try to add to root element
@@ -4023,10 +4868,11 @@ function initialize() {
 	// will be used for file operations
 	var fso = new ActiveXObject("Scripting.FileSystemObject");
 
-	var httpregex = /^http/;
+	var httpregex = new RegExp("^http");
 
 	var isWeb = false;
 	var base = "";
+
 	if (argn("base") != null) {
 		base = argn("base");
 		if(httpregex.test(base)) {
@@ -4049,15 +4895,19 @@ function initialize() {
 	dinfo("Base directory is '" + base + "'.");
 	dinfo("Log level is " + getLogLevel());
 
+	var packages_file;
+	var profiles_file;
+	var hosts_file;
+	var nodes;
 	if (!isWeb) {
 		// Append the settings file names to the end of the base path.
-		var packages_file = fso.BuildPath(base, packages_file_name);
+		packages_file = fso.BuildPath(base, packages_file_name);
 		var packages_folder = fso.BuildPath(base, "packages");
-		var profiles_file = fso.BuildPath(base, profiles_file_name);
+		profiles_file = fso.BuildPath(base, profiles_file_name);
 		var profiles_folder = fso.BuildPath(base, "profiles");
-		var hosts_file = fso.BuildPath(base, hosts_file_name);
+		hosts_file = fso.BuildPath(base, hosts_file_name);
 		var hosts_folder = fso.BuildPath(base, "hosts");
-		var nodes = loadXml(profiles_file, profiles_folder, "profiles");
+		nodes = loadXml(profiles_file, profiles_folder, "profiles");
 		if (nodes == null) {
 			// connot continue without profiles (probably network error occurred)
 			throw new Error(10, "No profiles found. Aborting");
@@ -4072,10 +4922,10 @@ function initialize() {
 		// load packages
 		setPackages(loadXml(packages_file, packages_folder, "packages"));
 	} else {
-		var packages_file = base + "/" + web_packages_file_name;
-		var profiles_file = base + "/" + web_profiles_file_name;
-		var hosts_file = base + "/" + web_hosts_file_name;
-		var nodes = loadXml( profiles_file, null, null );
+		packages_file = base + "/" + web_packages_file_name;
+		profiles_file = base + "/" + web_profiles_file_name;
+		hosts_file = base + "/" + web_hosts_file_name;
+		nodes = loadXml( profiles_file, null, null );
 		if (nodes == null) {
 			// connot continue without profiles (probably network error occurred)
 			throw new Error(10, "No profiles found. Aborting");
@@ -4132,47 +4982,47 @@ function initialize() {
 		}
 	}
 
+	var message;
 	if(isDebug()) {
-		var message = "";
 		var hst = getHostNodes();
 		message = "Hosts file contains " + hst.length + " hosts:";
-		for (var i=0; i < hst.length; i++ ) {
-			message += "\n" + getHostNameAttribute(hst[i]);
+		for (var iHost = 0; iHost < hst.length; iHost++ ) {
+			message += "\n" + getHostNameAttribute(hst[iHost]);
 		}
 		dinfo(message);
 
-		var packs = getSettingNodes();
-		message = "Settings file contains " + packs.length + " packages:";
-		for (var i=0; i < packs.length; i++) {
-			if (packs[i] != null) {
-				 message += "\n" + getPackageID(packs[i]);
+		var settingsPkg = getSettingNodes();
+		message = "Settings file contains " + settingsPkg.length + " packages:";
+		for (var iSettings = 0; iSettings < settingsPkg.length; iSettings++) {
+			if (settingsPkg[iSettings] != null) {
+				 message += "\n" + getPackageID(settingsPkg[iSettings]);
 			}
 		}
 		dinfo(message);
 
-		var packs = getPackageNodes();
-		message = "Packages file contains " + packs.length + " packages:";
-		for (var i=0; i < packs.length; i++) {
-			if (packs[i] != null) {
-				 message += "\n" + getPackageID(packs[i]);
+		var packageNodes = getPackageNodes();
+		message = "Packages file contains " + packageNodes.length + " packages:";
+		for (var iPackage = 0; iPackage < packageNodes.length; iPackage++) {
+			if (packageNodes[iPackage] != null) {
+				 message += "\n" + getPackageID(packageNodes[iPackage]);
 			}
 		}
 		dinfo(message);
 
 		var profileNodes = getProfileNodes();
 		message = "Profile file contains " + profileNodes.length + " profiles:";
-		for (var i=0; i < profileNodes.length; i++) {
-			if (profileNodes[i] != null) {
-				 message += "\n" + getProfileID(profileNodes[i]);
+		for (var iProfile = 0; iProfile < profileNodes.length; iProfile++) {
+			if (profileNodes[iProfile] != null) {
+				 message += "\n" + getProfileID(profileNodes[iProfile]);
 			}
 		}
 		dinfo(message);
 
 		// get profile list
-		var profileList = getProfileList();
-		var message = "Using profile(s):\n";
-		for (var i=0; i<profileList.length; i++) {
-			message += profileList[i] + "\n";
+		var profiles = getProfileList();
+		message = "Using profile(s):\n";
+		for (var i=0; i<profiles.length; i++) {
+			message += profiles[i] + "\n";
 		}
 		dinfo(message);
 	}
@@ -4180,13 +5030,13 @@ function initialize() {
 	// check if all referenced profiles are available
 	var profileList = getProfileList();
 	var error = false;
-	var message = "Could not locate referenced profile(s):\n";
-	for (var i=0; i<profileList.length; i++) {
-		var currentProfile = getProfileNode(profileList[i]);
+	message = "Could not locate referenced profile(s):\n";
+	for (var iProf = 0; iProf<profileList.length; iProf++) {
+		var currentProfile = getProfileNode(profileList[iProf]);
 		if (currentProfile == null) {
 
 			error = true;
-			message += profileList[i] + "\n";
+			message += profileList[iProf] + "\n";
 		}
 	}
 	if (error) {
@@ -4333,7 +5183,11 @@ function initializeLog() {
 				// 0=ASCII, -1=unicode, -2=system default
 				dinfo("Initializing new log file: " + newLogfilePath);
 				try {
-					newLogfileHandler = fso.OpenTextFile(newLogfilePath, 2, true, -2);
+					var openMode = 2;
+					if (isLogAppend()) {
+						openMode = 8;
+					}
+					newLogfileHandler = fso.OpenTextFile(newLogfilePath, openMode, true, -2);
 				} catch (e) {
 					// fall back to local temp folder
 					newLogfilePath = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings("%TEMP%\\" + logFileName);
@@ -4396,6 +5250,11 @@ function parseArguments(argv) {
 		setQuiet(quietDefault);
 	}
 
+	// process log append flag
+	if (isArgSet(argv, "/logAppend")) {
+		setLogAppend(true);
+	}
+
 	// Process log level
 	if (argn("logLevel") != null) {
 		setLogLevel(parseInt(argn("logLevel")));
@@ -4417,9 +5276,9 @@ function parseArguments(argv) {
 		logfilePattern = argn("logfilePattern");
 	}
 
-	// Process log file pattern
-	if (argn("logfilePattern") != null) {
-		var log_file_path = argn("log_file_path");
+	// Process path to log file
+	if (argn("log_file_path") != null) {
+		log_file_path = argn("log_file_path");
 	}
 
 	// Process property named arguments that set values.
@@ -4463,6 +5322,11 @@ function parseArguments(argv) {
 	// Process property named arguments that set values.
 	if (isArgSet(argv, "/quitonerror")) {
 		setQuitOnError(true);
+	}
+
+	// check if status messages should be sent
+	if (isArgSet(argv, "/sendStatus")) {
+		setSendStatus(true);
 	}
 
 	// Process property named arguments that set values.
@@ -4515,8 +5379,8 @@ function saveSettings() {
  * Echos text to the command line or a prompt depending on how the program is
  * run.
  */
-function alert(msg) {
-	WScript.Echo(msg);
+function alert(message) {
+	WScript.Echo(message);
 }
 
 /**
@@ -4546,6 +5410,59 @@ function getLogFile() {
 		initializeLog();
 	}
 	return logfileHandler;
+}
+
+/**
+ * Creates a log line from a given string. The severity string is automatically
+ * padded to a fixed length too to make the log entries easily readable.
+ *
+ * @param severity string which represents log severity
+ * @param message string which represents the message to be logged
+ * @return log entry in its default format:
+ * 			YYYY-MM-DD hh:mm:ss, SEVERITY: <message>
+ */
+function getLogLine(severity, message) {
+	var severityPadding = 7;
+	// pad string with spaces
+	for (var i = severity.length; i <= severityPadding; i++) {
+		severity += " ";
+	}
+
+	// escape pipes (since they are used as new-line characters)
+	var logLine = message.replace(new RegExp("\\|", "g"), "\\|");
+	// replace new-lines by pipes
+	logLine = logLine.replace(new RegExp("(\\r\\n)|(\\n\\r)|[\\r\\n]+", "g"), "|");
+
+	// build date string
+	var today = new Date();
+	var year = today.getFullYear();
+	var month = today.getMonth() + 1;
+	var day = today.getDate();
+	var hour = today.getHours();
+	var minute = today.getMinutes();
+	var second = today.getSeconds();
+	if (month < 10) {
+		month = "0" + month;
+	}
+	if (day < 10) {
+		day = "0" + day;
+	}
+	if (hour < 10) {
+		hour = "0" + hour;
+	}
+	if (minute < 10) {
+		minute = "0" + minute;
+	}
+	if (second < 10) {
+		second = "0" + second;
+	}
+
+	var tstamp = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
+
+	// build log line
+	logLine = tstamp + ", " + severity + ": " + logLine;
+
+	return logLine;
 }
 
 /**
@@ -4585,7 +5502,7 @@ function log(type, description) {
 		if(isQuiet() && !isSkipEventLog()) {
 			try {
 				WshShell = WScript.CreateObject("WScript.Shell");
-				WshShell.logEvent(type, description);
+				WshShell.logEvent(type, "" + description);
 			} catch (e) {
 				// skip future event log entries and log an error
 				setSkipEventLog(true);
@@ -4612,55 +5529,35 @@ function log(type, description) {
 				logSeverity = "SUCCESS";
 				break;
 			case 1:
-				logSeverity = "ERROR  ";
+				logSeverity = "ERROR";
 				break;
 			case 2:
 				logSeverity = "WARNING";
 				break;
 			case 4:
-				logSeverity = "INFO   ";
+				logSeverity = "INFO";
 				break;
 			case 8:
-				logSeverity = "DEBUG  ";
+				logSeverity = "DEBUG";
 				break;
 			case 16:
-				logSeverity = "DEBUG  ";
+				logSeverity = "DEBUG";
 				break;
 		}
-		// escape pipes (since they are used as new-line characters)
-		var logLine = description.replace(new RegExp("\\|", "g"), "\\|");
-		// replace new-lines by pipes
-		logLine = logLine.replace(new RegExp("(\\r\\n)|(\\n\\r)|[\\r\\n]+", "g"), "|");
 
-		// build date string
-		var today = new Date();
-		var year = today.getFullYear();
-		var month = today.getMonth() + 1;
-		var day = today.getDate();
-		var hour = today.getHours();
-		var minute = today.getMinutes();
-		var second = today.getSeconds();
-		if (month < 10) {
-			month = "0" + month;
-		}
-		if (day < 10) {
-			day = "0" + day;
-		}
-		if (hour < 10) {
-			hour = "0" + hour;
-		}
-		if (minute < 10) {
-			minute = "0" + minute;
-		}
-		if (second < 10) {
-			second = "0" + second;
-		}
+		getLogFile().WriteLine(getLogLine(logSeverity, description));
+	}
+}
 
-		var tstamp = year + "-" + month + "-" + day + " " + hour + ":" + minute + ":" + second;
-
-		// build log line
-		logLine = tstamp + ", " + logSeverity + ": " + logLine;
-		getLogFile().WriteLine(logLine);
+/**
+ * Logs status message which can be read by WPKG client to display messages
+ * to the user
+ *
+ * @param message the message to be sent to the client.
+ */
+function logStatus(message) {
+	if (isSendStatus()) {
+		alert(getLogLine("STATUS", message));
 	}
 }
 
@@ -4676,11 +5573,11 @@ function notify(message) {
 		try {
 			exec(cmd, 0, null);
 		} catch (e) {
-			var message = "Notification failed. " + e.description;
+			var errorMessage = "Notification failed. " + e.description;
 			if (isQuitOnError()) {
-				throw new Error(0, message);
+				throw new Error(0, errorMessage);
 			} else {
-				error(message);
+				error(errorMessage);
 			}
 		}
 	} else {
@@ -4759,6 +5656,15 @@ function notifyUserStop() {
 }
 
 /**
+ * Sets new log append value.
+ *
+ * @param append true if log should be appended, false otherwise (boolean)
+ */
+function setLogAppend(append) {
+	logAppend = append;
+}
+
+/**
  * Sets new logging level.
  *
  * @param newLevel new log level to be used:
@@ -4802,16 +5708,139 @@ function concatenateList(list1, list2) {
 	// Create a new array the size of the sum of both original lists.
 	var list = new Array();
 
-	for (var i = 0; i < list1.length; i++) {
-		list.push(list1[i]);
+	for (var iList1 = 0; iList1 < list1.length; iList1++) {
+		list.push(list1[iList1]);
 	}
 
-	for (var i = 0; i < list2.length; i++) {
-		list.push(list2[i]);
+	for (var iList2 = 0; iList2 < list2.length; iList2++) {
+		list.push(list2[iList2]);
 	}
 
 	return list;
 }
+
+
+/**
+ * Downloads a file by url, target directory and timeout
+ *
+ * @param url full file URL to download (http://www.server.tld/path/file.msi)
+ * @param target target directory do download to. This is specified relative
+ *               to the downloadUrl path as specified within config.xml
+ * @param timeoutValue timeout in seconds
+ * @return true in case of successful download, false in case of error
+ */
+function downloadFile(url, target, timeoutValue) {
+	if (url == null || url == "") {
+		error("No URL specified for download!");
+		return false;
+	}
+	try {
+		// evaluate target directory
+		if (target == null || target == "") {
+			error("Invalid download target specified: " + target);
+			return false;
+		} else {
+			target = downloadDir + "\\" + target;
+		}
+		target = new ActiveXObject("WScript.Shell").ExpandEnvironmentStrings(target);
+
+		// evaluate timeout
+		var timeout = downloadTimeout;
+		if (timeoutValue != null && timeoutValue == "") {
+			timeout = parseInt(timeoutValue);
+		}
+		var fso = new ActiveXObject("Scripting.FileSystemObject");
+		var stream = new ActiveXObject("ADODB.Stream");
+		var xmlHttp = new createXmlHttp();
+
+		dinfo("Downloading '" + url + "' to '" + target + "'");
+
+		// open HTTP connection
+		xmlHttp.open("GET", url, true);
+		xmlHttp.setRequestHeader("User-Agent", "XMLHTTP/1.0");
+		xmlHttp.send();
+
+		for (var t=0; t < timeout; t++) {
+			if (xmlHttp.ReadyState == 4) {
+				break;
+			}
+			WScript.sleep(1000);
+		}
+
+		// abort download if not finished yet
+		if (xmlHttp.ReadyState != 4) {
+			xmlHttp.abort();
+			error("HTTP Timeout after " + timeout + " seconds.");
+		}
+
+		// check if download has been completed
+		if (xmlHttp.status != 200) {
+			error("HTTP Error: " + xmlHttp.status + ", " + xmlHttp.StatusText);
+		}
+
+		stream.open();
+		stream.type = 1;
+
+		stream.write(xmlHttp.responseBody);
+		stream.position = 0;
+
+		// delete temporary file if it already exists
+		if (fso.fileExists(target)) {
+			fso.deleteFile(target);
+		}
+
+		// check if target folder exists, crate if required
+		var folder = fso.getParentFolderName(target);
+		var folderStructure = new Array();
+
+		while (!fso.FolderExists(folder)) {
+			folderStructure.push(folder);
+			folder = fso.getParentFolderName(folder);
+		}
+		// create folders
+		for (var i=folderStructure.length-1; i>=0; i--) {
+			fso.createFolder(folderStructure[i]);
+		}
+
+		// write file
+		stream.saveToFile(target);
+		stream.close();
+
+	} catch (e) {
+		error("Download failed: " + e.description);
+		return false;
+	}
+
+	return true;
+}
+
+/**
+ * This method is used to return an XMLHTTP object. Depending on the MSXML
+ * version used the factory is different.
+ * 
+ * @return XMLHTTP object
+ */
+function createXmlHttp() {
+	var xmlHttpFactories = [
+		function () {return new XMLHttpRequest();},
+		function () {return new ActiveXObject("Msxml2.XMLHTTP");},
+		function () {return new ActiveXObject("Msxml3.XMLHTTP");},
+		function () {return new ActiveXObject("Microsoft.XMLHTTP");}
+	];
+
+	var xmlHttp = null;
+	for (var i=0; i < xmlHttpFactories.length; i++) {
+		try {
+			xmlHttp = xmlHttpFactories[i]();
+		} catch (e) {
+			continue;
+		}
+		break;
+	}
+	return xmlHttp;
+}
+
+
 
 /**
  * Executes a shell command and blocks until it is completed, returns the
@@ -4819,7 +5848,7 @@ function concatenateList(list1, list2) {
  * specified number of seconds.
  *
  * @param cmd the command line to be executed
- * @param timeout timeout value in seconds
+ * @param timeout timeout value in seconds (use value <= 0 for default timeout)
  * @param workdir working directory (optional). If set to null uses the current
  *                working directory of the script.
  * @return command exit code (or -1 in case of timeout)
@@ -4833,7 +5862,7 @@ function exec(cmd, timeout, workdir) {
 		var shell = new ActiveXObject("WScript.Shell");
 
 		// Timeout after an hour by default.
-		if (timeout == 0) {
+		if (timeout <= 0) {
 			timeout = 3600;
 		}
 
@@ -4844,6 +5873,38 @@ function exec(cmd, timeout, workdir) {
 			shell.CurrentDirectory = workdir;
 		}
 
+		/*
+		 * This code has been added to make sure STDOUT & STDERR is redirected
+		 * to NUL. This is due to a bug in WSH which causes executed processes
+		 * to "hang" if they write more than 4k of output to STDOUT/STDERR.
+		 * It is currently not possible to flush these buffers without blocking
+		 * WPKG itself. So the work-around currently is to make sure the output
+		 * is redirected to NUL.
+		 */
+		// check if STDOUT needs to be redirected
+		var stdOutReg = new RegExp(" [1]{0,1}>", "i");
+		var useCmd = false;
+		if (!stdOutReg.test(cmd)) {
+			cmd += " >NUL";
+			useCmd = true;
+		}
+
+		// check if STDERR needs to be redirected
+		var stdErrReg = new RegExp(" 2>", "i");
+		if (!stdErrReg.test(cmd)) {
+			cmd += " 2>&1";
+			useCmd = true;
+		}
+		
+		/* prepend %COMSPEC% to make sure STDOUT can be redirected
+		 * Unfortunately on Windows the commands have to take care by themself
+		 * about handling this parameter.
+		 */
+		if (useCmd) {
+			cmd = "%COMSPEC% /c " + cmd;
+		}
+		dinfo("Executing command: " + cmd);
+		
 		var shellExec = shell.exec(cmd);
 
 		var count = 0;
@@ -4851,17 +5912,44 @@ function exec(cmd, timeout, workdir) {
 			WScript.sleep(1000);
 			count++;
 
+			/*
+			 * Unfortunately WSH is terribly broken when handling I/O streams
+			 * from processes. AtEndOfStream blocks as well as ReadAll(),
+			 * Read(x) and ReadLine(). So it's impossible to fetch STDOUT/
+			 * STDERR without blocking the main WPKG program.
+			 * So either you can fetch the output or wait for the program to
+			 * terminate, but not both.
+			 * For WPKG it's more important to handle a timeout in order to
+			 * handle programs which do not terminate properly or interactively
+			 * ask for input.
+			 * Unfortunately sub-processes seem to be blocked if they write
+			 * more than 4k of data to STDOUT and/or STDERR buffer. So make
+			 * sure your commands do not print too much on the console.
+			 * If in doubt you might redirect STDOUT/STDERR to a file.
+			 * For example by adding "> %TEMP%\myprog-out.txt 2>&1" to the
+			 * command line.
+			 * See <http://www.tech-archive.net/Archive/Scripting/microsoft.public.scripting.wsh/2004-10/0204.html>
+			 * for a discussion on this topic.
+			 */
+			// Read and discard the output buffers to prevent process blocking
+			/*
+		    if (!shellExec.StdOut.AtEndOfStream) {
+		    	dinfo("STDOUT: " + shellExec.StdOut.ReadAll());
+		    }
+		    if (!shellExec.StdErr.AtEndOfStream) {
+		    	dinfo("STDERR: " + shellExec.StdErr.ReadAll());
+		    }
+		    */
+
 			if (count >= timeout) {
 				return -1;
 			}
 		}
 
-		WScript.sleep(1000);
-
 		return shellExec.exitCode;
 	} catch (e) {
 		// handle execution exception
-		var message = "Command '" + cmd + "\" was not successful.\n" + e.description;
+		var message = "Command '" + cmd + "\" was unsuccessful.\n" + e.description;
 		if(isQuitOnError()) {
 			throw new Error(message);
 		} else {
@@ -4881,7 +5969,7 @@ function getArgv() {
 /**
  * This function retrieves the IP address from the registry.
  *
- * @return array of IP address strings, array can be of lenght 0
+ * @return array of IP address strings, array can be of length 0
  */
 function getIPAddresses() {
 	var addresses = new Array;
@@ -4914,7 +6002,7 @@ function getIPAddresses() {
 					// try reading fixed IP
 					dinfo("Reading fixed IP address(es).");
 
-					var fixedIPs = getRegistryValue(regBase, "IPAddress").toArray();
+					var fixedIPs = getRegistryValue(regBase + "IPAddress").toArray();
 					if (fixedIPs != null) {
 						for (var j=0; j < fixedIPs.length; j++) {
 							if (fixedIPs[j] != null &&
@@ -5117,6 +6205,42 @@ function isArgSet(argv, arg) {
 	}
 	// ...otherwise, return false.
 	return false;
+}
+
+/**
+ * Loads environment for the specified package (including applying host and
+ * profile variables).
+ * 
+ * NOTE: You should invoke saveEnv() before loading the package environment.
+ * This allows you to call loadEnv() after operations are done to restore
+ * the previous environment.
+ * [...]
+ * saveEnv();
+ * loadPackageEnv(package);
+ * // do some actions
+ * loadEnv();
+ * 
+ * @param packageNode The package definition to load the environment from
+ */
+function loadPackageEnv(packageNode) {
+		// Package variables first...
+		var variables = getPackageVariables(packageNode, null);
+
+		// ...then profile variables...
+		getProfileVariables(variables);
+
+		// ...and lastly host variables.
+		getHostVariables(variables);
+
+		var procEnv=new ActiveXObject("WScript.Shell").Environment("Process");
+		// apply variable keys to environment
+		var variableKeys = variables.keys().toArray();
+		for (var i=0; i < variableKeys.length; i++) {
+			var key = variableKeys[i];
+			var val = variables.Item(key);
+			dinfo("Variable " + key + " = " + val);
+			procEnv(key) = val;
+		}
 }
 
 /**
@@ -5329,22 +6453,22 @@ function psreboot() {
 					throw new Error("Could not locate rebootCmd '" + rebootCmd + "'.");
 				}
 			}
-		var shutdown=rebootCmd + " -r ";
+		var shutdown=rebootCmd + " -r -accepteula ";
 
 		cleanup();
-		for (var i=60; i!=0; i=i-1) {
+		for (var iCountdown1 = 60; iCountdown1 != 0; iCountdown1 = iCountdown1-1) {
 			// This could be cancelled.
-			var cmd=shutdown+" -c -m \"" +msg+ "\" -t "+ i;
-			info("Running a shutdown command: "+ cmd);
-			exec(cmd, 0, null);
-			WScript.Sleep(i * 1000);
+			var cmd1 = shutdown + " -c -m \"" + msg + "\" -t " + iCountdown1;
+			info("Running a shutdown command: "+ cmd1);
+			exec(cmd1, 0, null);
+			WScript.Sleep(iCountdown1 * 1000);
 		}
 		// Hmm. We're still alive. Let's get more annoying.
-		for (var i=60; i!=0; i=i-3) {
-			var cmd=shutdown+" -m \"" + msg + "\" -t "+ i;
-			info("Running a shutdown command: " + cmd);
-			exec(cmd, 0, null);
-			WScript.Sleep(i * 1000);
+		for (var iCountdown2 = 60; iCountdown2 != 0; iCountdown2 = iCountdown2 - 3) {
+			var cmd2 = shutdown + " -m \"" + msg + "\" -t "+ iCountdown2;
+			info("Running a shutdown command: " + cmd2);
+			exec(cmd2, 0, null);
+			WScript.Sleep(iCountdown2 * 1000);
 		}
 		// And if we're here, there's problem.
 		notify("This machine needs to reboot.");
@@ -5414,24 +6538,25 @@ function reboot() {
 	exit(3010 << 8);
 }
 
-/**
- * To save the environment.
- */
-function saveEnv() {
-	var procEnv=new ActiveXObject("WScript.Shell").Environment("Process");
-	for(e=new Enumerator(procEnv); !e.atEnd(); e.moveNext()) {
-		var env=e.item(e);
-		var RetVal = env.split("=");
-		if (RetVal[0] != "") {
-			// This has a bug: what about a='b=c': that will split into three parts...
-			// TODO: Fix splitting bug
-			if (oldEnv.Exists(RetVal[0])) {
-				oldEnv.Remove(RetVal[0]);
-			}
-			oldEnv.add(RetVal[0], RetVal[1]);
-		}
-	}
-}
+ /**
+  * To save the current environment in order to allow later restore. See
+  * loadEnv() method.
+  */
+ function saveEnv() {
+ 	var procEnv=new ActiveXObject("WScript.Shell").Environment("Process");
+ 	for(e=new Enumerator(procEnv); !e.atEnd(); e.moveNext()) {
+ 		var env=e.item(e);
+ 		var RetVal = env.split("=", 1);
+ 		var key = RetVal[0];
+ 		if (key != null && key != "") {
+ 			if (oldEnv.Exists(key)) {
+ 				oldEnv.Remove(key);
+ 			}
+ 			var valueStartOffset = key.length + 1;
+ 			oldEnv.add(RetVal[0], env.substr(valueStartOffset));
+ 		}
+ 	}
+ }
 
 /**
  * Scans uninstall list for given name.
@@ -5443,8 +6568,13 @@ function saveEnv() {
  *
  * @param nameSearched The uninstall string to look for
  *                  (as it appears within control panel => add/remove software)
+ * @return returns an array of registry paths to the uninstall entries found.
+ *         An array is returned since the same software might be installed
+ *         more than once (32-bit and 64-bit versions).
+ *         Returns an empty array in case no uninstall entry could be located.
  */
 function scanUninstallKeys(nameSearched) {
+	var uninstallPath = new Array();
 	var scanKeys = new Array();
 	scanKeys.push("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall");
 	if (is64bit()) {
@@ -5456,16 +6586,18 @@ function scanUninstallKeys(nameSearched) {
 		var keyNames = getRegistrySubkeys(regPath);
 
 		for (var j=0; j < keyNames.length; j++) {
-			var displayName = getRegistryValue("HKLM\\" + regPath + "\\" + keyNames[j] + "\\DisplayName");
+			var registryPath = "HKLM\\" + regPath + "\\" + keyNames[j];
+			var displayName = getRegistryValue(registryPath + "\\DisplayName");
 
 			if (displayName != null) {
 				if (displayName == nameSearched) {
-					return true;
+					uninstallPath.push(registryPath);
+					break;
 				}
 			}
 		}
 	}
-	return false;
+	return uninstallPath;
 }
 
 /**

@@ -288,6 +288,24 @@
 
 	<!--
 		****************************************************************************
+		* Controls weather WPKG prints some information about its progress to
+		* STDOUT. This output can be read by another program (GUI) to display some
+		* progress bar or additional status information to the user.
+		*
+		* True : Enable status output on STDOUT.
+		* False: Disable status output on STDOUT.
+		*
+		* Default value      : false
+		* Command-line switch: /sendStatus
+		****************************************************************************
+	-->
+	<!--
+		<param name='sendStatus' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
 		****************************************************************************
 		*
 		*  Logging properties
@@ -295,6 +313,27 @@
 		****************************************************************************
 		****************************************************************************
 	-->
+	<!--
+		****************************************************************************
+		* Specifies if the log file should be appended or overwritten.
+		*
+		* True : Log files are appended instead of overwritten. Please note that
+		*        log files could grow quite large if debug level logging is enabled.
+		*        Depending on the pattern (date and time used) a new log file might
+		*        be written on each run.
+		* False: Log files are overwritten on each run. This is the default setting
+		*        and it is aimed for the target to keep only the log of the most
+		*        recent WPKG run.
+		*
+		* Default value      : false
+		* Command-line switch: /logAppend
+		****************************************************************************
+	-->
+	<!--
+		<param name='logAppend' value='false' />
+	-->
+
+
 	<!--
 		****************************************************************************
 		* Log level is defined as a bitmask. Just sum up the values of each log
@@ -331,7 +370,7 @@
 		*     <param name='log_file_path' value='\\\\server\\share\\dir' />
 		*
 		* Default value      : "%TEMP%"
-		* Command-line switch: -
+		* Command-line switch: /log_file_path:<path>
 		****************************************************************************
 	-->
 	<!--
@@ -441,6 +480,14 @@
 			<string id="notifyUserReboot">Rebooting to complete software installation. Please note that some software might not work until the machine is rebooted.</string>
 		</language>
 
+		<!-- french LCIDs -->
+		<language lcid="40c,80c,2c0c,c0c,240c,300c,3c0c,140c,340c,180c,380c,e40c,200c,280c,100c,1c0c">
+			<string id="notifyUserStart">WPKG, l'utilitaire d'installation automatique des programmes a appliqué ou applique en ce moment des mises à jour à votre système. Veuillez consulter l'heure au début de ce message afin de vérifier que cette information ne soit pas obsolète. Veuillez sauvegarder tous vos documents ouverts, car un redémarrage peut être nécessaire et, dans ce cas, le système redémarrera sans avertissement à la fin de l'installation ou de la mise à jour. Merci.</string>
+			<string id="notifyUserStop">WPKG, l'utilitaire d'installation automatique de logiciels a terminé l'installation ou l'actualisation des logiciels sur votre système. Aucun redémarrage n'était requis. Toutes les mises à jour sont achevées.</string>
+			<string id="notifyUserFail">L'installation des logiciels est échoué.</string>
+			<string id="notifyUserReboot">Un rédémarrage est nécessaire pour compléter l'installation ou la mise à jour. Veuillez noter que les programmes nouveaux/actualisées peuvent ne pas fonctionner avant redémarrage du système.</string>
+		</language>
+
 		<!-- german LCIDs -->
 		<language lcid="407,c07,1407,1007,807">
 			<string id="notifyUserStart">Das WPKG Software-Installationstool installiert oder aktualisiert gerade Software auf Ihrem System. Bitte die Zeit am Anfang der Nachricht kontrollieren, ggf. ist dieser Hinweis veraltet. Wenn nicht: Speichern Sie bitte alle Ihre offenen Dokumente, da ein Neustart notwendig werden kann. Das System wird ohne weitere Warnung neu starten, wenn die Installation oder Aktualisierung beendet wurde. Danke.</string>
@@ -449,12 +496,12 @@
 			<string id="notifyUserReboot">Neustart zum Abschliessen der Installation. Bitte beachten: Die neu installierte/aktualisierte Software funktioniert ggf. erst nach einem Neustart.</string>
 		</language>
 
-		<!-- french LCIDs -->
-		<language lcid="40c,80c,2c0c,c0c,240c,300c,3c0c,140c,340c,180c,380c,e40c,200c,280c,100c,1c0c">
-			<string id="notifyUserStart">WPKG, l'utilitaire d'installation automatique des programmes a appliqué ou applique en ce moment des mises à jour à votre système. Veuillez consulter l'heure au début de ce message afin de vérifier que cette information ne soit pas obsolète. Veuillez sauvegarder tous vos documents ouverts, car un redémarrage peut être nécessaire et, dans ce cas, le système redémarrera sans avertissement à la fin de l'installation ou de la mise à jour. Merci.</string>
-			<string id="notifyUserStop">WPKG, l'utilitaire d'installation automatique de logiciels a terminé l'installation ou l'actualisation des logiciels sur votre système. Aucun redémarrage n'était requis. Toutes les mises à jour sont achevées.</string>
-			<string id="notifyUserFail">L'installation des logiciels est échoué.</string>
-			<string id="notifyUserReboot">Un rédémarrage est nécessaire pour compléter l'installation ou la mise à jour. Veuillez noter que les programmes nouveaux/actualisées peuvent ne pas fonctionner avant redémarrage du système.</string>
+		<!-- italian LCIDs -->
+		<language lcid="410,810">
+			<string id="notifyUserStart">L'utilità di installazione automatica del software sta aggiornando il sistema. Verifica la marcatura temporale di questa segnalazione per capire se c'è qualche problema. Se tutto è a posto, salva e chiudi tutte le applicazioni aperte, perchè potrebbe essere necessario un riavvio. Se necessario, il sistema verrà infatti riavviato senza alcun preavviso. Grazie.</string>
+			<string id="notifyUserStop">L'utilità di installazione automatica del software ha terminato di aggiornare il sistema. Non si è reso necessario un riavvio. Tutti gli aggiornamenti sono andati a buon fine.</string>
+			<string id="notifyUserFail">Qualcosa nell'aggiornamento del sistema è fallito.</string>
+			<string id="notifyUserReboot">Riavvia per completare l'aggiornamento del sistema. Qualche programma potrebbe non funzionare correttamente senza un riavvio.</string>
 		</language>
 	</languages>
 </config>

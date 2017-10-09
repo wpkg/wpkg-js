@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.example.org/profiles" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.example.org/profiles">
+
+    <xsd:element name="profiles" type="profiles">
+    	<xsd:annotation>
+    		<xsd:documentation>Root node containing all profile definitions.</xsd:documentation>
+    	</xsd:annotation></xsd:element>
+    <xsd:complexType name="profiles">
+        <xsd:choice minOccurs="1" maxOccurs="unbounded">
+    		<xsd:element ref="profile">
+    			<xsd:annotation>
+    				<xsd:documentation>Defines a concrete profile.</xsd:documentation>
+    			</xsd:annotation></xsd:element>
+    	</xsd:choice>
+    </xsd:complexType>
+
+    <xsd:element name="profile" type="profile">
+    	<xsd:annotation>
+    		<xsd:documentation>Profile definition which defines a single profile and allows assigning of packages to it.</xsd:documentation>
+    	</xsd:annotation></xsd:element>
+
+    <xsd:complexType name="profile">
+    	<xsd:annotation>
+    		<xsd:documentation></xsd:documentation>
+    	</xsd:annotation>
+    	<xsd:sequence>
+    		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+    			<xsd:element ref="package">
+    				<xsd:annotation>
+    					<xsd:documentation>Assigns a package to the profile.</xsd:documentation>
+    				</xsd:annotation></xsd:element>
+    		</xsd:choice>
+    		<xsd:choice minOccurs="0" maxOccurs="unbounded">
+    			<xsd:element ref="depends">
+    				<xsd:annotation>
+    					<xsd:documentation>Dependency definition. Allows to refer to another profile which is "included".</xsd:documentation>
+    				</xsd:annotation></xsd:element>
+    			<xsd:element ref="variable">
+    				<xsd:annotation>
+    					<xsd:documentation>Variable definition.</xsd:documentation>
+    				</xsd:annotation></xsd:element>
+    		</xsd:choice>
+    	</xsd:sequence>
+    	<xsd:attribute name="id" type="xsd:string" use="required">
+    		<xsd:annotation>
+    			<xsd:documentation>Name of the profile (as referenced within hosts.xml).
+    			</xsd:documentation>
+    		</xsd:annotation>
+    	</xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:element name="package" type="package">
+    	<xsd:annotation>
+    		<xsd:documentation>References a package.</xsd:documentation>
+    	</xsd:annotation></xsd:element>
+
+    <xsd:complexType name="package">
+    	<xsd:attribute name="package-id" type="xsd:string" use="required">
+    		<xsd:annotation>
+    			<xsd:documentation>References the package ID of the package to assign to the profile.</xsd:documentation>
+    		</xsd:annotation></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="depends">
+    	<xsd:attribute name="profile-id" type="xsd:string" use="required">
+    		<xsd:annotation>
+    			<xsd:documentation>ID of the profile which this profile depends on (in fact it works similar to an include - all packages from the referenced profile are installed too).</xsd:documentation>
+    		</xsd:annotation></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:element name="depends" type="depends">
+    	<xsd:annotation>
+    		<xsd:documentation>Define profile dependencies.</xsd:documentation>
+    	</xsd:annotation></xsd:element>
+
+    <xsd:complexType name="variable">
+    	<xsd:attribute name="name" type="xsd:string" use="required">
+    		<xsd:annotation>
+    			<xsd:documentation>Variable name.</xsd:documentation>
+    		</xsd:annotation>
+    	</xsd:attribute>
+    	<xsd:attribute name="value" type="xsd:string" use="required">
+    		<xsd:annotation>
+    			<xsd:documentation>Variable value.</xsd:documentation>
+    		</xsd:annotation></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:element name="variable" type="variable">
+    	<xsd:annotation>
+    		<xsd:documentation>Variable definition.</xsd:documentation>
+    	</xsd:annotation></xsd:element>
+</xsd:schema>

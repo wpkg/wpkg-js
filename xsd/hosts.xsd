@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema targetNamespace="http://www.wpkg.org/hosts" elementFormDefault="qualified" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.wpkg.org/hosts">
+
+    <xsd:element name="wpkg" type="wpkg">
+    	<xsd:annotation>
+    		<xsd:documentation>Root element, contains host definitions.</xsd:documentation>
+    	</xsd:annotation>
+    </xsd:element>
+
+    <xsd:complexType name="variable">
+    	<xsd:attribute name="name" type="xsd:string" use="required">
+    		<xsd:annotation>
+    			<xsd:documentation>Variable name.</xsd:documentation>
+    		</xsd:annotation>
+    	</xsd:attribute>
+    	<xsd:attribute name="value" type="xsd:string" use="required">
+    		<xsd:annotation>
+    			<xsd:documentation>Variable value.</xsd:documentation>
+    		</xsd:annotation></xsd:attribute>
+    </xsd:complexType>
+
+    <xsd:complexType name="wpkg">
+    	<xsd:sequence minOccurs="1" maxOccurs="unbounded">
+    		<xsd:element ref="host"></xsd:element>
+    	</xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:element name="host" type="host">
+    	<xsd:annotation>
+    		<xsd:documentation>Host evaluation rules. Assigns host based on host name or IP address to a profile.</xsd:documentation>
+    	</xsd:annotation></xsd:element>
+    
+    <xsd:complexType name="host">
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+            <xsd:element ref="profile">
+            	<xsd:annotation>
+            		<xsd:documentation>Define as many profiles as you like which applies to the current host class.</xsd:documentation>
+            	</xsd:annotation></xsd:element>
+            <xsd:element ref="variable">
+            	<xsd:annotation>
+            		<xsd:documentation>Define as much variables as you like for the current host class.</xsd:documentation>
+            	</xsd:annotation></xsd:element>
+        </xsd:choice>
+    	<xsd:attribute name="name" type="xsd:string" use="required">
+    		<xsd:annotation>
+    			<xsd:documentation>Hostname specification. It might contain regular expressions as well as well as IP-address ranges.
+
+Direct match:
+   This is tried first always. If the hostname matches exactly the value of 'name' this host node is applied to the machine.
+
+IP-Ranges:
+     format has to be specified as follows:
+     start[-end].start[-end].start[-end].start[-end]
+     examples:
+     192.168.1.1
+     192.168.1.1-254
+     192.168.1-5.20-50
+
+Regular expressions:
+    example: "test-.*" will match all machines where the hostname is starting with "test-" string.
+
+</xsd:documentation>
+    		</xsd:annotation></xsd:attribute>
+    	<xsd:attribute name="profile-id" type="xsd:string" use="optional">
+    		<xsd:annotation>
+    			<xsd:documentation>Main profile. You can specify the applying profile as separate "profile" nodes as well but if there is only one single profile it is recommended to use the profile-id attribute.</xsd:documentation>
+    		</xsd:annotation></xsd:attribute>
+    </xsd:complexType>
+    
+    <xsd:element name="variable" type="variable">
+    	<xsd:annotation>
+    		<xsd:documentation>Define as many variables as you like for a host.</xsd:documentation>
+    	</xsd:annotation></xsd:element>
+
+    <xsd:element name="profile" type="profile">
+    	<xsd:annotation>
+    		<xsd:documentation>Add as many profiles to a host as you like (all of them will apply).</xsd:documentation>
+    	</xsd:annotation></xsd:element>
+    
+    <xsd:complexType name="profile">
+    	<xsd:attribute name="id" type="xsd:string" use="required">
+    		<xsd:annotation>
+    			<xsd:documentation>ID referencing to the profile defined in profiles.xml</xsd:documentation>
+    		</xsd:annotation></xsd:attribute>
+    </xsd:complexType>
+</xsd:schema>
