@@ -1,3 +1,29 @@
+Thu Mar 16 2006
+-----------------------------
+V 0.9.6
+
+WPKG-0.9.6-test2 released as 0.9.6 (stable) - no changes.
+
+
+Tue Mar 14 2006
+-----------------------------
+V 0.9.6-test1
+
+- a fix by Paul Griffith to deal with "checkType undefined error".
+
+
+Tue Mar 07 2006
+-----------------------------
+V 0.9.6-test1
+
+- three patches, which implement:
+  * "logical tests" - http://wpkg.org/index.php/Logical_tests
+  * "version checking" - http://wpkg.org/index.php/Version_checking
+  * "package dependencies" - http://wpkg.org/index.php/Package_dependencies
+
+Thanks to Frank Lee for all new features!
+
+
 Sun Mar 05 2006
 -----------------------------
 V 0.9.5
