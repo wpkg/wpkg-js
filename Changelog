@@ -1,0 +1,646 @@
+===============================================================================
+= CHANGES FOR 1.0 release
+===============================================================================
+
+Changes 2008-02-06, v1.0
+MOD: WPKG 1.0-rc9 released as WPKG-1.0 with no changes.
+
+Changes 2008-02-04, v1.0-RC9 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: WPKG crashed when /force was used in conjunction with /synchronize. Fixed.
+MOD: WPKG was forced to exit if package checks failed after installation or if
+     a package failed to remove. This has been changed. Now WPKG prints an
+     error (unless /quitonerror is used).
+     Note that installation of packages depending on the failed one will fail
+     as well. Some packages require reboot unless checks yield true. Therefore
+     it is crucial to define correct package reboot flags for such packages.
+
+Changes 2008-02-18, v1.0-RC8 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Included cosmetic fix for Bug 104 (opening quotation missing).
+     This fix adds a missing opening quotation in debug output when a new
+     package is added to the local settings node (after installation success).
+FIX: Fixed Bug 103. /help screen is not showing up if config.xml is missing and
+     null-pointer exception is thrown.
+
+Changes 2008-01-14, v1.0-RC7 by Rainer Meier <skybeam (at) users.sourceforge.net>
+FIX: Fixed Bug 96. Equality check on non-existing registry value yields an
+     exception. The same could theoretically occur as well on IP-address
+     evaluation. However there it's very unlikely to happen but I fixed it as
+     well.
+
+Changes 2007-01-08, v1.0-RC6 by Rainer Meier <skybeam (at) users.sourceforge.net>
+FIX: The /noforcedremove parameter defaulted to "true" instead of "false" as
+     documented within config.xml. Fixed.
+     To make it clear: If neither the /noforcedremove flag is set or the
+     noforcedremove property is set to true within config.xml it defaults to
+     false.
+NEW: Added /noremove flag to skip all package uninstallation actions.
+     Allows to disable removing of packages. If used in conjunction with the
+     /synchronize parameter it will just add packages but never remove them.
+     Instead of removing a list of packages which would have been removed
+     during that session is printed on exit. Packages are not removed from
+     the local settings database (wpkg.xml). Therefore it will contain a list
+     of all packages ever installed.
+     Note that each package which is requested to be removed (manually or by
+     a synchronization request) will be checked for its state by executing its
+     included package checks. If the package has been removed manually it will
+     also be removed from the settings database. Due to the fact that packages
+     whithout checks always return 'false' for during the install-status check
+     these packages will disappear from the local wpkg.xml.
+
+Changes 2007-12-15, v1.0-RC5 by Rainer Meier <skybeam (at) users.sourceforge.net>
+NEW: Support for 64-bit operating systems added. Tested on Windows Vista x64.
+     WPKG will now be able to read the uninstall keys of 32- and 64-bit
+     applications when run from 64-bit cscript.exe.
+     NOTE: Unfortunately WPKG-client is purely 32-bit so it will run 32-bit
+     cscript.exe. As a result there is no way to read the 64-bit native
+     registry keys as well as accessing the 64-bit "Program Files" folder.
+     To work around this I wrote a small wrapper script which invokes the
+     64-bit cmd shell. Unfortunately the 64-bit binaries within
+     %SystemRoot%\system32 (yes, really, Microsoft put the 64-bit binaries
+     there!) are not accessible by 32-bit programs. So you need to copy it
+     to another location. See instructions below (copied fromthe header of
+     wrapper.js):
+
+     Script which allows to execute WPKG within 64-bit environment (using
+     64-bit cscript.exe) on 64-bit operating systems like Windows XP x64 or
+     Windows Vista x64.
+
+     How to install:
+     - Put wrapper.js into the same directory where you run wpkg.js from
+      e.g. \\server\RemInst\wpkg\wrapper.js
+     - Put your 64-bit cmd.exe from %SystemRoot%\system32\cmd.exe to the 64-bit
+       sub-folder:
+       e.g. \\server\RemInst\wpkg\64-bit\cmd.exe
+       NOTE: Make sure you really copy the 64-bit cmd.exe. Do not copy cmd.exe
+       from %SystemRoot%\SysWOW64\cmd.exe since this is the 32-bit binary.
+       Quite strange but Microsoft put all 64-bit binaries to system32 while
+       all 32-bit binaries are located at SysWOW64.
+       (WOW64 = Windows on Windows-64)
+     - Configure WPKG-Client to run the wrapper instead while keeping all
+       parameters.
+
+     Directory structure:
+     \\server\RemInst\wpkg
+                        |- [XML files]
+                        |- wpkg.js
+                        |- wrapper.js
+                        |- 64-bit
+                              |- cmd.exe
+
+     WPKG Client configuration:
+     WPKG file path (required): \\server\RemInst\wpkg\wrapper.js
+     WPKG parameters:           /synchronize
+
+     IMPORTANT, IMPORTANT, IMPORTANT, IMPORTANT, IMPORTANT, IMPORTANT
+     ================================================================
+     File checks:
+     If you use file checks within your 32-bit packages you have to check
+     for %ProgramFiles(x86)%\file\path... as well since %ProgramFiles% will
+     point to the install location of native 64-bit binaries and 32-bit
+     binaries cannot be found there.
+     To create a package which supports both (32/64-bit) systems I recommend
+     using a logical "or" check. For example:
+     <check type='logical' condition='or'>
+     <check type='file' condition='versiongreaterorequal' path='%ProgramFiles(x86)%\Skype\Phone\Skype.exe' value='3.6.0.216' />
+     <check type='file' condition='versiongreaterorequal' path='%ProgramFiles%\Skype\Phone\Skype.exe' value='3.6.0.216' />
+     </check>
+
+     Registry checks:
+     Registry values of 32-bit applications are redirected to
+     "HKLM\Software\Wow6432Node\*". WPKG will try to look up each value directly
+     at "HKLM\Software\*" first and in case it cannot find it it will look for
+     the corresponding key within "Wow6432Node". Therefore you might check for
+     "HKLM\Software\TortoiseSVN\AddedIcon" which will look up the 64-bit version
+     on 64-bit Windows and the 32-bit version on 32-bit Windows.
+     In case you installed only 32-bit TortoiseSVN on 64-bit Windows it will try
+     to find the 64-bit key and if it fails read the one at
+     "HKLM\Software\Wow6432Node\TortoiseSVN\AddedIcon".
+
+Changes 2007-12-06, v1.0-RC4 by Rainer Meier <skybeam (at) users.sourceforge.net>
+FIX: Requires config.xml in order to run. This was due to the fact that a WPKG
+     tries to resolve language strings from config.xml. Fixed. If config.xml is
+     not available it will simply print english built-in messages.
+     Fixes bug 87.
+
+Changes 2007-12-06, v1.0-RC3 by Rainer Meier <skybeam (at) users.sourceforge.net>
+FIX: Variable declaration yielded an error within packages, profiles and hosts.
+     Fixes bug 83.
+
+Changes 2007-11-24, v1.0-RC2 by Rainer Meier <skybeam (at) users.sourceforge.net>
+NEW: Allows "true", "false" and "postponed" as a value of the reboot attribute
+     within the package node. The states have the following effect:
+     "true"      Immediate reboot after package installation.
+                 This will take precedence of any command-level reboot="postponed"
+                 attribute if present and reboot immediately after package
+                 installation.
+                 A reboot="true" attribute on command-level will still result in
+                 an immediate reboot.
+                 Resulting status depending on command-level reboot flag:
+                 "true"      immediate reboot after command execution
+                 "delayed"   reboot after package installation
+                 "postponed" reboot after package installation
+                 "false"     reboot after package installation
+     "postponed" Schedule reboot after installing all packages within this
+                 session, for example after synchronizing.
+                 Resulting status depending on command-level reboot flag:
+                 "true"      immediate reboot after command execution
+                 "delayed"   reboot after package installation
+                 "postponed" reboot after all actions are completed
+                 "false"     reboot after all actions are completed
+     "false"     No reboot unless one is defined at command-level.
+     or not set  Resulting status depending on command-level reboot flag:
+                 "true"      immediate reboot after command execution
+                 "delayed"   reboot after package installation
+                 "postponed" reboot after all actions are completed
+                 "false"     no reboot
+
+     As a result there are four possibilities to schedule a reboot in order of
+     precedence:
+     immediate   Command node specified reboot=true, immediate reboot takes place.
+     package     Reboot is issued right after installing:
+                 - package specifies reboot="true"
+                   OR
+                 - any command node specified reboot="delayed"
+     postponed   Reboot will take place after all packages have been applied.
+                 - package specifies reboot="postponed"
+                   OR
+                 - any command node specified reboot="postponed"
+     none        No reboot is issued by this package:
+                 - package does not specify reboot or specifies reboot="false"
+                   AND
+                 - no command node specified any form of reboot reboot
+
+     This means that an immediate reboot always has the highest priority. You
+     can just set "reboot markers" on a "timeline" on package and command level
+     where the closest reboot marker will be executed:
+     immediate => package => postponed => none
+
+MOD: Exit code 0 is not any more automatically regarded as "successful" value.
+     Even code 0 is now evaluated by exit code nodes. If no node is found it is
+     still assumed that the command was successful. This allows administrators
+     to schedule a reboot (immediate/delayed/postponed) even on exit code 0.
+
+Changes 2007-11-24, v0.10.13 by Rainer Meier <skybeam (at) users.sourceforge.net>
+NEW: Added ability to install packages by date.
+     To use this feature an install/uninstall date has to be specified within
+     the package node of the profile. Example:
+     <package package-id="pkg" installdate="<date>" uninstalldate="<date>" />
+
+     Note that a package can be referenced several times within different
+     profiles. Each profile can specify its own install/uninstall date for a
+     specific package (that's why it is not a property of the package itself).
+
+     In case a host has multiple profiles assigned and the package is
+     referenced from multiple profiles WPKG will evaluate all package
+     references. If one of the references specify that the package has to be
+     installed (or not date-range is specified at all), the package will be
+     applied.
+
+     Date is parsed in ISO 8601 format.
+     See <http://www.w3.org/TR/NOTE-datetime>.
+     Generic format example:
+        "YYYY-MM-DD hh:mm:ss"
+     Valid date examples:
+        (the following dates are all equal if ceil is set to false)
+        "2007-11-23 22:00"          (22:00 local time)
+        "2007-11-23T22:00"          (Both, "T" and space delimiter are allowed)
+        "2007-11-23 22:00:00"       (specifies seconds which default to 0 above)
+        "2007-11-23 22:00:00.000"   (specifies milliseconds which default to 0)
+     It is allowed to specify the timezone as well:
+        "2007-11-23 22:00+01:00"    (22:00 CET)
+        "2007-11-23 21:00Z"         (21:00 UTC/GMT = 22:00 CET)
+        "2007-11-23 22:00+00:00"    (21:00 UTC/GMT = 22:00 CET)
+
+     If 'ceil' is set to true then unspecified date components do not fall back
+     to "floor" (basically 0) but will be extended to the next value.
+     This allows easy comparison if the current date is within a parsed "!ceil"
+     date and a parsed "ceil" date.
+     Examples:
+     ceil=false:
+        "2007-11-23"    => "2007-11-23 00:00:00"
+        "2007-11"       => "2007-11-01 00:00:00"
+     ceil=true:
+        "2007-11-23"    => "2007-11-24 00:00:00"
+        "2007-11"       => "2007-12-01 00:00:00"
+
+     TIMEZONES:
+     As specified by ISO 8601 the date is parsed as local date in case no
+     time zone is specified. If you define a time zone then the specified time
+     is parsed as local time for the given time zone. So if you specify
+     "2007-11-23 22:00+05:00" this will be equal to "2007-11-23 18:00+01:00"
+     while "+01:00" is known as CET as well. The special identifier "Z" is equal
+     to "+00:00" time zone offset.
+
+     Usually you will not specify any time zone at all since you might have a
+     package installed at 08:00 local time rather than installing it at
+     08:00 in UTC+1 time zone while it is installed at 15:00 in UTC+8 time
+     zone (when specifying 07:00Z or 07:00+00:00 install time).
+
+     Specifying an empty string as dateString is allowed and will results in
+     returning the first of january 00:00 of the current year (ceil=false) or
+     first of january 0:00 of the next year (ceil=true).
+
+     This implements a feature on the TODO list.
+MOD: Ordered functions by name and group (functionality, logging, supplementary).
+
+Changes 2007-11-20, v0.10.12 by Rainer Meier <skybeam (at) users.sourceforge.net>
+NEW: Added /ignoreCase switch which allows to disable case sensitivity of
+     packages and profiles. Therefore you can assign the package "myapp" to a
+     profile while only a package "MyApp" is defined within the packages.
+     Note that this change requires modifying of the package/profile/host nodes
+     read from the XML files. All IDs are converted to lowercase.
+     Please note that this is a kind of one-way switch. Removing the switch
+     later will cause all packages which use uppercase characters to fail
+     looking up the local package node (which is stored in lowercase only).
+     Fixes Bug 81.
+NEW: Implemented change to allow multiple profiles to be specified within a
+     host node (hosts.xml). The entries need to have the following format:
+     <host name='hostname' profile-id='main-profile'>
+        <profile id='profile1' />
+        <profile id='profile2' />
+     </host>
+     The legacy "profile-id" is still used and preferred if you refer just
+     to one single profile. However it is required to specify at least one
+     valid profile which can be resolved within profiles.xml.
+     WPKG will quit immediately if no profile can be resolved. Note that
+     host definitions in the form of
+     <host name='hostname' profile-id='main-profile' />
+     are still allowed and preferred. Additionally the following is allowed
+     as well:
+     <host name='hostname'>
+        <profile id='profile1' />
+        <profile id='profile2' />
+     </host>
+     as long as at least one valid profile is referenced.
+     Please note: If you use [PROFILE] within the logfile-template the names
+     of all referenced profiles are concatenated in the form of
+     <profile>[-profile[-profile]]
+     Fixes Bug 53.
+FIX: I noticed that I broke the code (again) that config.xml is entirely
+     optional. As I added a parameter (/config:<path>) to specify the config
+     file I decided that WPKG quits in case /config is used but the file
+     cannot be found (assuming that you know what you're doing and there is
+     probably something else going wrong so it's better to abort.
+     In case /config is not used WPKG will not exit if config.xml cannot be
+     located within the wpkg.js directory.
+     In case of parsing errors it will quit immediately in any case.
+MOD: Revised install procedure regarding the "execute" attribute of the
+     package. Previously all pacakges were installed as if the execute
+     attribute would have been set to "once" in pre-0.10.x releases.
+     This means that packages with no execute flag were not checked at
+     each run. This has been modified now. The execute flag has three
+     states now:
+     "always":
+         No checks are executed. The package is installed no matter what
+         its current install status is.
+
+     "once":
+         The package is installed once to the system and added to local
+         settings database (wpkg.xml). If the package is within the local
+         database it is checked if there is an upgrade available which will
+         be installed. If no update is available the package is skipped.
+         There are no checks executed to verify that the package is still
+         installed. So this is faster than executing the checks but there is
+         no verification of the install state done on each synchronize
+         unless the /force switch is used which forces reinstalling even if
+         the package has been installed already once.
+
+     any other value (including missing attribute):
+         The package is verified to be installed even if the package is
+         within the local package database (wpkg.xml) which indicates that
+         the package has been successfully installed once. This allows to
+         actually verify the install state on each synchronize.
+         If the checks yield true (package installed) and no new package
+         version is available then the package is skipped (unless /force has
+         been specified).
+MOD: Improved error handling in case a referenced profile does not exist.
+     Prints error and continues.
+
+Changes 2007-11-19 by Rainer Meier <skybeam (at) users.sourceforge.net>
+FIX: No change here but the redesign should fix Bug 57 (not installing
+     packages whose dependencies failed to install).
+     Fixes Bug 57.
+FIX: No change here but the redesign should fix Bug 54 (dependency
+     installation does not work).
+     Fixes Bug 54.
+FIX: No change here but the redesign already fixes Bug 52 (multiple wpkg.xml
+     entries for one package when using /upgrade:<package>
+     Fixes Bug 52.
+NEW: Allows specifying of workdir='%WINDIR%\path\to\dir' attribute in
+     package command nodes to specify the execution working directory.
+     e.g.
+     <install cmd='msiexec /i (path to msi)' workdir='%WINDIR%\system32' />
+     Note: This works for install, upgrade and remove nodes.
+     This fixes Bug 40.
+MOD: Registry 'equals' conditions allows now to include variables like
+     "%SystemRoot%". WPKG will now check if the registry value contains
+     the given string. If it does not match it expands the string and
+     checks again.
+     This fixes Bug 47.
+MOD: Packages are removed in reverse order (regarding priority).
+     Note: Due to the new upgrade-before-remove feature all packages
+     scheduled for removal are upgraded first. This upgrade is done in
+     respect to the priority (highest priority first).
+     Fixes Bug 24.
+MOD: Exit node allows to specify code='any' now which matches any exit
+     code. Specific exit codes still takes precedence. The user might
+     specify the reboot=true/false/delayed flag for code='any' nodes as
+     well.
+MOD: Modified getHostVariables() to prevent null-pointer exception even
+     if no dictionary is supplied. This has no effect on the current
+     implementation but might prevent problems within future changes.
+
+Changes 2007-11-19 by Rainer Meier <skybeam (at) users.sourceforge.net>
+FIX: Fixed /noforcedremove. Now correctly disables forced removal.
+FIX: Fixed trying to install package even if dependency failed. Now package
+     installation aborts if installing of a dependency failed.
+NEW: Added /config:<path> parameter which allows to specify an alternative
+     configuration file location.
+MOD: Removed duplicated usage-description (file-header, showUsage()) which
+     made it difficutlt to keep them in-sync.
+MOD: Re-organized usage help output. Now structured into three chapters:
+     - package operations
+     - optional parameters
+     - testing parameters
+     This hopefully helps to prevent scaring new users with lots of
+     parameters while most of them are optional anyway.
+MOD: 'config.xml' does not any more inject global variables into the code.
+     Instead it's only allowed to overwrite defined variables.
+
+Changes 2007-11-15 by Rainer Meier <skybeam (at) users.sourceforge.net>
+FIX: Fixed always printing debug to event log (even if /debug was disabled).
+NEW: The reboot=true attribute on an exit code forces an immediate reboot.
+     Unfortunately all following commands are skipped then. Sometimes
+     (maybe even more often) you might like to just set the package reboot
+     flag depending on a command exit code. I introduced the support of
+     reboot='delayed' within the command nodes. This allows to schedule a
+     reboot instead of immediately executing it. The effect is the same
+     as setting reboot='true' on package level (reboot after executing
+     all comands. However it allows you to leave reboot='false' on package
+     level and schedule a reboot based on command exit codes.
+NEW: Added support for profile-based log level. You might use a profile node
+     as follows:
+     <profile id="profileID" logLevel="0xFF">
+         ...
+     </profile>
+     If not specified it keeps the default log level. So final evaluation
+     priority is as follows:
+     - config.xml
+     - command line parameter (/logLevel:<#>)
+     - profile-specific logLevel
+MOD: Upgrading to the latest package version before removing a package
+     (if package is still available on server). This allows administrators
+     to fix broken uninstall commands by supplying a new package with fixed
+     commands. WPKG will now first do the upgrade and then execute the
+     uninstall commands.
+
+Changes 2007-11-14 by Rainer Meier <skybeam (at) users.sourceforge.net>
+NEW: Modified logLevel parameter. Now acts as a bitmask which allows masking
+     or unmasking of each severity level in its own. So for example it's
+     possible mow to print only error, warning and debug by skipping info
+     messages.
+FIX: In case logLevel is set to 0 no output is written.
+FIX: getPackageRevision() returns now "0" as a string instead of integer
+     in case a package node does not have a revision attribute. This caused
+     the version comparison of packages without revision attributes to fail
+     since integers cannot be splitted by "." values ;-).
+MOD: At initialization only warnings and errors are logged.
+MOD: If a zombie package without reference from profile is removed it is
+     removed from the local DB before a forced reboot (by exit code) takes
+     place. This is done to avoid endless reboots in case the uninstall
+     command returns the reboot command each time. Note that this can be
+     disabled by the /noforcedremove switch. Moreover the package is NOT
+     forced to be removed if the profile still has a reference to it (even
+     if it is not within the package database any more).
+MOD: Modified some getter methods to return default values for optional
+     attributes instead of returning null.
+
+Changes 2007-11-13 by Rainer Meier <skybeam (at) users.sourceforge.net>
+NEW: Added printing version number with information-severirty to log at each
+     start. This was added to ease support. Users should always use the
+     latest version and including the version allows verifying it when a
+     user attaches an execution log to Bugzilla.
+MOD: Added trimming of splitted LCID values. This allows parsing of values
+     even if spaces are used before/after the comma which separates the
+     values.
+MOD: Log entries written to an intermediate log file (before final log could
+     be initialized) are moved to the new log file when a new log file is
+     initialized. This assures that all messages will appear on the server.
+     NOTE: In case there is a fatal error during initialization WPKG might
+     be unable to initialize the final log file on the server. For example
+     if you use the [PROFILE] naming template and profile.xml canot be read.
+     The temporary log file is removed after moving log entries to the new
+     log file.
+
+Changes 2007-11-12 by Rainer Meier <skybeam (at) users.sourceforge.net>
+FIX: Fixed user notification through windows messaging service. It was
+     always skipped no matter what the "nonotify" value was set to. Fixed.
+NEW: Added possibility to customize user messages (notifications) within
+     config.xml. This change was proposed by Falko Trojahn and extended by
+     myself. The idea is to localize at least the notification messages
+     since they have to be read by the machine user. There are currently no
+     intentions to localize all info/warning/error/debug messages. However
+     it would be possible - but with a lot of effort and with quite small
+     benefit.
+     I already inserted translated messages for english and german LCIDs.
+     French has been prepared as well (LCIDs) but the messages were not
+     translated yet since my french might be funny to read but not make
+     much sense ;-)
+NEW: Added methods to read the system locale and to read the value of a
+     corresponding localized string from a string ID within config.xml.
+MOD: Failing to send a notify message will no longer force exit if
+     /quitonerror is not set.
+MOD: Since loading of XML nodes allow now to skip invalid XML files I added
+     verification that at least one profile and one hosts definition is
+     read. Without these information it makes no sense to continue so I
+     force an immediate exit.
+     This also fixes a problem where WPKG cannot read any XML files (share
+     or wpkg_web not available) and it prints 3 error messages (about each
+     database file) and quits after that. Finally this also speeds up
+     canellaction of installation for road warriors with no network
+     connection.
+MOD: Moved position of the dinfo() method (as proposed by Leon Hedding).
+
+Changes 2007-11-12 by Rainer Meier <skybeam (at) users.sourceforge.net>
+MOD: Changed "notify" package attribute handling. Now by default (if
+     attribute is missing) a notification is sent. This allows disabling of
+     notification for a specific package by setting the notify="false"
+     attribute.
+     NOTE: It is still possible to disable notifications for ALL packages
+          by using the /nonotify switch or disable notify within config.xml.
+
+Changes 2007-11-12 by Rainer Meier <skybeam (at) users.sourceforge.net>
+NEW: Allow use of [ss] within logfile pattern to allow creating of
+     independent log file even if subsequent runs within the same minute.
+MOD: Added seconds within timestamp for logfile output.
+MOD: Changed the template of "hours" to lowercase [hh] which more clearly
+     seperates hour/minutes/seconds templates from year/month/day values.
+
+Changes 2007-11-10 by Rainer Meier <skybeam (at) users.sourceforge.net>
+FIX: Fixed query all packages crash because of invalid statement.
+NEW: WPKG does no longer stop parsing of XML files within folders in case of
+     syntax errors. It just prints an error-severity message that the file is
+     broken and and proceedes with the next file. In case /quitonerror is
+     enabled it still exits immediately on XML load error.
+     This fixes Bug 29.
+MOD: Improved log file handling to assure that as much as possible is logged
+     directly to the server.
+MOD: Printing error number in hex format now in case of exception.
+MOD: Query all packages will now print the total number of packages as well.
+MOD: New setter and getter methods for data structure abstraction.
+
+Changes 2007-11-09 by Rainer Meier <skybeam (at) users.sourceforge.net>
+FIX: Fixed package reboot when package specifies exit code which initiates
+     reboot at package uninstall. (NOTE: Package installation was not
+     affected).
+FIX: Reboot attribute within package did not have any effect. Fixed bug in
+     isPackageReboot()
+FIX: Cleanup is done before reboot now - this makes sure that local wpkg.xml
+     is written before reboot takes place.
+MOD: Fixed debug output typos.
+MOD: Information printed during package installation revised to allow better
+     debugging.
+MOD: Removed getPackageReboot() in favor of isPackageReboot() and integrated
+     it within installPackage() - code reusage enhancement.
+
+Changes 2007-11-08 by Rainer Meier <skybeam (at) users.sourceforge.net>
+MOD: Modified install procedure. In case a package is not within the local
+     settings it checks if the package checks return true (package
+     installed) before it is installed. This was done to prevent re-
+     installing all packages in case of a lost local wpkg.xml.
+     Unfortunately this introduces a small chance that in case a new version
+     is added to the package database AND the local wpkg.xml is deleted AND
+     the check for the new package yields true for an old installation as
+     well that the new package does not get installed. However in any case
+     the next upgrade will fix that.
+     I still added the changes since the advantages wight much heavier than
+     the disadvantages of re-installing every package in case of lost local
+     database.
+     NOTE: This will not prevent packages without checks to be re-installed
+     if no package checks are provided.
+MOD: Revised debug messages printed by installPackage() to allow easier
+     debugging for errors reported when debug log file is attached.
+MOD: Installation of dependencies moved to separate function for better
+     (code re-usage).
+FIX: Package version comparison caused exception if one of the packages had
+     no revision defined. Changed getPackageRevision() to return "0" for all
+     packages where no revision is defined.
+     Thanks to Falko Trojahn for reporting.
+FIX: installPackage() returned false (failed installation) in case it found
+     that a package is already installed (same revision within package
+     database and wpkg.xml). This was causing dependeny installations to
+     fail if the dependency was installed already. Fixed, installPackage()
+     returns true now in case the specified package is already installed.
+     Thanks to Falko Trojahn for reporting.
+FIX: Adding a cloned node from package database to settings file instead
+     of the node directly. Thes lead to the fact that the node disappeared
+     within the package database and was therefore not available within the
+     cached database any more. It looks like XML nodes are removed from any
+     other node when "appended" to another node using appendChild().
+
+Changes 2007-11-06 by Rainer Meier <skybeam (at) users.sourceforge.net>
+FIX: Removed echo statement which I used for debug purposes.
+NEW: Allowing matching of IP-addresses within the profile name now. The
+     format has to be specified as follows:
+     <start>[-<end>].<start>[-<end>].<start>[-<end>].<start>[-<end>]
+     examples:
+     192.168.1.1
+     192.168.1.1-254
+     192.168.1-5.20-50
+
+     Re-Used code from scanUninstallKeys() to retrieve IP address from the
+     registry. According to my knowledge there is no direct interface within
+     WScript to access the local IP adress(es).
+FIX: Fixed some null reference problems in case package DB is inconsistent.
+FIX: Fixed bug where a package referenced within the profile but neither
+     installed (available in wpkg.xml) nor within the package database
+     (packages.xml) caused a null pointer exception.
+MOD: Sorting setting nodes before saving settings. This allows easier diff
+     of XML files on server. See
+     <http://wpkg.org/Viewing_software_installed_on_workstations>
+     for more information.
+MOD: Fixed some typo and output cosmetics reported by Falko Trojahn.
+
+Changes 2007-11-06 by Rainer Meier <skybeam (ag) users.sourceforge.net>
+FIX: Change for optional config.xml has broken config file reading in case
+     config.xml was not stored directly within the current working folder.
+     The code has been altered now to search for config.xml within the
+     directory where wpkg.js is called from. So if you execute the script
+     by using '\\server\share\wpkg.js' it looks for
+     '\\server\share\config.xml'. Still if it does not exist it is silently
+     ignored and default values are used.
+FIX: Implemented fix for Bug 12 - getRegistryValue() returns the key default
+     value if a path to a key is specified. If the "(default)" entry is not
+     set it returns an empty string (""). Still returns null in case no such
+     registry entry could be located (neither key nor value).
+MOD: Added some more debug output.
+
+Changes 2007-11-05 by Rainer Meier <skybeam (ag) users.sourceforge.net>
+FIX: Usage of [PROFILE] tag was described within the /logfilePattern
+     documentation but not implemented. Added implementation.
+FIX: Temporary log file at WPKG startup (written to %TEMP%) is now properly
+     closed.
+FIX: Modified regular expression to replace CR/LF with pipes for logfile
+     output (was matching LF only before).
+FIX: Log file timestamp now contains log severity.
+MOD: Error in case of failed XML file read is now printed in one message
+     instead of splitting it to several event log entries.
+MOD: Debug output is not any more coupled with logLevel. A log level of 16
+     will log debug output even if /debug is not set. This allows running
+     the script on clients with default log level while writing a debug
+     log file to the log directory. This is handy to prevent polluting the
+     client event log with wpkg messages.
+MOD: Integraded changes from version 0.9.12-test 3:
+     - config.xml is now optional.
+     - Bug 75: Failed to check file revision could not be retrieved.
+MOD: Optimized getProfile(), caching value now instead of re-evaluating
+     on each call.
+ *
+Changes 2007-11-04 by Rainer Meier <skybeam (at) users.sourceforge.net>
+FIX: Fixed package query. Compares package ID now to get installed status
+     instead of comparing references (which returns false when comparing
+     node from pacakge database and node from settings).
+NEW: Introduced new set*(), is*() and get*() methods to query script
+     parameters. Direct field access should be avoided.
+NEW: Introduced ability to write a log file to a specified directory. This
+     allows administrator to have clients writing a log file to a shared
+     directory to trace client execution.
+NEW: Log-file naming pattern is configurable in order to allow having one
+     log file per client, one log file per day/hour/minute...
+NEW: Configurable log level allows administrators to change level of log
+     detail within config.xml (or overridden by command line switch).
+NEW: Zombie packages will be removed from the local package database even if
+     locally stored uninstall string fails. Except if the package is still
+     referenced in the applying profile. In such a case a message about
+     message about inconsitency between profiles and the package database is
+     printed. This makes sure that a package does not generate a recurring
+     error on each boot (when using wpkg-service) in case the package has
+     been completely removed from the server.
+     In case you like to disable this have a look at the /noforcedremove
+     switch.
+NEW: Using versionCompare() now to compare versions of packages. This allows
+     usage of string representation of revision attribute on each package.
+     Currently wpkg_web supports just integer values but this could be
+     changed.
+MOD: Removed some redundant code.
+MOD: Removed all XML node handling to get* methods to simplify XML handling.
+MOD: Saving settings XML file just once (on exit) instead of several times.
+MOD: Unified logging, info(), dinfo(), warning() and error() use the log()
+     method now which can handle the output in one single place.
+MOD: query*() methods now rely on the same code. Unifies output formatting
+     and siplifies maintenance.
+MOD: Does not stop execution in case a package fails installation except if
+     /quitonerror flag is set.
+MOD: installPackage() (package installation) makes sure all dependencies are
+     installed first. In case a dependency failed the package installation
+     fails as well.
+MOD: installPackage() now acts more intelligent and detects if a package
+     needs to be installed, upgraded or skipped. It also takes into account
+     the package execution flag ("always" or "once"). Therefore the
+     upgradePackage() and executeOnce() methods which mainly contained
+     duplicated code are removed. Just call installPackage() for each
+     package which applies to the system no matter if it is already
+     installed or not.
+MOD: Splitted script parameter evaluation and initialization.
+MOD: Added lots of comments and documentation.
+MOD: Some code reformating.

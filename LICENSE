@@ -1,7 +1,8 @@
 wpkg - Windows automated software deployment tool
 Copyright (C) 2003  Jerry Haltom
-Copyright (C) 2005-2006 Tomasz Chmielewski <tch (at) wpkg . org>
+Copyright (C) 2005-2007 Tomasz Chmielewski <tch (at) wpkg . org>
 Copyright (C) 2005 Aleksander Wysocki <papopypu (at) op . pl>
+Copyright (C) 2007 Rainer Meier <skybeam (at) users.sourceforge.net>
 
 
 This program is free software; you can redistribute it and/or modify

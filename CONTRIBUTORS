@@ -1,14 +1,8 @@
-If you would like to contribute, you can consider the following:
-
-- help complete the documentation on http://wpkg.org/
-- add your Silent installers to the wiki on http://wpkg.org/ (it's OK if they don't have the uninstallers)
-- see the TODO list and see if you can help
-- share your ideas and problems on the mailing list
+The following people contributed code to WPKG:
 
 
 
 The following people contributed code to WPKG:
-
 
 Knud Ahrnell Albrechtsen - snakebyte ##at# email (dot) dk
 
@@ -20,19 +14,35 @@ Chris Freeze - cfreeze #at# cfreeze (dot) com
 
 Paul Griffith - paulg #at# cs (dot) yorku (dot) ca
 
+Jerry Haltom - original (wpkg.js) idea
+
 Stian Husemoen - stian (dot) husemoen #at# batbelt (dot) org
 
 Andre Ilie - ai #at# photonic-sense (dot) com
 
-Kristofer Kiik - kristofer.kiik #at# gmail (dot) com
+Michael J. Kidd - wpkg #at# linuxkidd (dot) com
+
+Kristofer Kiik - kristofer (dot) kiik #at# gmail (dot) com
 
 Suuri Kikkeli - suurikikkeli #at# yahoo (dot) com
 
-Gordon Klimm - Gordon.Klimm #at# gmx (dot) net
+Gordon Klimm - Gordon (dot) Klimm #at# gmx (dot) net
 
-Jason Lee - rl201 #at# cam (dot) ac (dot) uk 
+Frank Lee - rl201 #at# cam (dot) ac (dot) uk
+
+Artur Majuch - artur (dot) majuch #at# pronet (dot) lublin (dot) pl - WPKG Client
+
+Rainer Meier - skybeam #at# users (dot) sourceforge (dot) net
+
+Jason Owen - r (dot) alex (dot) owen #at# gmail (dot) com
 
 Falko Trojahn - ftrojahn #at# smi-softmark (dot) de
 
+Aleksander Wysocki - papopypu #at# op (dot) pl
+
+
+WPKG logo was contributed by Eric Le Henaff - eric (dot) le (dot) henaff #at# ens (dot) fr
+
+Tomasz Chmielewski is the maintainer of WPKG.
 
 Thanks!

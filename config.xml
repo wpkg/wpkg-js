@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--
+	*******************************************************************************
+	* This is the WPKG configuration file.
+	* Place it within the same directory as you place wpkg.js.
+	* All parameters are optional. If not specified WPKG falls back to the default
+	* values. So it's recommended just to uncomment the values you like to change
+	*******************************************************************************
+-->
+
+<config>
+	<!--
+		*******************************************************************************
+		*
+		* If you use wpkg_web, you can set base equal to the base URL of your
+		* wpkg_web installation.  NO TRAILING SLASH (/).  This will allow wpkg to
+		* use the Web generated XML file and not require further XML Exports to the
+		* file system.
+		*
+		* Examples:
+		*  <param name='wpkg_base' value='http://wpkg.mydomain.com' />
+		*  <param name='wpkg_base' value='http://www.mydomain.com/wpkg_web' />
+		*  <param name='wpkg_base' value='http://USER:PASS@wpkg.mydomain.com' />
+		*
+		*          where USER and PASS are required credentials to access your
+		*          installation.  Configure this user in config.php for
+		*          wpkg_web version 1.1.0 and greater.
+		*
+		*
+		* If would like to use the flat XML file instead of the web based method,
+		* leave the variable declaration as follows:
+		*
+		* <param name='wpkg_base' value='' />
+		*
+		* Default value      : ''
+		* Command-line switch: /base:<base-url>
+		******************************************************************************
+	-->
+	<!--
+		<param name='wpkg_base' value='http://wpkg:secret@wpkg.mydomain.com' />
+	-->
+	<!--
+		<param name='wpkg_base' value='' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* When true: doesn't consider wpkg.xml but checks existence of packages.
+		* Default value      : false
+		* Command-line switch: /force
+		****************************************************************************
+	-->
+	<!--
+		<param name='force' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* When true, forces installation over existing packages.
+		* Default value      : false
+		* Command-line switch: /forceinstall
+		****************************************************************************
+	-->
+	<!--
+		<param name='forceInstall' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* When true, forces to quit the script immediately on error.
+		* Default value      : false
+		* Command-line switch: /quitonerror
+		****************************************************************************
+	-->
+	<!--
+		<param name='quitonerror' value='false' />
+	 -->
+
+
+	<!--
+		****************************************************************************
+		* Enables script debugging. Prints lots of ugly debug messages to event log.
+		* Default value      : false
+		* Command-line switch: /debug
+		****************************************************************************
+	-->
+	<!--
+		<param name='debug' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Enables running without actually applying changes to the system.
+		* Enables debug output and disables reboot.
+		* Default value      : false
+		* Command-line switch: /dryrun
+		****************************************************************************
+	-->
+	<!--
+		<param name='dryrun' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* If set to true disables all alert messages (dialog boxes).
+		* Should be set to true in case of unattended run (WPKG service)
+		* Default value      : false
+		* Command-line switch: /quiet
+		****************************************************************************
+	-->
+	<!--
+		<param name='quiet' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Disables user notification about WPKG actions using windows messaging.
+		* Should be set to true in case of unattended run (WPKG service)
+		* Default value      : false
+		* Command-line switch: /nonotify
+		****************************************************************************
+	-->
+	<!--
+		<param name='nonotify' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Disables reboot actions.
+		* Default value      : false
+		* Command-line switch: /noreboot
+		****************************************************************************
+	-->
+	<!--
+		<param name='noreboot' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Disables exporting of running state to Windows registry at
+		* HKCU\Software\WPKG\running
+		* Default value      : false
+		* Command-line switch: /norunningstate
+		****************************************************************************
+	-->
+	<!--
+		<param name='noRunningState'  value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Allows to disable case sensitivity for package and profile IDs.
+		* If set to false or /ignoreCase switch is set WPKG will match
+		* package-id="SomePackage" to the package with an ID of "SoMePaCkAgE".
+		* Default value      : true
+		* Command-line switch: /ignoreCase
+		****************************************************************************
+	-->
+	<!--
+		<param name='caseSensitivity'  value='true' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Defines a custom command to reboot the machine
+		* Default value      : "standard"
+		* Command-line switch: /rebootcmd:<command>
+		****************************************************************************
+	-->
+	<!--
+		<param name='rebootCmd' value='standard' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Name of local package database (client-side) stored at
+		* %SystemRoot%\system32 by default (see settings_file_path)
+		* Default value      : "wpkg.xml"
+		* Command-line switch: -
+		****************************************************************************
+	-->
+	<!--
+		<param name='settings_file_name' value='wpkg.xml' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Path to local package database (client-side). It is strongly suggestet
+		* NOT to set this parameter at all  if not required. Only change this
+		* parameter if you really know what you're doing.		
+		* Default value      : "%SystemRoot%\\system32"
+		* Command-line switch: -
+		****************************************************************************
+	-->
+	<!--
+		<param name='settings_file_path' value='%SystemRoot%\\system32' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Allows to disable forcing packages to be removed if they are removed
+		* from the profile AND the package database.
+		* NOTE that in such case a client might continuously try to uninstall a
+		* package if an uninstall command fails.
+		* Default value      : false
+		* Command-line switch: /noforcedremove
+		****************************************************************************
+	-->
+	<!--
+		<param name='noForcedRemove' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Allows to disable removing of packages. If used in conjunction with the
+		* /synchronize parameter it will just add packages but never remove them.
+		* Instead of removing a list of packages which would have been removed
+		* during that session is printed on exit. Packages are not removed from
+		* the local settings database (wpkg.xml). Therefore it will contain a list
+		* of all packages ever installed.
+		* Note that each package which is requested to be removed (manually or by
+		* a synchronization request) will be checked for its state by executing its
+		* included package checks. If the package has been removed manually it will
+		* also be removed from the settings database. Due to the fact that packages
+		* whithout checks always return 'false' for during the install-status check
+		* these packages will disappear from the local wpkg.xml.
+		* Default value      : false
+		* Command-line switch: /noremove
+		****************************************************************************
+	-->
+	<!--
+		<param name='noRemove' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		****************************************************************************
+		*
+		*  Logging properties
+		*
+		****************************************************************************
+		****************************************************************************
+	-->
+	<!--
+		****************************************************************************
+		* Log level is defined as a bitmask. Just add sum up the values of each log
+		* severity you would like to include within the log file and add this value
+		* to your config.xml or specify it at /logLevel:<num>.
+		* Specify 0 to disable logging.
+		* 1 : log errors only
+		* 2 : log warnings
+		* 4 : log information
+		* 8 : log audit success
+		* 16: log audit failure
+		* Example:
+		*     31 log everything (1+2+4+8+16=31)
+		*     13 logs errors, information and audit success (1+4+8=13)
+		*      3 logs errors and warnings only (1+2=3)
+		*
+		* Default value      : "0xFF"
+		* Command-line switch: /logLevel:<level>
+		****************************************************************************
+	-->
+	<!--
+		<param name='logLevel' value='0xFF' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Path where the logfiles are written to. This might be an UNC path on the
+		* network as well as a local path. Environment variables are expanded.
+		* Default value      : "%TEMP%"
+		* Command-line switch: -
+		* Examples:
+		* <param name='log_file_path' value='%TEMP%' />
+		* <param name='log_file_path' value='\\\\server\\share\\dir' />
+		****************************************************************************
+	-->
+	<!--
+		<param name='log_file_path' value='%TEMP%' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Pattern to generate the log file name.
+		* Recognized patterns:
+		* [HOSTNAME] replaced by the executing hostname
+		* [PROFILE]  replaced by the applying profile name
+		* [YYYY]     replaced by year (4 digits)
+		* [MM]       replaced by month number (2 digits)
+		* [DD]       replaced by the day of the month (2 digits)
+		* [hh]       replaced by hour of the day (24h format, 2 digits)
+		* [mm]       replaced by minute (2 digits)
+		* [ss]       replaced by second (2 digits)
+		*
+		* Examples:
+		* "wpkg-[YYYY]-[MM]-[DD]-[HOSTNAME].log"
+		* 		results in a name like "wpkg-2007-11-04-myhost.log"
+		* NOTE: Using [PROFILE] causes all messages before reading or profiles.xml
+		*       to be temporarily written to local %TEMP% folder. So they might
+		*       appear on the final log file with some delay.
+		* Default value      : "wpkg-[HOSTNAME].log"
+		* Command-line switch: /logfilePattern:<pattern>
+		*
+		* Note:
+		* The default pattern allows tracing of last execution without polluting
+		* the log directory. Subsequent executions will overwrite the same log file.
+		****************************************************************************
+	-->
+	<!--
+		<param name='logfilePattern' value='wpkg-[HOSTNAME].log' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		****************************************************************************
+		*
+		*  Path properties properties
+		*
+		****************************************************************************
+		****************************************************************************
+	-->
+	<!--
+		****************************************************************************
+		*  Names of the the XML input files.  Not used if base begins with "http"
+		****************************************************************************
+	-->
+	<!--
+		<param name='packages_file_name' value='packages.xml' />
+		<param name='profiles_file_name' value='profiles.xml' />
+		<param name='hosts_file_name'    value='hosts.xml' />
+	-->
+
+	<!--
+		 ****************************************************************************
+		 *  Names of the PHP scripts which output the XML files.  Only used if
+		 *  base begins with "http"
+		 ****************************************************************************
+	-->
+	<!--
+		<param name='web_packages_file_name' value='packages_xml_out.php' />
+		<param name='web_profiles_file_name' value='profiles_xml_out.php' />
+		<param name='web_hosts_file_name'    value='hosts_xml_out.php' />
+	-->
+
+	<!--
+		****************************************************************************
+		* Registry paths
+		****************************************************************************
+	-->
+	<!--
+		<param name='sRegPath' value='SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall' />
+		<param name='sRegWPKG_Running' value='HKLM\\Software\\WPKG\\running' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		****************************************************************************
+		* Language definitions
+		*
+		* Defines language specific strings. Insert languages as you wish. Multiple
+		* LCID codes might be handled by one language definition. Just separate them
+		* by comma. A full list of LCIDs might be found at:
+		* http://www.microsoft.com/globaldev/reference/lcid-all.mspx
+		*
+		* This is entirely optional. If a message is not defined here the script
+		* will just print a built-in english message.
+		*
+		****************************************************************************
+		****************************************************************************
+	-->
+	<languages>
+		<!-- english LCIDs -->
+		<language lcid="409,809,c09,2809,1009,2409,3c09,4009,3c09,4009,3809,1809,2009,4409,1409,3409,4809,1c09,2c09,3009">
+			<string id="notifyUserStart">The automated software installation utility has or is currently applying software updates to your system. Please check the time shown at the beginning of this message to determine if it is out of date. If not, please save all your open documents, as the system might require a reboot. If so, the system will be rebooted with no warning when installation is complete. Thank you.</string>
+			<string id="notifyUserStop">The automated software installation utility has completed installing or updating software on your system. No reboot was necessary. All updates are complete.</string>
+			<string id="notifyUserFail">The software installation has failed.</string>
+			<string id="notifyUserReboot">Rebooting to complete software installation. Please note that some software might not work until the machine is rebooted.</string>
+		</language>
+
+		<!-- german LCIDs -->
+		<language lcid="407,c07,1407,1007,807">
+			<string id="notifyUserStart">Das WPKG Software-Installationstool installiert oder aktualisiert gerade Software auf Ihrem System. Bitte die Zeit am Anfang der Nachricht kontrollieren, ggf. ist dieser Hinweis veraltet. Wenn nicht: Speichern Sie bitte alle Ihre offenen Dokumente, da ein Neustart notwendig werden kann. Das System wird ohne weitere Warnung neu starten, wenn die Installation oder Aktualisierung beendet wurde. Danke.</string>
+			<string id="notifyUserStop">Das WPKG Software-Installationstool hat die Installation oder Aktualisierung von Software auf Ihrem System beendet. Es war kein Neustart notwendig. Alle Updates sind komplett.</string>
+			<string id="notifyUserFail">Die Software-Installation ist fehlgeschlagen.</string>
+			<string id="notifyUserReboot">Neustart zum Abschliessen der Installation. Bitte beachten: Die neu installierte/aktualisierte Software funktioniert ggf. erst nach einem Neustart.</string>
+		</language>
+
+		<!-- french LCIDs -->
+		<language lcid="40c,80c,2c0c,c0c,240c,300c,3c0c,140c,340c,180c,380c,e40c,200c,280c,100c,1c0c">
+			<string id="notifyUserStart">WPKG, l'utilitaire d'installation automatique des programmes a appliqué ou applique en ce moment des mises à jour à votre système. Veuillez consulter l'heure au début de ce message afin de vérifier que cette information ne soit pas obsolète. Veuillez sauvegarder tous vos documents ouverts, car un redémarrage peut être nécessaire et, dans ce cas, le système redémarrera sans avertissement à la fin de l'installation ou de la mise à jour. Merci.</string>
+			<string id="notifyUserStop">WPKG, l'utilitaire d'installation automatique de logiciels a terminé l'installation ou l'actualisation des logiciels sur votre système. Aucun redémarrage n'était requis. Toutes les mises à jour sont achevées.</string>
+			<string id="notifyUserFail">L'installation des logiciels est échoué.</string>
+			<string id="notifyUserReboot">Un rédémarrage est nécessaire pour compléter l'installation ou la mise à jour. Veuillez noter que les programmes nouveaux/actualisées peuvent ne pas fonctionner avant redémarrage du système.</string>
+		</language>
+	</languages>
+</config>
