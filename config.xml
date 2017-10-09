@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <!--
 	*******************************************************************************
 	* This is the WPKG configuration file.
@@ -147,6 +147,23 @@
 	-->
 	<!--
 		<param name='nonotify' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Defines how long a user notification is displayed to the user. After
+		* timeout has been reached the message will be closed. Specify 0 in order to
+		* specify that messages are never closed automatically.
+		* Note: This only works on Windows Vista or newer where msg.exe is
+		* available.
+		*
+		* Default value      : 10
+		* Command-line switch: -
+		****************************************************************************
+	-->
+	<!--
+		<param name='notificationDisplayTime' value='10' />
 	-->
 
 
@@ -521,13 +538,18 @@
 		* This is entirely optional. If a message is not defined here the script
 		* will just print a built-in english message.
 		*
+		* Please note that the message has a maximum of 256 characters on Windows
+		* Vista and newer operating systems due to limitation of the messaging
+		* system. Longer messages will result in no message being displayed at all.
+		*
 		****************************************************************************
 		****************************************************************************
 	-->
 	<languages>
 		<!-- english LCIDs -->
 		<language lcid="409,809,c09,2809,1009,2409,3c09,4009,3c09,4009,3809,1809,2009,4409,1409,3409,4809,1c09,2c09,3009">
-			<string id="notifyUserStart">The automated software installation utility has or is currently applying software updates to your system. Please check the time shown at the beginning of this message to determine if it is out of date. If not, please save all your open documents, as the system might require a reboot. If so, the system will be rebooted with no warning when installation is complete. Thank you.</string>
+			<!-- <string id="notifyUserStart">The automated software installation utility has or is currently applying software updates to your system. Please check the time shown at the beginning of this message to determine if it is out of date. If not, please save all your open documents, as the system might require a reboot. If so, the system will be rebooted with no warning when installation is complete. Thank you.</string> -->
+			<string id="notifyUserStart">Automatic software deployment is currently updating your system. Plase safe all your documents as the the system might reboot without further notice. Thank you.</string>
 			<string id="notifyUserStop">The automated software installation utility has completed installing or updating software on your system. No reboot was necessary. All updates are complete.</string>
 			<string id="notifyUserFail">The software installation has failed.</string>
 			<string id="notifyUserReboot">Rebooting to complete software installation. Please note that some software might not work until the machine is rebooted.</string>
@@ -543,7 +565,8 @@
 
 		<!-- german LCIDs -->
 		<language lcid="407,c07,1407,1007,807">
-			<string id="notifyUserStart">Das WPKG Software-Installationstool installiert oder aktualisiert gerade Software auf Ihrem System. Bitte die Zeit am Anfang der Nachricht kontrollieren, ggf. ist dieser Hinweis veraltet. Wenn nicht: Speichern Sie bitte alle Ihre offenen Dokumente, da ein Neustart notwendig werden kann. Das System wird ohne weitere Warnung neu starten, wenn die Installation oder Aktualisierung beendet wurde. Danke.</string>
+			<!-- <string id="notifyUserStart">Das WPKG Software-Installationstool installiert oder aktualisiert gerade Software auf Ihrem System. Bitte die Zeit am Anfang der Nachricht kontrollieren, ggf. ist dieser Hinweis veraltet. Wenn nicht: Speichern Sie bitte alle Ihre offenen Dokumente, da ein Neustart notwendig werden kann. Das System wird ohne weitere Warnung neu starten, wenn die Installation oder Aktualisierung beendet wurde. Danke.</string> -->
+			<string id="notifyUserStart">Die automatische Software-Verteilung läuft gerade. Bitte speichern sie ihre offenen Dokuemnte weil das System unter Umständen ohne weitere Warnung neu startet. Danke.</string>
 			<string id="notifyUserStop">Das WPKG Software-Installationstool hat die Installation oder Aktualisierung von Software auf Ihrem System beendet. Es war kein Neustart notwendig. Alle Updates sind komplett.</string>
 			<string id="notifyUserFail">Die Software-Installation ist fehlgeschlagen.</string>
 			<string id="notifyUserReboot">Neustart zum Abschliessen der Installation. Bitte beachten: Die neu installierte/aktualisierte Software funktioniert ggf. erst nach einem Neustart.</string>

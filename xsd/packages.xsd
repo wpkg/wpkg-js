@@ -214,6 +214,9 @@
 					of the current install state or the result of any
 					defined checks.
 
+					changed: Execute on each synchronization but only if
+					there are other changes done to the system.
+
 					once: Execute only once. No checks will be executed
 					on following synchronization requests unless the
 					package version on the server side is changed.
@@ -231,6 +234,7 @@
 					<xsd:enumeration value="default"></xsd:enumeration>
 					<xsd:enumeration value="once"></xsd:enumeration>
 					<xsd:enumeration value="always"></xsd:enumeration>
+					<xsd:enumeration value="changed"></xsd:enumeration>
 				</xsd:restriction>
 			</xsd:simpleType>
 		</xsd:attribute>
@@ -363,7 +367,7 @@
 		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:restriction base="check">
-				<xsd:attribute name="TYPE" use="required"
+				<xsd:attribute name="type" use="required"
 					fixed="file">
 					<xsd:annotation>
 						<xsd:documentation>
@@ -444,7 +448,7 @@
 		<xsd:complexContent>
 			<xsd:restriction base="check">
 
-				<xsd:attribute name="TYPE" use="required"
+				<xsd:attribute name="type" use="required"
 					fixed="registry">
 					<xsd:annotation>
 						<xsd:documentation>
@@ -513,7 +517,7 @@
 		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:restriction base="check">
-				<xsd:attribute name="TYPE" fixed="uninstall"
+				<xsd:attribute name="type" fixed="uninstall"
 					use="required">
 					<xsd:annotation>
 						<xsd:documentation>
@@ -593,7 +597,7 @@
 		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:restriction base="check">
-				<xsd:attribute name="TYPE" use="required"
+				<xsd:attribute name="type" use="required"
 					fixed="execute">
 					<xsd:annotation>
 						<xsd:documentation>
@@ -689,7 +693,7 @@
 						</xsd:annotation>
 					</xsd:element>
 				</xsd:sequence>
-				<xsd:attribute name="TYPE" use="required"
+				<xsd:attribute name="type" use="required"
 					fixed="logical">
 					<xsd:annotation>
 						<xsd:documentation>

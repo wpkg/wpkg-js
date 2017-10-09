@@ -1,0 +1,21 @@
+It is recommended to use WPKG Client to start WPKG on workstations.
+
+DEBUGGING
+=========
+Use this one when logged in as Administrator to debug the problems
+
+cscript \\server\wpkg\wpkg.js /synchronize /debug
+
+
+VARIABLES
+=========
+You can also use variables...
+
+set WPKGROOT=\\server\wpkg
+set SOFTWARE=%WPKGROOT%\software
+%WPKGROOT%\wpkg.js /synchronize /debug
+
+...and then, you can put variables into packages.xml:
+
+<install cmd='%SOFTWARE%\test\test.exe -silent' />
+

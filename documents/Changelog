@@ -1,6 +1,191 @@
 ===============================================================================
 = CHANGES FOR 1.1 release
 ===============================================================================
+Changes 2009-09-26, v1.1.2 by Rainer Meier <r.meier (at) wpkg.org>
+NEW: Final release of WPKG 1.1.2
+
+Changes 2009-09-22, v1.1.2-RC19 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Fixed duplicated version read from file if a file version check is used.
+NEW: Added environment value expansion for file version values.
+NEW: Added environment value expansion for uninstall version values.
+NEW: Added environment value expansion for execute check return values.
+MOD: Modified message if uninstall check string fails to be used as a regular
+     expression.
+
+Changes 2009-09-21, v1.1.2-RC18 by Rainer Meier <r.meier (at) wpkg.org>
+MOD: Added check for package revision environment expansion. Expansion is only
+     done if the revision string contains two "%" characters which indicates
+     an environment definition in the form of %VAR%.
+     This should prevent unneeded environment setups and therefore it prevents
+     wasting resources.
+
+Changes 2009-09-21, v1.1.2-RC17 by Rainer Meier <r.meier (at) wpkg.org>
+NEW: Expands environment variables in package revision. For example
+     revision="%PRG_VERSION%" is valid now. Make sure the environment variable
+     is defined before you use it.
+     Fixes Bug 173. Thanks to Stefan Pendl.
+
+Changes 2009-09-10, v1.1.2-RC16 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Fixed typo in registry equality checks which caused exceptions.
+     Thanks to Malte Starostik.
+FIX: Fixed some code formatting and typo.
+MOD: Updated built-in user notification to fit within the 256 character limit.
+
+Changes 2009-09-05, v1.1.2-RC15 by Rainer Meier <r.meier (at) wpkg.org>
+NEW: Added expansion of environment variables in rebootCmd setting.
+     Thanks to grubi for request.
+     On this occasion I've updated some code to correctly expand
+     settings_file_name too (in case no settings_file_path is defined).
+     Environment expansion of logfilePattern setting has been added too.
+
+Changes 2009-09-04, v1.1.2-RC14 by Rainer Meier <r.meier (at) wpkg.org>
+NEW: Added support for Windows Vista/7 msg.exe-based user notification
+     (replaces "net send" messaging on those systems). Unfortunately there are
+     some limitations. For example the message is ignored if it is longer than
+     256 characters. So be aware and update your config.xml as needed.
+     A new option to define a timeout after which the notification disappears
+     automatically on those systems has been added (notificationDisplayTime).
+     This defaults to 10 which will make the message to be automatically
+     discarded after 10 seconds.
+     Adresses report 171. Thanks to Ralf Lederle.
+
+Changes 2009-08-29, v1.1.2-RC13 by Rainer Meier <r.meier (at) wpkg.org>
+MOD: Changed information-level output to debug-level output in registry equal
+     checks if check fails. This avoids unnecessary output in the event log.
+     Thanks to Malte Starostik for reporting.
+
+Changes 2009-08-23, v1.1.2-RC12 by Rainer Meier <r.meier (at) wpkg.org>
+NEW: Added expression matching to uninstall key scanner. This allows to specify
+     a check as follows:
+     <check type='uninstall' condition='exists' path='Mozilla Firefox.*' />
+     This matches all Firefox versions. In this case the check remains true if
+     the user changes to another Firefox versions. Note that in this case WPKG
+     would not even complain/reinstall the package if the user downgrades.
+     To prevent this you might specify
+     <check type='uninstall' condition='exists'
+     	path='Mozilla Firefox \(3\.5\.[0-9]*\)' />
+     This would allow any Firefox 3.5.x version to be installed by the user.
+     Plese note that this does not prevent WPKG to upgrade the package when
+     the administrator provides a new version.
+     For example the Administrator might install Firefox 3.5.1. Then version
+     3.5.2 is released and manually installed by the user. WPKG will accept
+     this new version due to the regular expression and will not try to
+     re-install (downgrade in this case) to version 3.5.1. But as soon as
+     the administrator releases version 3.5.2 officially and increases the
+     package version then WPKG will enforce to install the version provided
+     by the administrator.
+     Please also note that the regular expression you give has to match the
+     full string read from the uninstall key. The heading "^" and trailing
+     "$" are automatically added to the regular expression.
+     This implements change request included in Bug 166.
+     Thanks to Stefan Pendl.
+
+Changes 2009-08-23, v1.1.2-RC11 by Rainer Meier <r.meier (at) wpkg.org>
+NEW: Added possibility to set execute="changed". This allows you to specify
+     packages which are executed only if there are other packages (with
+     different execute attributes) processed during this WPKG run.
+     If no package is processed an execute="changed" package will not be
+     processed at all. This allows one to define packages for actions which
+     should run on every change (but not each time like execute="always"
+     would).
+     Please note: Due to the nature of these packages they form their own
+     "group" in the WPKG package tree. All execute="changed" packages are
+     executed in the order of priority at the end of the synchronization.
+     Packages with lower priority but other execute attribute values are always
+     executed before execute="changed" packages (even if the execute="changed"
+     package has higher priority).
+     Also note that the package using execute="changed" will be processed
+     like every other package. So if you define checks which yield true, then
+     the package is not installed/upgraded. If you want it to be executed on
+     really each system change, then you should not specify any check.
+     Addresses feature request as proposed in Bug 168.
+FIX: If notify="false" attribute is used WPKG was still notifying users during
+     removal. Now WPKG will also not notify users on removal of such packages.
+MOD: During install/upgrade/downgrade the user was notified (if notifications
+     are enabled) even if the package did not have any commands specified for
+     the action to be processed (e.g. upgrade without upgrade commands).
+     This has been changed now and the user will be notified only if some
+     commands are actually executed.
+FIX: Version comparison is now done only once to detect if upgrade or downgrade
+     should be performed. This has not been a bug actually but it prevents
+     duplicated version checking and prevents redundant log output.
+
+Changes 2009-08-23, v1.1.2-RC10 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Fixed bug where "versionsmallerthan" version comparison on uninstall
+     entries almost always returned false.
+     Thanks to Falko Trojahn for reporting.
+
+Changes 2009-08-10, v1.1.2-RC9 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Version checks on uninstall enttries could evaluate "true" in case the
+     software is not installed at all.
+     Fixes Bug 170. Thanks to Malte Starostik for reporting and discussion.
+
+Changes 2009-08-09, v1.1.2-RC8 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: The change introduced to save the settings on each change inroduced some
+     problems in case the settings (wpkg.xml) are created from scratch.
+     In this case the settings were not saved at all until a change (package
+     added to or package removed from) was done during WPKG operation.
+     This fixes Bug 167. Thanks to Falko Trojahn for reporting.
+
+Changes 2009-07-29, v1.1.2-RC7 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Fixed two more bugs introduced in 1.1.2-RC6 regarding environment
+     handling.
+     Fixes Bug 164.
+     Fixes Bug 165.
+     Thanks to Stefan Pendl.
+
+Changes 2009-07-29, v1.1.2-RC6 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: The environment set changes done in previous release did not work as
+     expected. WSH does not provide convenient methods to modify the
+     environment. Maybe I will find a work-around later...
+
+Changes 2009-07-28, v1.1.2-RC5 by Rainer Meier <r.meier (at) wpkg.org>
+MOD: Modified bahavior of WPKG whensaving settings (wpkg.xml). Now the settings
+     are saved immediately after modification instead of just when WPKG
+     terminates. Mainly this helps in case of unexpected reboot (initiated
+     outside WPKG) to prevent loss of some progress in case of unexpected
+     interruption.
+     Thanks to Johannes Brix for open discussion on the mailing list.
+MOD: Changed some code to load package environment and and when restoring
+     previous environment to prevent some IDE errors (but cscript somehow seems
+     to accept the code).
+
+Changes 2009-07-18, v1.1.2-RC4 by Rainer Meier <r.meier (at) wpkg.org>
+MOD: Moved documents to the documents/ sub-folder in order to clean up the root
+     directory.
+MOD: Small corrections and updates to some documents.
+
+Changes 2009-07-17, v1.1.2-RC4 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Fixed another small problem when locating system locales which could lead
+     to an exception in case the "HKCU\Control Panel\International\Locale" key
+     does not exist.
+
+Changes 2009-07-17, v1.1.2-RC3 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Retrieving the system locale caused an exception on some systems.
+     Thanks to Simon Kelsall for reporting.
+
+Changes 2009-07-10, v1.1.2-RC2 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Fixed a couple of typos. Thanks to Malte Starostik for reporting.
+NEW: Added additional output to the status printer (when /sendStatus is
+     enabled) when installPackage() performs installation tasks and therefore
+     takes some time to finish. This allows external tools to inform the user
+     about ongoing actions.
+     Thanks to Malte Starostik for the suggestion.
+
+Changes 2009-06-25, v1.1.2-RC1 by Rainer Meier <r.meier (at) wpkg.org>
+NEW: Registry path checks can now contain variables in the form of %VAR% too.
+     Variable expansion is allowed for the value attribute too. Please note
+     that WPKG first tries to locate the unexpanded key and compare unexpanded
+     values. For example if you use a registry equal check for the value of
+     "%APPDATA%" then it first tries to look for the "%APPDATA%" string and
+     only if this value does not exist it will compare the expanded value.
+     This allows you to still match REG_EXPAND_SZ values which contain
+     variable definitions.
+     This should fix Bug 139 as reported on Bugzilla.
+     Thanks to "graham" for reporting.
+NEW: Variable expansion (see Bug 139) is now supported for uninstall entries as
+     as well.
+
 Changes 2009-06-25, v1.1.1 by Rainer Meier <r.meier (at) wpkg.org>
 NEW: Final release of WPKG 1.1.1
 
