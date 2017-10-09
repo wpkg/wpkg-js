@@ -15,13 +15,13 @@
 <profiles>
 
     <profile id="default">
-    
+            <package package-id="wpkg2" />
     </profile>
   
     <profile id="custom">
         <depends profile-id="default" />
+        <depends profile-id="basement" />
         <package package-id="wpkg1" />
-        <package package-id="wpkg2" />
     </profile>
 
     <profile id="basement">

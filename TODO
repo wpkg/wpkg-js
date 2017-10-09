@@ -1,3 +1,6 @@
+- Help fix existing bugs on http://bugs.wpkg.org
+
+
 - Make IP-based profiles:
 
     <host ip="192.168.2.5" profile-id="profile01" />

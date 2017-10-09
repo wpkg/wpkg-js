@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- * WPKG 0.9.7 - Windows Packager
+ * WPKG 0.9.8 - Windows Packager
  * Copyright 2003 Jerry Haltom
  * Copyright 2005 Tomasz Chmielewski <tch (at) wpkg . org>
  * Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>
@@ -65,6 +65,9 @@
  * /forceinstall
  *     Forces installation over existing packages.
  *
+ * /norunningstate
+ *     Do not export the running state to the registry.
+ *
  * /debug
  * /verbose
  *     Prints some debugging info.
@@ -107,6 +110,7 @@ var hosts;
 
 var nonotify = false;
 var noreboot = false;
+var exportRunningState = true;	
 var rebootCmd = "standard";
 
 var packagesDocument;
@@ -134,6 +138,8 @@ var hosts_file_name    = "hosts.xml";
 var settings_file_name = "wpkg.xml";
 
 var sRegPath = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall";
+// here we indicate our running state
+var sRegWPKG_Running = "HKLM\\Software\\WPKG\\running";
 
 
 /*******************************************************************************
@@ -217,6 +223,13 @@ function main(argv) {
         if (debug)  info("Reboot-Cmd is " + rebootCmd +".");
     }
     
+    // want to export the state of WPKG to registry?
+    if (isArgSet(argv, "/norunningstate")) {
+    	exportRunningState = false;
+    } else {
+	// indicate that we are running
+	setRunningState("true");
+    }
     // will use the fso a bit
     var fso = new ActiveXObject("Scripting.FileSystemObject");
     
@@ -358,7 +371,7 @@ function main(argv) {
  */
 function showUsage() {
     var message = "";
-    message += "WPKG 0.9.7 - Windows Packager\n";
+    message += "WPKG 0.9.8 - Windows Packager\n";
     message += "Copyright 2004 Jerry Haltom\n";
     message += "Copyright 2005 Tomasz Chmielewski <tch (at) wpkg . org>\n";
     message += "Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>\n";
@@ -416,6 +429,9 @@ function showUsage() {
     message += "\n";
     message += "/forceinstall\n";
     message += "    Forces installation over existing packages.\n";
+    message += "\n";
+    message += "/norunningstate\n";
+    message += "   Do not export the running state to the registry.\n";
     message += "\n";
     message += "/debug\n";
     message += "/verbose\n";
@@ -874,6 +890,19 @@ function getRegistryValue(keyName) {
     return val;
 }
 
+function setRunningState(statename) {
+    var WshShell = new ActiveXObject("WScript.Shell");
+    var val;
+    
+    try {
+    	val = WshShell.RegWrite(sRegWPKG_Running, statename);
+    } catch (e) {
+    	val = null;
+    }
+
+    return val;
+}
+    	
 
 /**
  * Scans uninstall list for given name.
@@ -936,7 +965,14 @@ function hex(nmb)
         return (nmb + 0x100000000).toString(16);
 }
 
-
+/** 
+ * Presents some debug output if debugging is enabled
+ */
+function dinfo(stringInfo) {
+    if (debug) {
+        info(stringInfo)
+    }
+}
 
 /**
  * Checks for the success of a check condition for a package.
@@ -966,6 +1002,7 @@ function checkCondition(checkNode) {
         } // if checkCond == null || checkPath == null
 
         if (checkCond == "exists") {
+            // Display some debugging information
             var WshShell = new ActiveXObject("WScript.Shell");
             var val;
             try {
@@ -975,7 +1012,13 @@ function checkCondition(checkNode) {
             }
 
             if (val != null) {
+                // Some debugging information
+                dinfo("The registry path '"+checkPath+"' exists: the check was successful");
                 return true;
+            } else {
+                // Some debugging information
+                dinfo("The registry path '"+checkPath+"' does not exist: the check failed");
+                return false;
             }
         } else if (checkCond == "equals") {
             var WshShell = new ActiveXObject("WScript.Shell");
@@ -987,7 +1030,13 @@ function checkCondition(checkNode) {
             }
 
             if (val == checkValue) {
+                // Some debugging information
+                dinfo("The registry path '"+checkPath+"' contained the correct value: '"+
+                      checkValue+"': the check was successful");
                 return true;
+            } else {
+                info("The registry path '"+checkPath+"' did not contain the value: '"+
+                         checkValue+"' : the check failed");
             }
         } else {
             throw new Error("Check condition " + checkCond + " unknown " +
@@ -1007,7 +1056,13 @@ function checkCondition(checkNode) {
         if (checkCond == "exists") {
             var fso = new ActiveXObject("Scripting.FileSystemObject");
             if (fso.FileExists(checkPath)) {
+                // Some debugging information
+                dinfo("The path '"+checkPath+"' exists: the test was successful");
                 return true;
+            } else {
+                // Some debugging information
+                info("The path '"+checkPath+"' does not exist: the test failed");
+                return false;
             }
         } else if (checkCond == "sizeequals") {
             // sanity check: must have Value set for a size check
@@ -1019,7 +1074,11 @@ function checkCondition(checkNode) {
 
             filesize=GetFileSize(checkPath);
             if (filesize == checkValue) {
+                dinfo("The file '"+checkPath+"' has size "+filesize+": the test was successful");
                 return true;
+            } else {
+                dinfo("The file '"+checkPath+"' has size "+filesize+" - wanted "+
+                      checkValue+": the test fails")
             }
         } else if (checkCond.substring(0,7) == "version") {
             // sanity check: Must have a value set for version check
@@ -1034,27 +1093,40 @@ function checkCondition(checkNode) {
             if (CheckValFromFileSystem != "UNKNOWN") {
                 var versionresult = VersionCompare(CheckValFromFileSystem,
                                                    CheckValFromWpkg);
-               if (debug) {
-                   info ("Checking file version " + CheckValFromFileSystem + " is " + checkCond + 
-                         " (than) " + CheckValFromWpkg + " - got result "+versionresult);
-               }
-               switch (checkCond) {
+                dinfo ("Checking file version " + CheckValFromFileSystem + " is " + checkCond + 
+                       " (than) " + CheckValFromWpkg + " - got result "+versionresult);
+                switch (checkCond) {
                    case "versionsmallerthan":
-                       return (versionresult == -1);
+                       retval=(versionresult == -1);
+                       dinfo("Checking version of '"+checkPath+"' : Is "+CheckValFromFileSystem+
+                             " < "+checkValue+" ? "+retval);
+                       return retval;
                        break;
                    case "versionlessorequal":
-                       return (   (versionresult == -1)
+                       retval=(   (versionresult == -1)
                                || (versionresult == 0) );
+                       dinfo("Checking version of '"+checkPath+"' : Is "+CheckValFromFileSystem+
+                             " <= "+checkValue+" ? "+retval);
+                       return retval;
                        break;
                    case "versionequalto":
-                       return (versionresult == 0);
+                       retval=(versionresult == 0);
+                       dinfo("Checking version of '"+checkPath+"' : Is "+CheckValFromFileSystem+
+                             " = "+checkValue+" ? "+retval);
+                       return retval;
                        break;
                    case "versiongreaterorequal":
-                       return (   (versionresult == 1)
+                       retval=(   (versionresult == 1)
                                || (versionresult == 0) );
+                       dinfo("Checking version of '"+checkPath+"' : Is "+CheckValFromFileSystem+
+                             " >= "+checkValue+" ? "+retval);
+                       return retval;
                        break;
                    case "versiongreaterthan":
-                       return (versionresult == 1);
+                       retval=(versionresult == 1);
+                       dinfo("Checking version of '"+checkPath+"' : Is "+CheckValFromFileSystem+
+                             " >= "+checkValue+" ? "+retval);
+                       return retval;
                        break;
                    default:
                        throw new Error("Unknown operation on file versions : " + checkCond);
@@ -1062,9 +1134,7 @@ function checkCondition(checkNode) {
                }
            } else {
                // Didn't get a sensible version number from GetFileVersion
-               if (debug) {
-                   info("Unable to find the file version for " + checkPath);
-               }
+               dinfo("Unable to find the file version for " + checkPath);
                return (false);
            }
 
@@ -1084,7 +1154,11 @@ function checkCondition(checkNode) {
 
         if (checkCond == "exists") {
             if (scanUninstallKeys(checkPath)) {
+                dinfo("Uninstall entry for "+checkPath+" was found: test successful");
                 return true;
+            } else {
+                dinfo("Uninstall entry for "+checkPath+" missing: test failed");
+                return false;
             }
         } else {
             throw new Error("Check condition " + checkCond + " unknown for " +
@@ -1102,56 +1176,64 @@ function checkCondition(checkNode) {
         switch (checkCond) {
         case "not":
             if (subcheckNodes.length == 1) {
-                return ! checkCondition(subcheckNodes[0]);
+                retval=! checkCondition(subcheckNodes[0]);
+                dinfo("Result of logical 'NOT' check therefore "+retval);
+                return retval;
             } else {
                 throw new Error("Check condition 'not' requires one and only " +
                     "one child check condition. I found " + checkNodes.length);
             }
             break;
         case "and":
-            var defval=true;
             for (var i = 0; i < subcheckNodes.length; i++) {
-                defval=defval && checkCondition(subcheckNodes[i]);
-                if (defval == false) {
+                if (! checkCondition(subcheckNodes[i])) {
                     // lazy execution here.
+                    dinfo("Result of logical 'AND' check is false");
                     return false;
                 }
             }
-            // defval is always true by now.
-            return defval;
+            dinfo("Result of logical 'AND' check is true");
+            return true;
             break;
         case "or":
-            var defval=false;
             for (var i = 0; i < subcheckNodes.length; i++) {
-                defval=defval || checkCondition(subcheckNodes[i]);
-                // Lazy execution here.
-                if (defval == true) return true;
+                if (checkCondition(subcheckNodes[i])) {
+                    dinfo("Result of logical 'OR' check is true");
+                    return true;
+                }
             }
-            // defval is always false by now.
-            return defval;
+            dinfo("Result of logical 'OR' check is false");
+            return false;
             break;
         case "atleast":
             if (checkValue == null) {
-                throw new Error("Check condition logical atleast requires a value ");
+                throw new Error("Check condition logical 'atleast' requires a value ");
             }
             var count=0;
             for (var i = 0; i < subcheckNodes.length; i++) {
                 if (checkCondition(subcheckNodes[i])) count++;
                 // lazy execution
-                if (count >= checkValue) return true;
+                if (count >= checkValue) {
+                    dinfo("Result of logical 'AT LEAST' check is true");
+                    return true;
+                }
             } // for loop over subcheckNodes
-            // result will be false now;
-            return (count >= checkValue);
+            dinfo("Result of logical 'AT LEAST' check is false");
+            return false;
             break;
         case "atmost":
             var count=0;
             for (var i = 0; i < subcheckNodes.length; i++) {
                 if (checkCondition(subcheckNodes[i])) count++;
                 // lazy execution
-                if (count > checkValue) return false;
+                if (count > checkValue) {
+                    dinfo("Result of logical 'AT MOST' check is false");
+                    return false;
+                }
             }
             // result will be true now
-            return (count <= checkValue);
+            dinfo("Result of logical 'AT MOST' check is true");
+            return true;
             break;
         default:
             throw new Error("Check condition " + checkCond + " unknown for " +
@@ -1249,26 +1331,10 @@ function checkInstalled(packageNode) {
     // loop over every condition check
     // if all are successful, we consider package as installed
     for (var i = 0; i < checkNodes.length; i++) {
-        var checkNode = checkNodes(i);
-        var checkType = checkNode.getAttribute("type");
-        var checkCond = checkNode.getAttribute("condition");
-        var checkPath = checkNode.getAttribute("path");
-
-        if (checkType == null ||
-            checkCond == null ||
-            checkPath == null) {
-            throw new Error("Invalid check condition on package " +
-                packageName + ", aborting.");
-        } else if (! checkCondition(checkNodes[i])) {
-            info("Checking presence of " + packageName +
-                "; " + checkType + " check condition failed !");
-
+        if (! checkCondition(checkNodes[i])) {
             installed = false;
             //break;
-        } else {
-            info("Checking presence of " + packageName +
-                "; " + checkType + " check condition met.");
-        }
+        } 
     }
 
     return installed;
@@ -1724,34 +1790,56 @@ function getAvailablePackages() {
             if (searchArray(packageArray, packageNode)) {
                 continue;
             }
-            // Somewhere to store our dependencies
-            var depends=null;
+
             // sometimes nodes can be null
             if (packageNode != null) {
-                // add the new node to the array
+		// add package-id dependencies 
+		appendPackageDependencies(packageArray, packageNode);
+		if (!searchArray(packageArray, packageNode)) {
+                // add the new node to the array _after_ adding dependencies
                 packageArray.push(packageNode);
-                depends = packageNode.getAttribute("depends");
             }
+        }
+            }
+    }
 
-            // Now search all the dependencies
-            if ((depends != null) && (depends != "")) {
-                var deparray=depends.split(",");
-                for (var k=0;k<deparray.length;k++) {
-                    deppack=trim(deparray[k]);
-                    var deppkg=packages.selectSingleNode("package[@id='" + deppack + "']");
-                    if (searchArray(packageArray,deppkg)) {
+    return packageArray;
+}
+
+/* nearly the same as appendProfileDependencies() but more relaxed on unknown
+ * or invalid dependencies */
+function appendPackageDependencies(packageArray, packageNode) {
+    appendDependencies(packageArray, packageNode, packages, "package");
+}
+
+function appendDependencies(appendArray, appendNode, sourceArray, sourceName) {
+    // search for package tags in each profile
+    var dependsNodes = appendNode.selectNodes("depends");
+    if (dependsNodes != null) {
+	for (var i = 0; i < dependsNodes.length; i++) {
+	    var dependsId = dependsNodes(i).getAttribute(sourceName + "-id");
+	    // skip unknown entries 
+	    if (dependsId == null) continue;
+
+	    if (debug) info("Checking " + sourceName + " dependency: " + dependsId);
+	    var dependsNode = sourceArray.selectSingleNode(sourceName + "[@id='" +
+		dependsId + "']");
+
+	    if (dependsNode == null) {
+		throw new Error(0, "Invalid dependency \"" + dependsId +
+			"\" from " + sourceName +  " \"" + appendNode.getAttribute("id") 
+			+ "\".");
+	    }
+	    // duplicate check 
+	    if (searchArray(appendArray, dependsNode)) {
                         continue;
                     } else {
-                        if ((deppkg != null)) {
-                            packageArray.push(deppkg);
-                        }
-                    }
+		if (debug) info("Add " + sourceName + " dependecy: " + dependsId);
+		appendArray.push(dependsNode);
+		appendDependencies(appendArray, dependsNode, sourceArray, sourceName);
                 }
-            } // end search of dependencies
         }
     }
-    
-    return packageArray;
 }
 
 /**
@@ -1782,30 +1870,7 @@ function getAvailableProfiles() {
  * array. Recurses into self to get an entire dependency tree.
  */
 function appendProfileDependencies(profileArray, profileNode) {
-    var dependencyNodes = profileNode.selectNodes("depends");
-    for (var i = 0; i < dependencyNodes.length; i++) {
-        var dependentId = dependencyNodes(i).getAttribute("profile-id");
-        
-        // select profile that matches the "profile-id" attribute
-        var dependentNode = profiles.selectSingleNode("profile[@id='" +
-            dependentId + "']");
-            
-        // if the profile doesn't exist, we have a bad dependency
-        if (dependentNode == null) {
-            throw new Error(0, "Invalid dependency \"" + dependentId +
-                "\" from profile \"" + profileNode.getAttribute("id") + "\".");
-        }
-        
-        // search array for pre-existing profile, we don't want duplicates
-        if (searchArray(profileArray, dependentNode)) {
-            continue;
-        }
-        
-        // add the new node to the array, and add it's dependencies also
-        // (recurse)
-        profileArray.push(dependentNode);
-        appendProfileDependencies(profileArray, dependentNode);
-    }
+    appendDependencies(profileArray, profileNode, profiles, "profile");
 }
 
 /**
@@ -2276,6 +2341,10 @@ function psreboot() {
  * Ends program execution with the specified exit code.
  */
 function exit(exitCode) {
+    if (exportRunningState) {
+	// reset running state 
+	setRunningState("false");
+    }
     WScript.Quit(exitCode);
 }
 /**

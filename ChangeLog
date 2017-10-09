@@ -1,3 +1,39 @@
+Mon Apr 24 2006
+-----------------------------
+V 0.9.8
+
+WPKG-0.9.8-test3 released as 0.9.8 (stable) - no changes.
+
+
+Thu Apr 21 2006
+-----------------------------
+V 0.9.8-test3
+
+- checkval error when using the 'versiongreaterorequal' check
+
+Thanks to Paul Griffith for the fix.
+
+
+Mon Apr 17 2006
+-----------------------------
+V 0.9.8-test2
+
+- more debugging info (when /debug is used)
+- "logical tests" fixes
+
+Thanks to Frank Lee for the patch.
+
+
+Sun Apr 09 2006
+-----------------------------
+V 0.9.8-test1
+
+- changed "package dependencies" - now they are defined like profile dependencies
+- registry running state
+
+Thanks to Andre Ilie for patches.
+
+
 Mon Apr 04 2006
 -----------------------------
 V 0.9.7

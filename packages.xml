@@ -38,7 +38,8 @@
                     installed, but the new revision number is greater than the
                     old revision number.
                     
-        env         Sets an environmental variable to the specified value.
+        env         Sets an environmental variable to the specified value 
+		    (not yet implemented).
                     
     THIS IS A SAMPLE FILE
     
@@ -89,16 +90,10 @@
         revision="1"
         reboot="false"
         priority="0">
-	
-        <!-- not yet implemented
 
-        <depends package-id="(package)" />
+	<!-- One profile can depend on other profiles -->	
+        <depends package-id="some-library" />
     
-        <env var="name" value="value" />
-
-        -->
-							
-
         
         <!--
 	No check conditions; script will be executed *each time* wpkg.js is called - each time PC is booted.
@@ -125,7 +120,7 @@
         <!--
 	Checks in Software Add/Remove only.
         -->
-	<check type="uninstall" condition="exists" path="WPKG 0.6-test1" />
+	<check type="uninstall" condition="exists" path="Sample Package Software 1.6" />
         
         
         <install cmd='\\server\packages\software\package.exe /quiet /install'>
