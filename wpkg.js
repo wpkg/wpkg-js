@@ -1,6 +1,6 @@
 /*******************************************************************************
  *
- * WPKG 0.9.6-test2 - Windows Packager
+ * WPKG 0.9.7 - Windows Packager
  * Copyright 2003 Jerry Haltom
  * Copyright 2005 Tomasz Chmielewski <tch (at) wpkg . org>
  * Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>
@@ -53,8 +53,14 @@
  * /noreboot
  *     System does not reboot regardless of need.
  *
+ * /rebootcmd:<option>
+ *     Use the specified boot command, either with full path or
+ *     relative to location of wpkg.js
+ *     Specifying "special" as option uses tools\psshutdown.exe
+ *     from www.sysinternals.com - if it exists - and a notification loop
+ *
  * /force
- *     Uses force when performing actions (does no honour wpkg.xml).
+ *     Uses force when performing actions (does not honour wpkg.xml).
  *
  * /forceinstall
  *     Forces installation over existing packages.
@@ -101,6 +107,7 @@ var hosts;
 
 var nonotify = false;
 var noreboot = false;
+var rebootCmd = "standard";
 
 var packagesDocument;
 var profilesDocument;
@@ -205,6 +212,10 @@ function main(argv) {
         forceInstall = false;
     }
     
+    if (argn("rebootcmd") != null) {
+        rebootCmd=(argn("rebootcmd"));
+        if (debug)  info("Reboot-Cmd is " + rebootCmd +".");
+    }
     
     // will use the fso a bit
     var fso = new ActiveXObject("Scripting.FileSystemObject");
@@ -347,7 +358,7 @@ function main(argv) {
  */
 function showUsage() {
     var message = "";
-    message += "WPKG 0.9.6-test2 - Windows Packager\n";
+    message += "WPKG 0.9.7 - Windows Packager\n";
     message += "Copyright 2004 Jerry Haltom\n";
     message += "Copyright 2005 Tomasz Chmielewski <tch (at) wpkg . org>\n";
     message += "Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>\n";
@@ -396,6 +407,9 @@ function showUsage() {
     message += "\n";
     message += "/noreboot\n";
     message += "   System does not reboot regardless of need.\n";
+    message += "\n";
+    message += "/rebootcmd:<filename>\n";
+    message += "   Use the specified reboot command\n"
     message += "\n";
     message += "/force\n";
     message += "    Uses force when performing actions.\n";
@@ -1373,9 +1387,24 @@ function installPackage(packageNode) {
         bypass = checkInstalled(packageNode);
         if (bypass) {
                 info("Bypassing installation of package " + packageName);
+
+		// yes the packages is installed, but is it in wpkg.xml?
+		var packageID = packageNode.getAttribute("id");
+		var nodeInst = settings.selectSingleNode("package[@id='" + packageID + "']");
+
+		if (nodeInst == null) {
+		  
+		  if (debug) { 
+		    info("Package " + packageName +
+			 " missing from settings file, adding it now.");
+		  }
+		  
+		  settings.appendChild(packageNode);
+		  saveXml(settings, settings_file);
+		}
         }
     }
-
+    
 
     
     if (!bypass) {
@@ -1444,19 +1473,20 @@ function installPackage(packageNode) {
             throw new Error("Could not install " + packageName + ". " +
                             "Failed checking after installation.");
         }
-    }
+
     
-    // append new node to local xml
-    settings.appendChild(packageNode);
-    saveXml(settings, settings_file);
+	// append new node to local xml
+	settings.appendChild(packageNode);
+	saveXml(settings, settings_file);
     
-    // reboot the system if this package is suppose to
-    if (packageNode.getAttribute("reboot") == "true") {
-        info("Installation of " + packageName + " successful, system " +
-            "rebooting.");
-        reboot();
-    } else {
-        info("Installation of " + packageName + " successful.");
+	// reboot the system if this package is suppose to
+	if (packageNode.getAttribute("reboot") == "true") {
+	  info("Installation of " + packageName + " successful, system " +
+	       "rebooting.");
+	  reboot();
+	} else {
+	  info("Installation of " + packageName + " successful.");
+	}
     }
 }
 
@@ -1941,7 +1971,7 @@ function retrieveProfile(hosts, hostName) {
             attrName = node.getAttribute("name");
 
             if (null != attrName) {
-                var reg = new RegExp(attrName, "i");
+                var reg = new RegExp("^" + attrName + "$", "i");
 
                 if (reg.test(hostName)) {
                     attrProfile = node.getAttribute("profile-id");
@@ -2146,17 +2176,39 @@ function notify(message) {
 /**
  * Reboots the system.
   */
-function oldreboot() {
+function reboot() {
     if (!noreboot ) {
-	var wmi = GetObject("winmgmts:{(Shutdown)}//./root/cimv2");
-	var win = wmi.ExecQuery("select * from Win32_OperatingSystem where Primary=true");
-	var e = new Enumerator(win);
-
-	info("System reboot in progress!");
-
-	for (; !e.atEnd(); e.moveNext()) {
-	    var x = e.item();
-	    x.win32Shutdown(6);
+      var fso = new ActiveXObject("Scripting.FileSystemObject");
+      switch (rebootCmd) {
+        case "standard":
+		{	       
+		  var wmi = GetObject("winmgmts:{(Shutdown)}//./root/cimv2");
+		  var win = wmi.ExecQuery("select * from Win32_OperatingSystem where Primary=true");
+		  var e = new Enumerator(win);
+	
+		  info("System reboot in progress!");
+	
+		  for (; !e.atEnd(); e.moveNext()) {
+		    var x = e.item();
+		    x.win32Shutdown(6);
+		  }
+	        }
+		break;
+        case "special":
+                       psreboot();
+                       break;
+	default:
+          	if (!fso.fileExists(rebootCmd)) {
+                    var path = WScript.ScriptFullName;
+                    base = fso.GetParentFolderName(path);
+        	    rebootCmd = fso.BuildPath(base, rebootCmd);
+        	    if (!fso.fileExists(rebootCmd)) {
+        	      throw new Error("Could not locate rebootCmd " + rebootCmd + ".");
+		    } 
+		} 
+          	info("Running a shutdown command: "+rebootCmd);
+          	exec(rebootCmd,0); 
+	  	break;
 	}
 /**    } else if (pretend) {
 	info("REBOOT");
@@ -2171,7 +2223,7 @@ function oldreboot() {
 /**
  * Reboots the system.
  */
-function reboot() {
+function psreboot() {
     if (!noreboot ) {
 
     // RFL prefers shutdown tool to this method: allows user to cancel
@@ -2180,7 +2232,18 @@ function reboot() {
     var cmd;
     var msg="Rebooting to complete software installation. Please note that "+
             "some software might not work until the machine is rebooted."
-    var shutdown="\\\\spd\\wpkg\\psshutdown -r ";
+    // overwrites global variable rebootcmd !   
+    var rebootCmd="tools\\psshutdown.exe"
+    var fso = new ActiveXObject("Scripting.FileSystemObject");
+    	if (!fso.fileExists(rebootCmd)) {
+            var path = WScript.ScriptFullName;
+            base = fso.GetParentFolderName(path);
+            rebootCmd = fso.BuildPath(base, rebootCmd);
+            if (!fso.fileExists(rebootCmd)) {
+              throw new Error("Could not locate rebootCmd " + rebootCmd + ".");
+	    } 
+	} 
+    var shutdown=rebootCmd + " -r ";
 
     for (i=60; i!=0; i=i-1) {
         // This could be cancelled

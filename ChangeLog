@@ -1,3 +1,39 @@
+Mon Apr 04 2006
+-----------------------------
+V 0.9.7
+
+WPKG-0.9.7-test2 released as 0.9.7 (stable) - no changes.
+
+
+Thu Mar 26 2006
+-----------------------------
+V 0.9.7-test2
+
+Reboot behaviour more customizable (see rebootpatch.diff patch):
+
+- without option /rebootcmd   -> normal behaviour
+
+- with option /rebootcmd:special
+  -> looks if it can find tools\psshutdown.exe (from Sysinternals) and uses the loop 
+  from Frank Lee (introduced in 0.9.6)
+
+- with option   /rebootcmd:wpkg\myshutdown.bat  _or_
+  option   /rebootcmd:\\server\share\myshutdown.bat
+  it uses this for reboot
+
+Thanks to Falko Trojahn for the patch.
+
+
+Thu Mar 16 2006
+-----------------------------
+V 0.9.7-test1
+
+- fixed bug 19 (multiple calls to wpkg.js /install:package add more entries to wpkg.xml)
+- fixed bug 1 (regular expressions are broken)
+
+Thanks to Stian Husemoen for the patch.
+
+
 Thu Mar 16 2006
 -----------------------------
 V 0.9.6
@@ -7,7 +43,7 @@ WPKG-0.9.6-test2 released as 0.9.6 (stable) - no changes.
 
 Tue Mar 14 2006
 -----------------------------
-V 0.9.6-test1
+V 0.9.6-test2
 
 - a fix by Paul Griffith to deal with "checkType undefined error".
 
