@@ -1,815 +1,491 @@
 ﻿===============================================================================
-= CHANGES FOR 1.1 release
+= CHANGES FOR 1.2 release
 ===============================================================================
 
 Change notes
 ============
-WPKG Version: 1.1.2
+WPKG Version: 1.2
 Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
-Date        : 2009-09-26
-Status      : released
+Date        : 2011-07-16
+Status      : release pending
 
 Changes/fixes visible to the user:
 
 Summary:
-- Added path/value expansion for registry checks. Fixes Bug 139.
-- Added variable expansion for registry uninstall searches. 
-- Fixed typos.
-- Added additional status print messages on installation tasks.
-- Fixed exception when getting system locale on some systems.
-- Another small fix for system locale read.
-- Moved documents to documents/ folder.
-- Updated some documentation.
-- WPKG now saves progress immediately to settings (wpkg.xml)
-- Environment load/restore code changes.
-- Revert partially the environment load/restore code changes.
-- Fixed two more environment load/restore bugs.
-- Fixed bug introduced with immediate setting save. Fixes Bug 167.
-- Fixed uninstall version check in case of non-installed software.
-- Fixed uninstall version comparison "versionsmallerthan".
-- Added execute="changed" attribute to packages.
-- Fixed notify="false" was not taken into account during removal.
-- Notifications are now only sent if commands are executed.
-- Version comparison improvement during installation.
-- Added regular expression matching to uninstall key search.
-- Changed informational level to debug level output for registry check.
-- Added Windows Vista/7 msg.exe user-notification support.
-- Added expansion of environment variables in rebootCmd setting.
-- Fixed typo in registry equality check.
-- Fixed some more code formatting and typo.
-- Updated built-in user notification text.
-- Added environment expansion in package revision attribute.
-- Fixed duplicated version read from file if a file version check is used.
-- Added environment value expansion for file version values.
-- Added environment value expansion for uninstall version values.
-- Added environment value expansion for execute check return values.
-- Modified printed debug message if uninstall checks regex match fails.
+- Fixed IP-address match in case 3 "." are used in host matching string.
+- Fixed package removal procedure exception in case of /noremove flag is used.
+- Fixed removal of settings entry in case of /noremove and no package checks.
+- Allow folders to be checked with file checks.
+- Allows recursive search for uninstall entries in registry
+- Enhance wrapper.js to use sysnative cmd.exe.
+- Disabled recursive registry uninstall checking again due to slow execution.
+- Closing STDIN when executing commands.
+- Extended host matching for OS, IP, domain and groups.
+- Fix for crash if interface has no IP bound to it.
+- Fix for registry exist checks not returning true.
+- Fix for execute test writes null values to the logs.
+- Fix included aesthetic break.
+- Extended host attribute match for host architecture.
+- Extended host attribute match for environment variables.
+- Support for host attribute matches in <package/> definitions within profiles.
+- Small fixes and optimizations.
+- New /noDownload switch.
+- Fixed debug mode (broken since introduced advanced host checks).
+- Added extended host attribute match for package commands.
+- Added package pre-check attributes to package nodes.
+- Fixed ignore of lcid in package variables.
+- Cosmetic fix in extended host matching debug output.
+- Allow multiple packages to be installed/removed/upgraded in one-shot.
+- Allow variable expansion in file size checks.
+- Fix for null-reference exception if package variable did not specify lcid.
+- Added tabular output to report.pl
+- Fixed references to wpkg.org in profiles.xsd
+- Fixed change log typos.
+- Fixed invalid read of "uninstalldate" attribute.
+- Fixed typos in comments within wpkg.js.
+- Fixed additional typos in README.
+- Minor usage message formatting fixes.
+- Added printing of expanded command-line in debug message.
+- Fixed adding of packages to local DB if precheck-upgrade=always succeeds.
+- Added extended host matching in variables.
+- Added lcid matching for all extended host match supported nodes.
+- Added host information to local <wpkg /> settings node.
+- Using "hostname" now for extended host attribute matching instead of "host".
+- Fixed LCID extended host matching variable clash.
+- Fixed termination of commands which run into timeout.
+- Fixed classic host name matching.
+- Added support for IA64 architecture.
+- Fixed handling of failed commands with variables in path.
+- Fixed process termination when command times out.
+- Added sample package templates.
+- Included updated Firefox example package.
+- Included updated sample profile.
+- Final release as version 1.2.
 
-NEW: Registry path checks can now contain variables in the form of %VAR% too.
-     Variable expansion is allowed for the value attribute too. Please note
-     that WPKG first tries to locate the unexpanded key and compare unexpanded
-     values. For example if you use a registry equal check for the value of
-     "%APPDATA%" then it first tries to look for the "%APPDATA%" string and
-     only if this value does not exist it will compare the expanded value.
-     This allows you to still match REG_EXPAND_SZ values which contain
-     variable definitions.
-     This should fix Bug 139 as reported on Bugzilla.
-     Thanks to "graham" for reporting.
-NEW: Variable expansion (see Bug 139) is now supported for uninstall entries as
-     as well.
-FIX: Fixed a couple of typos. Thanks to Malte Starostik for reporting.
-NEW: Added additional output to the status printer (when /sendStatus is
-     enabled) when installPackage() performs installation tasks and therefore
-     takes some time to finish. This allows external tools to inform the user
-     about ongoing actions.
-     Thanks to Malte Starostik for the suggestion.
-FIX: Retrieving the system locale caused an exception on some systems.
-     Thanks to Simon Kelsall for reporting.
-FIX: Fixed another small problem when locating system locales which could lead
-     to an exception in case the "HKCU\Control Panel\International\Locale" key
-     does not exist.
-MOD: Moved documents to the documents/ sub-folder in order to clean up the root
-     directory.
-MOD: Small corrections and updates to some documents.
-MOD: Modified bahavior of WPKG whensaving settings (wpkg.xml). Now the settings
-     are saved immediately after modification instead of just when WPKG
-     terminates. Mainly this helps in case of unexpected reboot (initiated
-     outside WPKG) to prevent loss of some progress in case of unexpected
-     interruption.
-     Thanks to Johannes Brix for open discussion on the mailing list.
-MOD: Changed some code to load package environment and and when restoring
-     previous environment to prevent some IDE errors (but cscript somehow seems
-     to accept the code).
-FIX: The environment set changes done in previous release did not work as$
-     expected. WSH does not provide convenient methods to modify the
-     environment. Maybe I will find a work-around later...
-FIX: Fixed two more bugs introduced in 1.1.2-RC6 regarding environment
-     handling.
-     Fixes Bug 164.
-     Fixes Bug 165.
-     Thanks to Stefan Pendl.
-FIX: The change introduced to save the settings on each change inroduced some
-     problems in case the settings (wpkg.xml) are created from scratch.
-     In this case the settings were not saved at all until a change (package
-     added to or package removed from) was done during WPKG operation.
-     This fixes Bug 167. Thanks to Falko Trojahn for reporting.
-FIX: Version checks on uninstall enttries could evaluate "true" in case the
-     software is not installed at all.
-     Fixes Bug 170. Thanks to Malte Starostik for reporting and discussion.
-FIX: Fixed bug where "versionsmallerthan" version comparison on uninstall
-     entries almost always returned false.
-     Thanks to Falko Trojahn for reporting.
-NEW: Added possibility to set execute="changed". This allows you to specify
-     packages which are executed only if there are other packages (with
-     different execute attributes) processed during this WPKG run.
-     If no package is processed an execute="changed" package will not be
-     processed at all. This allows one to define packages for actions which
-     should run on every change (but not each time like execute="always"
-     would).
-     Please note: Due to the nature of these packages they form their own
-     "group" in the WPKG package tree. All execute="changed" packages are
-     executed in the order of priority at the end of the synchronization.
-     Packages with lower priority but other execute attribute values are always
-     executed before execute="changed" packages (even if the execute="changed"
-     package has higher priority).
-     Also note that the package using execute="changed" will be processed
-     like every other package. So if you define checks which yield true, then
-     the package is not installed/upgraded. If you want it to be executed on
-     really each system change, then you should not specify any check.
-     Addresses feature request as proposed in Bug 168.
-FIX: If notify="false" attribute is used WPKG was still notifying users during
-     removal. Now WPKG will also not notify users on removal of such packages.
-MOD: During install/upgrade/downgrade the user was notified (if notifications
-     are enabled) even if the package did not have any commands specified for
-     the action to be processed (e.g. upgrade without upgrade commands).
-     This has been changed now and the user will be notified only if some
-     commands are actually executed.
-FIX: Version comparison is now done only once to detect if upgrade or downgrade
-     should be performed. This has not been a bug actually but it prevents
-     duplicated version checking and prevents redundant log output.
-NEW: Added expression matching to uninstall key scanner. This allows to specify
-     a check as follows:
-     <check type='uninstall' condition='exists' path='Mozilla Firefox.*' />
-     This matches all Firefox versions. In this case the check remains true if
-     the user changes to another Firefox versions. Note that in this case WPKG
-     would not even complain/reinstall the package if the user downgrades.
-     To prevent this you might specify
-     <check type='uninstall' condition='exists'
-     	path='Mozilla Firefox \(3\.5\.[0-9]*\)' />
-     This would allow any Firefox 3.5.x version to be installed by the user.
-     Plese note that this does not prevent WPKG to upgrade the package when
-     the administrator provides a new version.
-     For example the Administrator might install Firefox 3.5.1. Then version
-     3.5.2 is released and manually installed by the user. WPKG will accept
-     this new version due to the regular expression and will not try to
-     re-install (downgrade in this case) to version 3.5.1. But as soon as
-     the administrator releases version 3.5.2 officially and increases the
-     package version then WPKG will enforce to install the version provided
-     by the administrator.
-     Please also note that the regular expression you give has to match the
-     full string read from the uninstall key. The heading "^" and trailing
-     "$" are automatically added to the regular expression.
-     This implements change request included in Bug 166.
-     Thanks to Stefan Pendl.
-MOD: Changed information-level output to debug-level output in registry equal
-     checks if check fails. This avoids unnecessary output in the event log.
-     Thanks to Malte Starostik for reporting.
-NEW: Added support for Windows Vista/7 msg.exe-based user notification
-     (replaces "net send" messaging on those systems). Unfortunately there are
-     some limitations. For example the message is ignored if it is longer than
-     256 characters. So be aware and update your config.xml as needed.
-     A new option to define a timeout after which the notification disappears
-     automatically on those systems has been added (notificationDisplayTime).
-     This defaults to 10 which will make the message to be automatically
-     discarded after 10 seconds.
-     Adresses report 171. Thanks to Ralf Lederle.
-NEW: Added expansion of environment variables in rebootCmd setting.
-     Thanks to grubi for request.
-     On this occasion I've updated some code to correctly expand
-     settings_file_name too (in case no settings_file_path is defined).
-     Environment expansion of logfilePattern setting has been added too.
-FIX: Fixed typo in registry equality checks which caused exceptions.
-     Thanks to Malte Starostik.
-FIX: Fixed some code formatting and typo.
-MOD: Updated built-in user notification to fit within the 256 character limit.
-NEW: Expands environment variables in package revision. For example
-     revision="%PRG_VERSION%" is valid now. Make sure the environment variable
-     is defined before you use it.
-     Fixes Bug 173. Thanks to Stefan Pendl.
-MOD: Added check for package revision environment expansion. Expansion is only
-     done if the revision string contains two "%" characters which indicates
-     an environment definition in the form of %VAR%.
-     This should prevent unneeded environment setups and therefore it prevents
-     wasting resources.
-FIX: Fixed duplicated version read from file if a file version check is used.
-NEW: Added environment value expansion for file version values.
-NEW: Added environment value expansion for uninstall version values.
-NEW: Added environment value expansion for execute check return values.
-MOD: Modified message if uninstall check string fails to be used as a regular
-     expression.
-
-
-Change notes
-============
-WPKG Version: 1.1.1
-Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
-Date        : 2009-06-25
-Status      : released
-
-Changes/fixes visible to the user:
-
-Summary:
-- Added new /noUpgradeBeforeRemove switch.
-- Reverted STDOUT/STDERR handling to WPKG 1.0 algorithm.
-- Updated README.TXT in tools/ folder.
-- Fixed typo in DB inconsistency message.
-- Changed wording in database-inconsistency message.
-- Changed install success message wording.
-- Enhanced variable expansion within variable definitions.
-- Enhanced human-style version comparison.
-- Improved human-style version comparison algorithm.
-- Extended volatile release marker list.
-- Added possibility to define volatile release markres in config.xml.
-- Updated profiles.xsd
-- Fixed wrong default for /noUpgradeBeforeRemove switch
-- Fixed typo in install-success message. Fixes Bug 163.
-- Fixed variable overwriting. Fixes Bug 156.
-
-NEW: Added a new switch: /noUpgradeBeforeRemove.
-     This switch allows to disable the upgrade-before-remove feature.
-     Usually WPKG upgrades a package to the latest available version before it
-	 removes the package. This allows administrators to fix bugs in the package
-	 and assure proper removal.
-	 However this feature can lead to (sometimes unexpected) re-execution of
-	 packages. For example if execution=always is used the package will run
-	 once again before it is finally removed.
-	 It's advised to leave this option on default unless you really know what
-	 you're doing.
-	 Thanks to Simon.
-NEW: Unfortunately the %COMSPEC%-wrapping introduced in WPKG 1.1.0 to allow
-     STDOUT/STDERR flushing (see Bug 155) does not work in any case as
-     expected. Therefore I decided to revert the change and fall back to the
-     default execution behavior of WPKG 1.0. This should solve execution and
-     return code problems for the moment.
-     However the issue that commands which print > 4k to STDOUT/STDERR will
-     block and not finish until the timeout has been reached. So make sure
-     your installers are (quite-) silent on STDOUT/STDERR or to redirect the
-     output to a file or NUL by appending ">NUL 2>&1" to commands which are
-     using verbose printing.
-MOD: Updated README.TXT in tools/ folder to reflect the truth that the tools
-     put into the tools folder are not automatically added to the PATH.
-     Thanks to Chris Allen.
-MOD: Fixed typo in in database-inconsistency message. Thanks to Gerd Ott.
-MOD: Changed Wording after successful installation of a package.
-     Thanks to Simon.
-MOD: Enhanced variable expansion within <variable /> nodes. If the value
-     contains shell variables they are expanded immediately.
-     Thanks to Chris Allen for reporting and Stefan Pendl for fix suggestion.
-MOD: The comparison of of version strings the same way how a human would read
-     it is quite difficult. Up to now WPKG supported only versions containing a
-     sequence of colon-separated digits. The algorithm has been re-worked to
-     support much more complicated version strings. Some examples include:
-     A        B              Result            
-     "1"      "2"            B is newer        
-     "1"      "15"           B is newer        
-     "1.0"    "1.2.b"        B is newer        
-     "1.35"   "1.35-2"       B is newer        
-     "1.35-2" "1.36"         B is newer        
-     "1.35R3" "1.36"         B is newer        
-     "1"      "1.0.00.0000"  Versions are equal
-     "1"      "1.0"          Versions are equal
-     "1.35"   "1.35-2"       B is newer        
-     "1.35-2" "1.35"         A is newer        
-     "1.35R3" "1.36R4"       B is newer        
-     "1.35-2" "1.35-2.0"     Versions are equal
-     "1.35.1" "1.35.1.0"     Versions are equal
-     Thanks to Jens Geile for asking an improved algorithm.
-MOD: Updated version comparison algorithm to treat some version appendixes as
-     "volatile". Volatile means that WPKG would claim that a revision witout
-     that suffix is newer than the one which carries this suffix. Usually a
-     version is assumed to be higher if it has an additional suffix but in case
-     of RC (Release Candidate), M (Milestone) and I (Integration) releases it's
-     usually the opposite way around. For example:
-     A        B              Result
-     "1.0RC2" "1.0"          B us newer (A is an "RC" version)
-     "1.5"    "1.5I3656"     A is newer (B is an "I"/intgration version)
-     "1.5"    "1.5M3656"     A is newer (B is an "M"/milestone version)
-     but (still)
-     "1.5"    "1.5u3656"     B is newer (B is an update version)
-MOD: Updated the list of volatile release markers (see previous change).
-NEW: Added the possibility to define "volatileReleaseMarker" parameters within
-     config.xml. This allows users to extend the list of volatile release
-     markers on-the-fly.
-MOD: Updated profiles.xsd. However I could not find a problem with the current
-     profile definition but Brian reported on the mailing list that his editor
-     throws a validation error. So I changed the definition according to his
-     proposal.
-FIX: The /noUpgradeBeforeRemove remove switch was "on" by default. Somehow I
-     left that in the code by accident from my testing sessions.
+NEW: Updated IP matching algorithm to prevent accidental matching if regexp or
+     host name is used which uses exactly 3 "." within the string.
      Thanks to Stefan Pendl for reporting.
-FIX: Fixed typo in install-success notification:
-     "Package and all chained packages ininstalled successfully."
-     changed to
-     "Package and all chained packages installed successfully."
-     Thanks to Stefan Pendl for reporting.
-     Fixes Bug 163.
-FIX: Fixed WPKG quit if a variable definition appears twice (re-defined). For
-     example if a variable is defined in profiles.xml and overwritten in
-     hosts.xml.
-     Thanks to Jindrich Vorlicek for reporting.
-     Fixes Bug 156.
-
-
-Change notes
-============
-WPKG Version: 1.1.0
-Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
-Date        : 2009-05-23
-Status      : released
-
-Changes/fixes visible to the user:
-
-Summary:
-- Improved MSXML factory handling.
-- Got rid of false-positive virus warning by Avira AntiVir.
-- Added italian LCIDs and messages.
-- Added work-around for STDOUT/STDERR flushing problem. Fixes Bug 155.
-- Fixed multiple dependency removal. Fixes Bug 145 and Bug 137.
-- Fixed another problem with STDOUT/STDERR flushing code.
-- Fixed WPKG ignoring /log_file_path:<path> parameter. Fixes Bug 157.
-- (Again) fixed dependency removal. Fixes Bug 145 and Bug 137.
-- Fixed bug which caused null-pointer when removing packages from server.
-- Updated regression-test suite to work with WPKG 1.1.0.
-- Added "-accepteula" parameter to psshutdown. Fixes Bug 159.
-- Internal getPackageName() enhancement.
-- WPKG 1.1.0 released.
-
-
-MOD: Improved file downloading. Different versions of MSXML use different
-     factories. Now WPKG supports multiple factories.
-MOD: Re-arranged download functions to avoid false-positive warning by
-     Avira AntiVir where WPKG was wrongly recognized as HTML/ADODB.Exploit.Gen.
-NEW: Italian LCIDs added to configuration (config.xml).
+FIX: Fixed package removal procedure in case /noremove flag is set. WPKG would
+     have failed (exception thrown) in case /noremove was used and a package
+     is detected NOT to be installed.
+FIX: In case /noremove is used and the package does not define any checks WPKG
+     is unable to detect if the package is still installed or not. Previously
+     WPKG was assuming that the package is not installed and removed it from
+     the local settings file. This has been changed. The package will now only
+     be removed from the settings file if it defines some checks which allow
+     WPKG to clearly detect that the package is not installed on the system.
+     So if the package does not define any checks WPKG assumes it's still
+     installed on the system and does not remove its entry from the local
+     settings file (wpkg.xml).
+FIX: Updated "file" type checks to match folders too. Now a check of type file
+     for condition exist yields true for a patch referring either a file or
+     a folder.
+     Thanks to Joe for reporting.
+NEW: WPKG now allows uninstall entries to be defined in sub-nodes of the
+     uninstall registry key. I was unable to verify that Windows supports such
+     entries but as reported RationalPlan Viewer seems to add such a sub-node:
+     Uninstall\RationalPlan\Viewer.
+     There might be other programs doing the same.
+     During tests Windows XP and Windows 7 were ignoring such entries but now
+     WPKG supports these entries now. (NOTE: Disabled again, read below)
+NEW: Enhanced wrapper.js to use sysnative directory. The sysnative directory
+     allows 32-bit programs to access the 64-bit binaries within
+     %SystemRoot%\system32\. This way it is not necessary any more to copy the
+     64-bit version of cmd.exe to the 64-bit\ sub-folder since the wrapper can
+     launch the locally available 64-bit cmd.exe.
+MOD: Disabled recursive uninstall checks again. Reading registry keys
+     recursively is very slow with WSH and since there are typically
+     many sub-keys within the uninstall locations this causes a very long
+     delay each time an uninstall check is used.
+     It's recommended to use a registry value check instead of an uninstall
+     check in order to check for the status of an application which puts its
+     uninstall entry within a sub-key of the uninstall keys in the registry.
+MOD: WPKG now closes STDIN when executing external commands. Some applications
+     seem to wait for STDIN to be closed before they exit. Microsoft PowerShell
+     seems to be one of the affected applications.
+     Since closing STDIN should not have negative effects (WPKG will not write
+     to STDIN) it's supposed to be safe to close it.
+     Thanks to Stéphane Bilqué for reporting.
+NEW: Many extensions in host matching. Now a host entry in hosts.xml is allowed
+     to include the following attributes:
+       <host name='host-x'
+         profile-id='profile-reference'
+         os="windows 7"
+         ipaddresses="^192\.168\.1\..*"
+         domainname="^domain$"
+         groups="^group.*$" />
+     Note: All special parameters (os, ipaddresses, domainname, groups) are
+     specified as regular expressions. Especially keep this in mind when
+     specifying IP-addresses or any parameter including periods (.). As a
+     period in regular expression means "any character". So keep in mind to
+     escape special regular expression characters.
+     Note that the group attribute refers to regular Windows NT group
+     membership and not to Active-Directory organization units.
+     Many thanks to Daniel Dehennin for continued support of this changes.
+     It just almost took as long as finishing DNF to include it. *sigh*
+FIX: Included fix for bug 196 which could make WPKG crash in case no IP
+     address is assigned to a network card.
+     Thanks to Daniel Dehennin again.
+FIX: Included fix for bug 199 where registry exist checks did not return true.
+     Thanks to Daniel Dehennin again.
+FIX: Included fix for bug 200 where execute test fallback to 'exitcodeequalto'
+     in 'execute' tests writes null values to the logs.
+     Thanks to Daniel Dehennin again.
+FIX: Included aesthetic break statement in check condition for uninstall checks.
+     Thanks to Daniel Dehennin again.
+NEW: Extended host attribute match now allows to match architecture using
+     architecture="<arc>" attribute. The following architectures are currently
+     supported:
+     x86      32-bit operating system
+     x64      64-bit operating system
+     Note: You will have to match x86 also if you run Windows 32-bit on
+     AMD64/EMT64/x64 hardware.
+NEW: Extended host attribute match allows to match environment variables using
+     environment="variable1=^regexp$|variable2=regexp..." attribute.
+     Please note that regular expressions are matched case-insensitive and
+     multiple variables have to be separated by the pipe ('|') character.
+     Please also note that in case you use WPKG-client the system-user
+     environment might differ from the environment you see when opening a
+     command prompt and typing 'set'. Some variables might be missing and
+     others might have different content. So use with caution.
+NEW: Extended use of host matches. Now WPKG supports host matches from previous
+     update not only in <host /> definitions but also in <package />
+     definitions used within <profile /> nodes. This allows profiles where
+     certain packages are applied only if specific host-conditions match.
+     For example:
+     <profile id='default'>
+       <package package-id='AdobeReader' os="windows 7" architecture="x64" />
+       <package package-id='audacity' />
+       <package package-id='pidgin' os="windows 7" />
+       <package package-id='firefox' environment="NUMBER_OF_PROCESSORS=^4$" />
+     </profile>
+     This example would install "AdobeReader" only on systems with Windows 7
+     64-bit edition running while "pidgin" is installed on all Windows 7 hosts
+     regardless of the architecture. The "firefox" package would be installed
+     only if WPKG runs within an environment which defines the
+     NUMBER_OF_PROCESSORS environment variable to the value "4".
+     The "audacity" packages would be installed on any host which gets the
+     'default' profile assigned.
+MOD: Some smaller fixes and optimizations.
+NEW: Added /noDownload option (and noDownload property in config.xml) to
+     disable downloads globally. When the switch is used then WPKG just ignores
+     any download specification. Use with caution as your install/upgrade/...
+     commands might depend on downloaded files. So make sure that you fetch
+     the files which would be downloaded prior to WPKG execution.
      Thanks to Marco Gaiarin.
-FIX: Added work-around for STDOUT/STDERR flushing problem. Unfortunately
-     reading from output streams is terribly broken in WSH. Reading output from
-     the streams blocks if the process does not write to the stream.
-     Even reading the "AtEndOfStream" property blocks which makes it impossible
-     to read from a stream which receives data without blocking the application.
-     As a work-around WPKG now makes sure STDOUT/STDERR is redirected to NUL
-     to discard them completely. Well, if your command includes the strings
-     " >" or " 2>" WPKG will not replace them by NUL redirects. This means you
-     can still redirect the output manually to files (or redirect to NUL by
-     yourself). The code just makes sure that output which would be discarded
-     anyway is not even sent to the buffers.
-     The drawback of this work-around is that it is not possible to capture the
-     output from within WPKG and therefore it will not appear within the logs.
-     However this is the same behavior as all WPKG versions (except 1.1.0-M21)
-     had. So no big loss. 
-     Fixes Bug 155.
-FIX: Fixed a problem where removing the same package multiple times during one
-     session ended in a null pointer exception. This could have happened if
-     packages with dependencies are removed and therefore the packages which
-     depend on the removed package is removed too.
-     In case a package is removed two times now WPKG will detect it. In case
-     the package has been removed successfully during this session the remove
-     function returns successful state.
-     Fixes Bug 137 and 145 I hope.
-FIX: STDOUT/STDERR flushing code did not work for non-cmd/%COMSPEC% based
-     installer scripts. Unfortunately on Windows it looks like the I/O re-
-     director parameters ">" or "2>" need to be handled by the application
-     and not by the shell/OS. As a result appending ">NUL" caused invalid/
-     unknown arguments to be passed to some commands (like msiexec). As a
-     work-around WPKG is now executing all commands within a %COMSPEC% shell
-     unless they already use STDOUT & STDERR redirectors.
-FIX: WPKG was ignoring the command-line parameter /log_file_path:<path>.
-     This bug was not affecting log_file_path property set in config.xml.
-     Fixes Bug 157.
-     Thanks to Luca Manganelli.
-FIX: Dependency removal was not fully fixed. Actually the bug has been fixed
-     but the fix contained another issue which caused the same exception.
-     In fact WPKG was comparing the package name with the package ID during
-     the check if the package has been removed already during this session.
-     This of course caused WPKG to belive that it's the first time the package
-     is attempted to be removed and returned a failure code.
-     Fixes Bug 137 and 145.
-FIX: Fixed bug which caused a null-pointer exception when a package marked for
-     removal (removed from the profile) was removed from the package tree on
-     server side. The bug has been reported in Bug 145.
-FIX: Updated regression-test suite which contained some tests which failed
-     because they used unix path separator "/" instead of windows "\"
-     separator. Problems with this tests have been reported in Bug 145.
-MOD: PsTools of Sysinternals have been taken over by Microsoft. The latest
-     version seems to require an additional (undocumented of course) switch
-     "-accepteula" in order to prevent a screen displaying the EULA to pop
-     up which has to be interactively accepted by the user.
-     The work-around for this is to add the "-accepteula" flag to the "special"
-     reboot command by default.
-     Fixes Bug 159.
-MOD: Enhanced getPackageName() to prevent null pointer exceptions if the
-     package node passed within the arguments is null. According to the
-     documentation it should not throw an exception but return an empty string.
-NEW: WPKG 1.1.0 is finally released!
-     WPKG 1.1.0 now becomse the stable branch and WPKG 1.0 releases are marked
-     as end of life. WPKG 1.1.0 is fully backwards compatible and entirely
-     replaces WPKG 1.0. Basically all you need to do in order to upgrade is to
-     replace wpkg.js in your installation. It is recommended to migrate
-     config.xml too because of a few new prameters.
-     Package, host and profile definitions can be kept from previous WPKG
-     versions.
+FIX: Fixed using of lcid="<lcid>" attribute within variable definition in
+     packages. It was documented in packages.xsd but not implemented in wpkg.js.
+     Fixes bug 206.
+     Thanks to Stefan Pendl.
+FIX: Fixed bug when using /debug switch (or implicit enable of /debug by using
+     /dryrun switch or config.xml flag). The issue was introduced with new host
+     attribute matching and advanced host identification in debug messages.
+     Fixes bug 210. Thanks to Stefan Pendl for reporting.
+NEW: Extended host attribute verification is now allowed to be used in package
+     commands too. Commands which specify additional host attributes are
+     ignored if one of the extended attributes do not match the executing host.
+     e.g.
+       <install cmd="command"
+         ...
+         os="windows 7"
+         ipaddresses="^192\.168\.1\..*"
+         domainname="^domain$"
+         groups="^group.*$"
+         architecture="x86" />
+     Note: All special parameters (os, ipaddresses, domainname, groups) are
+     specified as regular expressions. Especially keep this in mind when
+     specifying IP-addresses or any parameter including periods (.). As a
+     period in regular expression means "any character". So keep in mind to
+     escape special regular expression characters.
+     As a result you can use extended host check attributes in the following
+     locations:
+     - host matching
+       <host name="hostname"
+             profile-id="profile"
+             ...
+             architecture="x64"
+             ...
+       />
+     - profile packages
+       <package package-id="package"
+                ...
+                architecture="x64"
+                ...
+       />
+     - package commands
+       <install cmd="command-line"
+                ...
+                architecture="x64"
+                ...
+       />
+       <remove cmd="command-line"
+                ...
+                architecture="x64"
+                ...
+       />
+       <upgrade cmd="command-line"
+                ...
+                architecture="x64"
+                ...
+       />
+       <downgrade cmd="command-line"
+                ...
+                architecture="x64"
+                ...
+       />
+NEW: Added attributes to package nodes which allow to control whether checks
+     shall be execute before install/upgrade/downgrade/remove. By default WPKG
+     only executes checks before first installation in order to prevent re-
+     installing a package which is already installed. Using the new attributes
+     it allows you to enable these checks before upgrade/downgrade/remove too.
+     For example if you use precheck-upgrade="always" and upgrade a package,
+     then WPKG will first run the checks and if they succeed WPKG will skip
+     the execution of upgrade commands and just assume this version is already
+     installed.
+     Be careful when using these attributes as it might lead WPKG to skip
+     upgrades/downgrades if your checks are not sufficiently specific. For
+     example if your check just checks for an uninstall entry existence which
+     is true for the old and the new version, then precheck-upgrade="always"
+     would make WPKG believe that the upgrade has been performed already as
+     the uninstall check from the updated package succeeds. So make sure to
+     include some checks which are true for the new package, but not for the
+     old one.
+     Here is some documentation on the attributes (all of them are optional):
+     <package ...
+     	precheck-install="never|always"
+     	precheck-remove="never|always"
+     	precheck-upgrade="never|always"
+     	precheck-downgrade="never|always"
+     />
+     Notes on "precheck-install":
+        Defines how package checks are used during package
+        installation.
+        
+        Currently supported values:
+        
+        "always" (default): When a package is new to the
+        host then first the checks are run in order to
+        verify whether the package is already installed. If
+        the checks succeed then it is assumed that no
+        further installation is needed. The package is
+        silently added to the host without executing any
+        commands.
+        
+        "never": When a package is new to the host then the
+        install commands are run in any case (without doing
+        checks first). Note: Checks will still be done after
+        package installation to verify whether installation
+        was successful.
 
+     Notes on "precheck-remove":
+        Defines how package checks are used during package
+        removal.
+        
+        Currently supported values:
+        
+        "always": When a package is removed from a
+        host then the checks will be executed before removal
+        is processes. If the checks fail this potentially
+        means that the package has been removed already. In
+        such case the package remove commands will be
+        skipped.
+        
+        "never" (default): When a package is about
+        to be removed from the host then WPKG will execute
+        the remove commands in any case without executing
+        the checks first. Note: Checks will still be done
+        after package removal to verify whether the removal
+        was successful.
 
-Change notes
-============
-WPKG Version: 1.1.0-M21
-Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
-Date        : 2009-04-11
-Status      : Released
+     Notes on "precheck-upgrade":
+        Defines how package checks are used during package
+        upgrade.
+        
+        Currently supported values:
+        
+        "always": When a package is upgraded the
+        checks specified will be be executed before the
+        upgrade takes place. If checks succeed, then the
+        upgrade will not be performed (WPKG just assumes
+        that the new version is already applied correctly.
+        Please note that your checks shall verify a specific
+        software version and not just a generic check which
+        is true for all versions. If your checks are true
+        for the old version too then WPKG would never
+        perform the upgrade in this mode.
+        
+        "never" (default): When a package is about
+        to be upgraded then WPKG will execute the upgrade
+        commands in any case without executing the checks
+        first. This is the recommended behavior. Note:
+        Checks will still be done after package upgrade to
+        verify whether the upgrade was successful.
 
-Changes/fixes visible to the user:
+     Notes on "precheck-downgrade":
+        Defines how package checks are used during package
+        downgrade.
+        
+        Currently supported values:
+        
+        "always": When a package is downgraded the
+        checks specified will be be executed before the
+        downgrade takes place. If checks succeed, then the
+        downgrade will not be performed (WPKG just assumes
+        that the old version is already applied correctly.
+        Please note that your checks shall verify a specific
+        software version and not just a generic check which
+        is true for all versions. If your checks are true
+        for the new/current version too then WPKG would
+        never perform the downgrade in this mode.
+        
+        &quot;never&quot; (default): When a package is about
+        to be downgraded then WPKG will execute the
+        downgrade commands in any case without executing the
+        checks first. This is the recommended behavior.
+        Note: Checks will still be done after package
+        downgrade to verify whether the downgrade was
+        successful.
+     This implements a change request reported in Bugzilla report 180.
+FIX: Fixed using of lcid="<lcid>" attribute within variable definition in
+     packages. It was documented in packages.xsd but not implemented in wpkg.js.
+     Fixes bug 206.
+     Thanks to Stefan Pendl.
+FIX: Fixed cosmetic issue in host matching output.
+     Fixes bug 211. Thanks to Stefan Pendl for reporting.
+NEW: Allow to specify multiple packages to be installed/removed/upgraded on
+     command-line. Just specify a comma-separated list of packages:
+     cscript wpkg.js /install:package1,package2,...
+     Implements bugzilla 204. Thanks to Michael Croes for reporting.
+NEW: Allowing use of environment variables in file size checks:
+     <check type="file"
+            condition="sizeequals"
+            path="%ProgramFiles%\%PKG_DST%"
+            value="%PKG_SIZE%" />
+     Fixes bug report 212. Thanks to Stefan Pendl for reporting.
+FIX: Fixed additional issue in package variable LCID matching in case variable
+     was defined but no lcid attribute was present (which should be fully
+     supported).
+     Support for multiple comma-separated LCID values added.
+     Fixes bug 206.
+NEW: Added tabular output for the listing to report.pl script.
+     Thanks to Stefan Pendl for providing the update.
+     Fixes bug 213.
+FIX: Fixed profiles.xsd reference to example.org instead of wpkg.org.
+     Thanks to Stefan Pendl for reporting. Fixes bug 214.
+FIX: Fixed typos in change log files.
+     Thanks to Stefan Pendl for review. Fixes bug 215.
+FIX: Fixed minior formatting errors in usage message.
+     Fixes bug 220. Thanks to Stefan Pendl.
+NEW: Printing command + expanded command in debug message when executing
+     commands.
+     Fixes bug 221. Thanks to Stefan Pendl.
+FIX: Packages which were already updated by the user (detected by
+     precheck-update=always) were not added to the local package database.
+     As a result such packages were checked over and over again for upgrade
+     on each WPKG-run.
+     Fixes bug 219. Thanks to Heiko Helmle.
+NEW: Supporting extended host matching in variables.
+     Fixes bug 209. Thanks to Stefan Pendl.
+NEW: Added generic lcid matching for all XML elements which support extended
+     host matching. Now the following attributes can be matched:
 
-Summary:
-- Show useage if executed without parameter.
-- Unnecessary null-reference check removed from getPackageChecks() method.
-- Updated help and config.xml (grammar and consistency fixes). Fixes Bug 116.
-- Updated XSD to support installdate & uninstalldate package attributes.
-- Changed exit behavior in case of overridden reboot (exits with 3010 << 8).
-- Fixed invalid env-splitting.
-- Fixed environment setup.
-- Fixed package ID reading bug wen reading profile.
-- Fixed recursive dependency tree build.
-- Fixed crash when profile did not havree any packages assigned.
-- Show usage when no parameter is given
-- improved documentation
-- Migrated code to work with Eclipse JSDT
-- Fixed typo when reading fixed IP addresses from registry
-- Added possibility for package chaining
-- Fixed removal of dependent packages. Fixes Bug 150.
-- Fixed typo in removal message. Fixes Bug 151.
-- Fixed more typos in output messages. Fixes Bug 152.
-- Fixed environment setup for remove commands. Fixes Bug 146.
-- XSD fixes
-- Fixed multi-dependency removal. Fixes Bug 153.
-- Added flushing of STDOUT and STDERR during exec(). Fixes Bug 123.
-- Fix writing null value to system log fails. Fix for Bug 135.
-- Removed unused varialble. Fix for Bug 154.
+     os="windows 7"
+     ipaddresses="^192\.168\.1\..*"
+     domainname="^domain$"
+     groups="^group.*$"
+     architecture="x86"
+     lcid="407,c07,1407,1007,807"
 
+     These matches can be used within the following XML elements now:
 
-NEW: Shows usage if executed without parameter (instead of just throwing an
-     error and exiting).
-FIX: In case a command is executed which does not exist (WScript.Shell.exec()
-     throws exception) WPKG does not immediately terminate.
-FIX: Removed unnecessary check for undefined checks in getPackageChecks()
-     method. It seems that selectNodes(String) never returns null but instead
-     returns empty collection.
-FIX: Updated help and config.xml with grammar and consistency fixes as proposed
-     by Jens Geile. Thanks Jens. Fixes Bug 116.
-FIX: Updated XSD to suppport installdate and uninstalldate package attributes.
-     The attributes have been missing from the XSD definition.
-MOD: Changed behavior of wpkg.js again in case reboot is overridden.
-     Previously it was exiting with exit code 3010 but this caused WPKG client
-     to initiate a reboot immediately after wpkg.js terminated.
-     Now WPKG returns code 3010 << 8 (3010 bit-shifted by 8 bits to the left)
-     which evaluates to a decimal value of 770560. This allows an external
-     tool to verify if a reboot was initiated but overridden.
-     If you would like WPKG to exit with code 3010 without issuing a reboot
-     consider to specify a reboot command within the configuration
-     (see rebootCmd in config.xml or /rebootcmd: switch) which points to a
-     script which does not do anything. In this case WPKG executes the script
-     (e.g. reboot.cmd) and then exits with code 3010.
-     This was discussed in Bug 132.
-FIX: Fixed invalid env-splitting introduced in earlier pre-release version.
-FIX: Fixed environment setup for package install/remove/upgrade.
-FIX: Package IDs wrongly read from profile.
-FIX: Fixed recursive dependency tree build introduced in previous milestone
-     checkin.
-FIX: Fixed error if profile does not have any packages assigned.
-NEW: Shows usage if executed without parameter (instead of just throwing an
-     error and exiting).
-MOD: Improved documentation.
-MOD: Updated source to be readable by Eclipse JSDT. This will be my primary
-     development environment now.
-     The change already helped me to identify a bunch of unused code and to
-     improve code quality in general.
-MOD: Fixed typo when reading fixed IP adresses from registry. It looks like
-     it did not have any effect on the functionality.
-     Changed
-     var fixedIPs = getRegistryValue(regBase, "IPAddress").toArray();
-     to
-     var fixedIPs = getRegistryValue(regBase + "IPAddress").toArray();
-     Thanks to Alan for reporting it.
-NEW: Added possiblity to chain packages. Use the following synatx:
-	 <chain package-id="some-id" />
-	 A chained package is pretty much similar to the
-	 <depends package-id="some-id" />
-	 functionality but chained packages are installed right after the package
-	 which specifies the chain.
-	 Personally I prefer to set a dependency on the "chained" package to assure
-	 that the "chaining" package is installed _before_ the package which
-	 depends on it.
-FIX: Fixed removal of package dependencies by fixing up removePackage() return
-     value. Anyway by definition it should return the success state according
-     to the documentation which was not the case yet.
-     Fixes Bug 150. Thanks to Jason Oster.
-MOD: Modified message when removing depending package from
-     Removal of depending package package '<package-id'> ...
-     to
-     Removal of depending package '<package-id'> ...
-     Fixes Bug 151.. Thanks to Jason Oster.
-MOD: Changed misspelled word "referemces" to "references"
-     Changed quoting in "Removal of <package> successful." message.
-     Fixes Bug 152. Thanks to Jason Oster.
-FIX: Fixed loading of package-specific environment for remove commands.
-     Previously environment variables set for a package have been unavailable
-     to remove commands.
-     Fixes Bug 146. Thanks to Jason Oster.
-FIX: Fixed packages.xsd - type of some elements was wrongly set to String.
-     Now correctly refers to packageReference where appropriate
-     (chain, depends, include).
-     Fixed 'type' attribute of 'check' element to be specified in lower case.
-FIX: Fixed possible errors when a package is removed twice during the same
-     session. This could happen if a package depends on multiple other
-     packages which are removed during a WPKG session.
-     Fixes Bug 153. Thanks to Jason Oster.
-MOD: Added flushing of STDOUT and STDERR during exec(). Due to strange
-     behavior of WSH a command might block if the buffer for STDOUT/STDERR
-     is full. Now WPKG flushes this buffer every second and prints its
-     contents to the debug log. This also allows you to see the console
-     output of the executed command if any.
-FIX: Writing log events to event log with null value might fail due to the
-     fact that WshShell.logEvent() method does not accept null values
-     directly. Now the string "null" will be logged in such case.
-     Fixes Bug 135.
-FIX: Unused Array removed from getPackageDependencies() function. Seems to be
-     some left-over from a testing session.
-     Fixes Bug 154. Thanks to Jason Oster.
+     In hosts.xml:
+     <host name="..." proifile-id="..." os="..." ... />
+     <variable name="..." value="..." os="..." ... />
 
+     In profiles.xml:
+     <variable name="..." value="..." os="..." ... />
+     <package package-id="..." os="..." ... />
 
-Change notes
-============
-WPKG Version: 1.1.0-M7
-Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
-Date        : 2008-05-08
+     In packages.xml:
+     <variable name="..." value="..." os="..." ... />
+     <install cmd="..." os="..." />
+     <upgrade cmd="..." os="..." />
+     <downgrade cmd="..." os="..." />
+     <remove cmd="..." os="..." />
 
-Changes/fixes visible to the user:
+     Implements request filed in bug 209. Thanks to Stefan Pendl.
+NEW: Added host attributes to <wpkg /> node of local settings file (wpkg.xml).
+     This allows analysis tools to get some more host information without
+     having to parse the log files. Example node:
+     <wpkg
+       hostname="admin-pc"
+       architecture="x64"
+       os="microsoft windows 7 professional, , , 6.1.7600"
+       ipaddresses="192.168.1.30"
+       domainname=""
+       groups=""
+       lcid="807"
+     />
+     Fixes bug 217. Thanks to Stefan Pendl.
+     Update: This change did have a huge impact on test cases as wpkg-test
+     performs 1:1 comparison to expected wpkg.xml files. As a result all checks
+     fail. To work-around this issue unless the tests are updated I have
+     introduced a configuration switch in config.xml:
+       settingsHostInfo=true
+     If set to false, then WPKG will not write host attributes to local
+     wpkg.xml database.
+FIX: Extended host attribute matching uses "hostname" now for host name
+     matching to prevent collision with name attributes in <variable />
+     nodes. Moreover this allows now to use classical "name=" attribute
+     in <host /> nodes as wel as the "hostname" extended match attribute.
+     In addition the "name=" attribute in <hosts /> have been declared as
+     optional now. This allows to use either legacy "name" matching which
+     does direct literal-match, IP-address match and regexp matching as well
+     as it allows to use extended host match attributes instead.
 
-Summary:
-- Improved variable support for all package actions.
-- Fixed missing quote in debug output. Fixes Bug 115.
+     E.g. the following constructs are valid...
+     Classial host matching:
+     <host name="hostname" profile-id="p" />
 
-NEW: Variables now supported for all package actions (install, remove upgrade,
-     downgrade, check). This issue was reported on the mailing list.
+     IP-matching using classical name attribute:
+     <host name="192.168.1.1-255" profile-id="p" />
 
-FIX: Fixed missing quote in debug output. Changed
-     Found package node "'Package name (PackageID) in package database "
-     to
-     Found package node "'Package name' (PackageID) in package database."
-     Thanks to Jens Geile for reporting it. Fixes Bug 115.
+     Alternative matching using extended host attributes omitting name
+     attribute:
+     <host ipaddresses="192\.168\.1\..*" profile-id="p" />
+     
+     Combining classical matching with extended host matching:
+     <host name="hostname" os="windows 7" profile-id="p" />
+     Fixes additional bugs found in implementation for bug 209.
+     Thanks to Stefan Pendl.
+FIX: Worked around a WSH issue of variable scopes in for loops.
+     Fixes LCID handling of extended host matches.
+FIX: Fixed termination of processes if timeout is reached.
+     Fixes bug 222. Thanks to Stefan Pendl.
+FIX: Fixed bug that "name" attribute in host node was completely ignored in
+     previous commits. Fixes classic host-name matching.
+NEW: Added support for IA64 Itanium architecture. Basically this adds
+     the possibility to use os="ia64" in extended host attribute matching.
+     So the current list of supported architectures is:
 
+     x86:  32-bit Windows operating system running on x86 instruction set 
+     x64:  64-bit Windows operating system running on x86-64 instruction set
+     ia64: 64-bit Windows operating system running on IA64 instruction set
 
-Change notes
-============
-WPKG Version: 1.1.0-M6
-Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
-Date        : 2008-04-24
-
-Changes/fixes visible to the user:
-
-Summary:
-- Fixed broken file size check. Fixes Bug 112.
-
-NEW: File size checks were broken due to faulty code in get file size method
-     which was modified to support expanding of environment variables.
-     WPKG 1.0 is not affected. This fixes Bug 112. Thanks to Daniel Dehennin!
-
-Change notes
-============
-WPKG Version: 1.1.0-M5
-Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
-Date        : 2008-04-21
-
-Changes/fixes visible to the user:
-
-Summary:
-- Improved handling of event log system errors. Fixes Bug 109.
-
-NEW: Improved handling of event log system errors. In case writing to event log
-     causes an exception WPKG will not exit silently any more but fall back to
-     write to STDOUT and log to the log file as appropriate (depending on log
-     level). Thanks to Brian May for reporting and debugging.
-     This fixes Bug 109.
-
-
-Change notes
-============
-WPKG Version: 1.1.0-M4
-Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
-Date        : 2008-04-10
-
-Changes/fixes visible to the user:
-
-Summary:
-- Fixed Bug 107. Registry equality checks fail on REG_DWORD values.
-- Changed confusing info message about non-zero exit code even if code was 0
-- Allow usage of environment variables within the "execute" check type
-
-FIX: Fixed Bug 107. Registry equality checks throw an error in case of checked
-     value is of type REG_DWORD or REG_BINARY. Now the values are converted to
-     strings before comparing it to the 'value' attribute. REG_MULTI_SZ and
-     REG_BINARY values are concatenated using newline characters. For
-     REG_BINARY values each octett is converted to its decinal number
-     representation. Examples:
-     REG_MULTI_SZ = a
-                    b
-                    c
-     value = "a
-     b
-     c"
-     will match.
-     REG_BINARY values will be converted to multiline string as well. Each octett of the binary value
-     is converted to its decimal representation.
-     REG_BINARY = "11 22 33 44"
-     value = "17
-     34
-     51
-     68"
-     will match.
-
-MOD: Misleading/confusing info message about non-zero exit code (even if exit
-     code was 0) changed from:
-     Command '<cmd> returned non-zero exit code [<code>]. This exit code...
-     to
-     Command '<cmd>' returned exit code [<code>]. This exit code...
-     The quoting has been fixed as well (see above).
-
-MOD: Download XML nodes are now allowed as sub-nodes of any command (install/
-     upgrade/downgrade/remove). This allows you to specify a download which is
-     only downloaded for a specific command. This was implemented since it
-     usually makes no sense to download the installation package again right
-     before the remove commands are executed (which usually runs a local
-     uninstall command which does not need the original installer).
-     Specifying a download XML node on the global package level (not below a
-     specific command definition) is still allowed. Such downloads will be
-     executed regardless of the command to be executed. So you can specify some
-     global downloads which are executed in any case.
-     Note: If multiple install (or upgrade/downgrade/remove) commands are
-     specified WPKG will download the the files of all command nodes of the
-     same kind before starting to execute the commands in sequence.
-     Example:
-     <package...>
-     <donwoad url="http://example.org/package.exe" target="package.exe" />
-     <install cmd="%TEMP%\file.exe some arguments" ...>
-       <donwoad url="http://example.org/file.exe" target="file.exe" />
-     </install>
-     <install cmd="%TEMP%\file2.exe some arguments" ...>
-       <donwoad url="http://example.org/file2.exe" target="file2.exe" />
-     </install>
-     <upgrade cmd="%TEMP%\update.exe arguments" ...>
-       <donwoad url="http://example.org/update.exe" target="update.exe" />
-     </upgrade>
-     </package>
-     This definition will simply download "package.exe" (global). "file.exe"
-     and "file2.exe" right before the install commands are executed in
-     seuence.
-     In case of upgrade it will download "package.exe" (global) and
-     "update.exe" before executing the upgrade command(s).
-
-NEW: Checks of type 'execute' allow to use environment variables within the
-     'path' attribute now. For example the following specification is valid
-     now:
-     "%SystemRoot%\mycheck.cmd"
-
-
-Change notes
-============
-
-WPKG Version: 1.1.0-M3
-Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
-Date        : 2008-04-05
-
-Changes/fixes visible to the user:
-
-Summary:
-- Fixed crash when /force was used in conjunction with /synchronize
-- Do not force quit if installation fails (unsless /qutonerror is set)
-- Extended uninstall check (check for DisplayVersion)
-- New package check: execute
-- Added download extension (allows downloading installers)
-- Added downgrade package functionality
-- Added status output on STDOUT which can be used by the GUI
-
-FIX: WPKG crashed when /force was used in conjunction with /synchronize. Fixed.
-
-MOD: WPKG was forced to exit if package checks failed after installation or if
-     a package failed to remove. This has been changed. Now WPKG prints an
-     error (unless /quitonerror is used).
-     Note that installation of packages depending on the failed one will fail
-     as well. Some packages require reboot unless checks yield true. Therefore
-     it is crucial to define correct package reboot flags for such packages.
-
-NEW: Package uninstall checks have been extended. The following values are now
-     valid:
-     type="uninstall" path="prg" condition="versionsmallerthan" value="1.1"
-             Check if version is smaller than the specified value
-
-     type="uninstall" path="prg" condition="versionlessorequal" value="1.1"
-             Check if version is less or equal than the specified value
-
-     type="uninstall" path="prg" condition="versionequalto" value="1.1"
-             Check if version is exactly equal to the specified value
-
-     type="uninstall" path="prg" condition="versiongreaterorequal" value="1.1"
-             Check if version is greater or equal to the specified value
-
-     type="uninstall" path="prg" condition="versiongreaterthan" value="1.1"
-             Check if version is greater than the specified value
-
-     The version is compared to the DisplayVersion value within the uninstall
-     entry within the Windows registry.
-     Changes are based on a patch by Richard de Vos. Thanks!
-
-NEW: Added new check type: "execute". This allows you to execute any script
-     which checks if an application is installed - based on the exit code of
-     the script.
-     Usage:
-     type="execute" path="\\path\to\script.cmd"
-         condition="exitcodesmallerthan" value="0"
-             Evaluates true if the exit code is negative
-
-     type="execute" path="\\path\to\script.cmd"
-         condition="exitcodelessorequal" value="0"
-             Evalueates true if exit code is 0 or negative
-
-     type="execute" path="\\path\to\script.cmd"
-         condition="exitcodeequalto" value="0"
-             Evaluates true only if exit code is exactly 0
-
-     type="execute" path="\\path\to\script.cmd"
-         condition="exitcodegreaterorequal" value="0"
-             Evaluates true if exit code is 0 or any poitive number
-
-     type="execute" path="\\path\to\script.cmd"
-         condition="exitcodegreaterthan" value="0"
-             Evaluates true if exit code is any positive number
-
-     This type of check also allows very complex checks. For example there is a
-     limitation of the RegRead method used by WPKG to query registry values
-     which contain backslashes '\'. Now you can execute a batch script which
-     checks for such registry values using 'reg query ...'.
-
-NEW: Added download extension as initially proposed by Tomasz Chmielewski (with
-     some changes). A download definition is specified as follows:
-     <download url="http://server.domain.tld/path/to/file.msi"
-     target="subdir/file.msi" timeout="7200" />
-
-     The 'timeout' attribute is entirely optional. It defaults to the value of
-     'downloadTimeout' as specified within config.xml (7200 if not omitted).
-     The value is specified in seconds.
-
-     The 'target' attribute specifies a path relative to the 'downloadDir' as
-     specified within config.xml (defaults to '%TEMP%' if omitted).
-     NOTE: You need to specify the full file path, including the file name, not
-     just a directory name!
-
-     So to install the package above could be installed by the following
-     install command definition:
-     <install cmd="msiexec /qn /i %TEMP%\subdir\file.msi">
-
-NEW: Added downgrade command nodes. These commands are executed if the version
-     installed on the client is newer thant the one on the server side.
-     Example:
-     <downgrade cmd="&quot;\\Store1\Mozilla\Firefox Setup 2.0.0.12.exe&quot; /S"/>
-
-NEW: Added /sendStatus flag and 'sendStatus' configuration parameter in
-     config.xml. The parameter allows to enable printing of status information
-     to STDOUT in order to be parsed by the calling program (e.g. WPKG client).
-     This allows the calling program to display some status messages about the
-     synchronization process.
-     The status update might not be very linear depending on the package sizes
-     but at least it allows to display the start time (and therefore also
-     elapsed time to the user. So the user can see at least how many percent of
-     packages have been synchronized already and for how long the current task
-     is running currently.
-     Users usually feel much less annoyed when waiting for a task to be
-     finished if there are at least some screen updates and a kind of progress
-     bar which is updating from time to time.
-     Note: STDOUT was chosen due to the fact that I was unable to find a way to
-     write to named pipes from JScript yet. However the implementation could
-     easily be adapted to pipes or sockets.
-     I also updated wrapper.js to read STDOUT of the called wpkg.js and print
-     it to its own STDOUT. This required if WPKG client is going to read the
-     output of wpkg.js, in that case output needs to be "chained" to be
-     forwarded to the GUI.
-
-
-Change notes
-============
-
-WPKG Version: 1.1-M1
-Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
-Date        : 2008-01-14
-
-Changes/fixes visible to the user:
-
-Summary:
-- Added dependency awareness for package removal
-
-NEW: removePackage now removes all packages which depends on the one to be
-     removed as well (recursively). This assures that after poackage uninstall
-     no packages are left installed which miss their required dependency.
-     Please note that if a package which depends on the one to be removed
-     specifies an immediate reboot the reboot takes place right after the
-     this package has been removed. In such case the package initially
-     requested to be removed will still be there after the reboot.
-     To avoid this it is possible that depending packages use the postponed
-     reboot functionality. Alternatively you can use the /noreboot switch
-     to advice WPKG to ignore each reboot request. Note that in such cases
-     some packages will not properly finish their uninstall procedure.
-     In case removing of any package from the dependency tree fails WPKG
-     will stop uninstalling and print a message. In such case the package
-     you requested to remove will still be there because there is at least one
-     more package which depends on it. You can advice WPKG to remove the
-     requested package in any case by using the /force switch. Warning: In such
-     case it might happen that some packages depending on the removed one could
-     not be removed and therefore will be left on the system (probably not
-     working any more).
+     Fixes bug 224. Thanks to Stefan Pendl for requesting.
+FIX: Fixed error handling in case command execution fails AND command includes
+     variables. In such case WPKG did not properly return code -1 so the
+     <exit code="any" /> tag did not have any effect.
+     Fixes bug 226. Thanks to Bruno Choquet for reporting.
+FIX: Fixed call of Terminate() method when command times out in order to
+     properly shut down the child process.
+NEW: Added sample package templates which might help users to build their own
+     packages.
+     Fixes bug 225. Thanks to Stefan Pendl for sharing the templates.
+MOD: Modified included sample packages for firefox and added adobe flash player
+     example. The new packages give some more insight on new WPKG features
+     as provided in WPKG-1.1.3.
+     Fixes bug 227. Thanks to Stefan Pendl.
+MOD: Modified included example profile to show os attribute.
+     Fixes bug 228. Thanks to Stefan Pendl.
+NEW: Final release of WPKG 1.1.3-RC16 as WPKG 1.2. No further code changes.

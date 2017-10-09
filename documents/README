@@ -5,7 +5,7 @@ This program is used to push/pull software packages, such as Service Packs,
 hotfixes, or program installations from a central server to a number of
 workstations.
 
-Package definations are stored in packages.xml, profile definations in
+Package definitions are stored in packages.xml, profile definitions in
 profiles.xml and host definitions in hosts.xml. The configuration is stored in
 config.xml.
 
@@ -15,7 +15,7 @@ returning a zero exit code, or by returning an exit code listed for the
 command.
 
 The system keeps track of what versions of what packages are currently
-installed and what version are available in order to decide weither to install,
+installed and what version are available in order to decide whether to install,
 remove, or upgrade a package.
 
 Profiles denote a certain "class" of workstations, such as departments.
@@ -23,7 +23,7 @@ Profiles can depend on other profiles making the resulting profile including all
 packages from the profile it depends on.
 
 Host definitions are used by WPKG to assign profiles to hosts depending on their
-host name or IP address. Regular expression matchin can be used for simpified
+host name or IP address. Regular expression matching can be used for simplified
 group matching.
 
 A Host definition assigns a profile to the host WPKG is running on. A profile

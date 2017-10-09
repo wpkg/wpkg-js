@@ -58,7 +58,8 @@
 /**
  * Global variables
  */
-var cmd64="64-bit\\cmd.exe"
+// var cmd64="64-bit\\cmd.exe"
+var cmd64="%SystemRoot%\\sysnative\\cmd.exe"
 var wpkg="wpkg.js"
 
 /**

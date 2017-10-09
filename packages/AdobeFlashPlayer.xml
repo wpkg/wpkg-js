@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<packages
+        xmlns:xsi="http://www.wpkg.org/packages"
+        xsi:noNamespaceSchemaLocation="../xsd/packages.xsd" >
+
+    <package id="AdobeFlashPlayer"
+            name="Adobe Flash Player"
+            revision="%PKG_VERSION%"
+            reboot="false"
+            priority="10">
+
+        <variable name="PKG_VERSION"      value="10.3.181.34" />
+        <variable name="PKG_SOURCE"       value="%SOFTWARE%\Flash Player" />
+        <variable name="PKG_DESTINATION"  value="%SystemRoot%\System32\Macromed\Flash" architecture="x86"/>
+        <variable name="PKG_DESTINATION"  value="%SystemRoot%\SysWOW64\Macromed\Flash" architecture="x64"/>
+        <variable name="PKG_FILE_ACTIVEX" value="Flash10u.ocx" />
+        <variable name="PKG_FILE_PLUGIN"  value="NPSWF32.dll" />
+
+        <check type="uninstall" condition="versiongreaterorequal" path="Adobe Flash Player .+ ActiveX"        value="%PKG_VERSION%" />
+        <check type="uninstall" condition="versiongreaterorequal" path="Adobe Flash Player .+ Plugin"         value="%PKG_VERSION%" />
+        <check type="file"      condition="versiongreaterorequal" path="%PKG_DESTINATION%\%PKG_FILE_ACTIVEX%" value="%PKG_VERSION%" />
+        <check type="file"      condition="versiongreaterorequal" path="%PKG_DESTINATION%\%PKG_FILE_PLUGIN%"  value="%PKG_VERSION%" />
+
+        <install cmd='"%PKG_SOURCE%\uninstall_flash_player.exe" -uninstall'>
+            <exit code="any" />
+        </install>
+        <install cmd='"%PKG_SOURCE%\install_flash_player_ax.exe" /install ' />
+        <install cmd='"%PKG_SOURCE%\install_flash_player.exe" /install ' />
+
+        <upgrade cmd='"%PKG_SOURCE%\uninstall_flash_player.exe" -uninstall'>
+            <exit code="any" />
+        </upgrade>
+        <upgrade cmd='"%PKG_SOURCE%\install_flash_player_ax.exe" /install ' />
+        <upgrade cmd='"%PKG_SOURCE%\install_flash_player.exe" /install ' />
+
+        <remove cmd='"%PKG_SOURCE%\uninstall_flash_player.exe" -uninstall' />
+    </package>
+</packages>

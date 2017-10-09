@@ -1,22 +1,249 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 
-<packages>
+<packages
+        xmlns:xsi="http://www.wpkg.org/packages"
+        xsi:noNamespaceSchemaLocation="../xsd/packages.xsd" >
 
-<package
-   id="firefox"
-   name="Mozilla Firefox"
-   revision="15041"
-   reboot="false"
-   priority="10">
+    <package
+            id="Firefox"
+            name="Mozilla Firefox"
+            revision="%PKG_VERSION%"
+            reboot="false"
+            priority="100">
+        <!-- a higher priority is used to install before Java and Flash Player
+            without the need to define a dependency -->
 
-   <check type="uninstall" condition="exists" path="Mozilla Firefox (1.5)" />
+        <variable name="PKG_VERSION"     value="5.0" />
+        <variable name="PKG_EXE_VERSION" value="5.0.0.4183" />
+        <variable name="PKG_DESTINATION" value="%ProgramFiles%\Mozilla Firefox"      architecture="x86"/>
+        <variable name="PKG_DESTINATION" value="%ProgramFiles(x86)%\Mozilla Firefox" architecture="x64"/>
 
-   <install cmd='"%SOFTWARE%\firefox\Firefox Setup 1.5.0.4.exe" -ms' />
+        <!-- default language is English -->
+        <variable name="PKG_LANGUAGE"    value="en-us"/>
+        <!-- overwrite default language for German systems -->
+        <variable name="PKG_LANGUAGE"    value="de" lcid="407,c07,1407,1007,807"/>
 
-   <upgrade cmd='"%SOFTWARE%\firefox\Firefox Setup 1.5.0.4.exe" -ms' />
+        <check type="uninstall" condition="versiongreaterorequal" path="Mozilla Firefox .+"            value="%PKG_VERSION%" />
+        <check type="file"      condition="versiongreaterorequal" path="%PKG_DESTINATION%\firefox.exe" value="%PKG_EXE_VERSION%" />
 
-   <remove cmd='"%PROGRAMFILES%\Mozilla Firefox\uninstall\uninstall.exe" -ms' />
+        <install cmd='"%SOFTWARE%\Firefox\Firefox Setup %PKG_VERSION% %PKG_LANGUAGE%.exe" /S' />
 
-</package>
+        <upgrade cmd='"%SOFTWARE%\Firefox\Firefox Setup %PKG_VERSION% %PKG_LANGUAGE%.exe" /S' />
 
+        <remove cmd='"%PKG_DESTINATION%\uninstall\helper.exe" /s' />
+    </package>
+
+    <package id="FirefoxExtensions"
+            name="Firefox Extensions"
+            revision="2011.07.03"
+            reboot="false"
+            priority="10"
+            execute="once">
+
+        <!-- package to define common Firefox plugins
+            this keeps the profile small.
+
+            Since the extensions depend on Firefox you just need to
+            specify this package to get Firefox installed -->
+
+        <include package-id="AddblockPlus"/>
+        <include package-id="CheckPlaces"/>
+        <include package-id="DownThemAll"/>
+        <include package-id="Firebug"/>
+        <include package-id="PDFDownload"/>
+        <include package-id="SortPlaces"/>
+        <include package-id="SQLiteManager"/>
+    </package>
+
+    <package id="SQLiteManager"
+            name="Firefox Extension - SQLite Manager"
+            revision="0.7.4"
+            reboot="false"
+            priority="10">
+
+        <depends package-id="Firefox"/>
+
+        <variable name="PKG_NAME"        value="SQLiteManager" />
+        <variable name="PKG_SIZE"        value="254358" />
+        <variable name="PKG_SOURCE"      value="%SOFTWARE%\Firefox\Add-ons\sqlitemanager-0.7.4-all.xpi" />
+        <variable name="PKG_FILE"        value="Mozilla Firefox\extensions\SQLiteManager@mrinalkant.blogspot.com.xpi" />
+        <variable name="PKG_DESTINATION" value="%ProgramFiles%"      architecture="x86"/>
+        <variable name="PKG_DESTINATION" value="%ProgramFiles(x86)%" architecture="x64"/>
+
+        <check type="file" condition="sizeequals" path="%PKG_DESTINATION%\%PKG_FILE%" value="%PKG_SIZE%" />
+
+        <install cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <upgrade cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <remove cmd='%ComSpec% /c del /f /q "%PKG_DESTINATION%\%PKG_FILE%"' />
+    </package>
+
+    <package id="SortPlaces"
+            name="Firefox Extension - Sort Places"
+            revision="1.9.0"
+            reboot="false"
+            priority="10">
+
+        <depends package-id="Firefox"/>
+
+        <variable name="PKG_NAME"        value="SortPlaces" />
+        <variable name="PKG_SIZE"        value="81302" />
+        <variable name="PKG_SOURCE"      value="%SOFTWARE%\Firefox\Add-ons\sortplaces190.xpi" />
+        <variable name="PKG_FILE"        value="Mozilla Firefox\extensions\sortplaces@andyhalford.com.xpi" />
+        <variable name="PKG_DESTINATION" value="%ProgramFiles%"      architecture="x86"/>
+        <variable name="PKG_DESTINATION" value="%ProgramFiles(x86)%" architecture="x64"/>
+
+        <check type="file" condition="sizeequals" path="%PKG_DESTINATION%\%PKG_FILE%" value="%PKG_SIZE%" />
+
+        <install cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <upgrade cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <remove cmd='%ComSpec% /c del /f /q "%PKG_DESTINATION%\%PKG_FILE%"' />
+    </package>
+
+    <package id="PDFDownload"
+            name="Firefox Extension - PDF Download"
+            revision="3.0.0.2"
+            reboot="false"
+            priority="10">
+
+        <depends package-id="Firefox"/>
+
+        <variable name="PKG_NAME"        value="PDFDownload" />
+        <variable name="PKG_SIZE"        value="164871" />
+        <variable name="PKG_SOURCE"      value="%SOFTWARE%\Firefox\Add-ons\pdf_download-3.0.0.2-fx.xpi" />
+        <variable name="PKG_FILE"        value="Mozilla Firefox\extensions\{37E4D8EA-8BDA-4831-8EA1-89053939A250}.xpi" />
+        <variable name="PKG_DESTINATION" value="%ProgramFiles%"      architecture="x86"/>
+        <variable name="PKG_DESTINATION" value="%ProgramFiles(x86)%" architecture="x64"/>
+
+        <check type="file" condition="sizeequals" path="%PKG_DESTINATION%\%PKG_FILE%" value="%PKG_SIZE%" />
+
+        <install cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <upgrade cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <remove cmd='%ComSpec% /c del /f /q "%PKG_DESTINATION%\%PKG_FILE%"' />
+    </package>
+
+    <package id="Firebug"
+            name="Firefox Extension - Firebug"
+            revision="1.7.3"
+            reboot="false"
+            priority="10">
+
+        <depends package-id="Firefox"/>
+
+        <variable name="PKG_NAME"        value="Firebug" />
+        <variable name="PKG_SIZE"        value="1347982" />
+        <variable name="PKG_SOURCE"      value="%SOFTWARE%\Firefox\Add-ons\firebug-1.7.3.xpi" />
+        <variable name="PKG_FILE"        value="Mozilla Firefox\extensions\firebug@software.joehewitt.com.xpi" />
+        <variable name="PKG_DESTINATION" value="%ProgramFiles%"      architecture="x86"/>
+        <variable name="PKG_DESTINATION" value="%ProgramFiles(x86)%" architecture="x64"/>
+
+        <check type="file" condition="sizeequals" path="%PKG_DESTINATION%\%PKG_FILE%" value="%PKG_SIZE%" />
+
+        <install cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <upgrade cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <remove cmd='%ComSpec% /c del /f /q "%PKG_DESTINATION%\%PKG_FILE%"' />
+    </package>
+
+    <package id="DownThemAll"
+            name="Firefox Extension - Down Them All"
+            revision="2.0.7"
+            reboot="false"
+            priority="10">
+
+        <depends package-id="Firefox"/>
+
+        <variable name="PKG_NAME"        value="DownThemAll" />
+        <variable name="PKG_SIZE"        value="691879" />
+        <variable name="PKG_SOURCE"      value="%SOFTWARE%\Firefox\Add-ons\downthemall-2.0.7-sm+fx.xpi" />
+        <variable name="PKG_FILE"        value="Mozilla Firefox\extensions\{DDC359D1-844A-42a7-9AA1-88A850A938A8}.xpi" />
+        <variable name="PKG_DESTINATION" value="%ProgramFiles%"      architecture="x86"/>
+        <variable name="PKG_DESTINATION" value="%ProgramFiles(x86)%" architecture="x64"/>
+
+        <check type="file" condition="sizeequals" path="%PKG_DESTINATION%\%PKG_FILE%" value="%PKG_SIZE%" />
+
+        <install cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <upgrade cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <remove cmd='%ComSpec% /c del /f /q "%PKG_DESTINATION%\%PKG_FILE%"' />
+    </package>
+
+    <package id="CheckPlaces"
+            name="Firefox Extension - Check Places"
+            revision="2.6.0"
+            reboot="false"
+            priority="10">
+
+        <depends package-id="Firefox"/>
+
+        <variable name="PKG_NAME"        value="CheckPlaces" />
+        <variable name="PKG_SIZE"        value="129312" />
+        <variable name="PKG_SOURCE"      value="%SOFTWARE%\Firefox\Add-ons\checkplaces260.xpi" />
+        <variable name="PKG_FILE"        value="Mozilla Firefox\extensions\checkplaces@andyhalford.com.xpi" />
+        <variable name="PKG_DESTINATION" value="%ProgramFiles%"      architecture="x86"/>
+        <variable name="PKG_DESTINATION" value="%ProgramFiles(x86)%" architecture="x64"/>
+
+        <check type="file" condition="sizeequals" path="%PKG_DESTINATION%\%PKG_FILE%" value="%PKG_SIZE%" />
+
+        <install cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <upgrade cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <remove cmd='%ComSpec% /c del /f /q "%PKG_DESTINATION%\%PKG_FILE%"' />
+    </package>
+
+    <package id="Brief"
+            name="Firefox Extension - Brief"
+            revision="1.6beta1"
+            reboot="false"
+            priority="10">
+
+        <depends package-id="Firefox"/>
+
+        <variable name="PKG_NAME"        value="Brief" />
+        <variable name="PKG_SIZE"        value="241511" />
+        <variable name="PKG_SOURCE"      value="%SOFTWARE%\Firefox\Add-ons\brief-1.6b1-fx.xpi" />
+        <variable name="PKG_FILE"        value="Mozilla Firefox\extensions\brief@mozdev.org.xpi" />
+        <variable name="PKG_DESTINATION" value="%ProgramFiles%"      architecture="x86"/>
+        <variable name="PKG_DESTINATION" value="%ProgramFiles(x86)%" architecture="x64"/>
+
+        <check type="file" condition="sizeequals" path="%PKG_DESTINATION%\%PKG_FILE%" value="%PKG_SIZE%" />
+
+        <install cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <upgrade cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <remove cmd='%ComSpec% /c del /f /q "%PKG_DESTINATION%\%PKG_FILE%"' />
+    </package>
+
+    <package id="AddblockPlus"
+            name="Firefox Extension - Addblock Plus"
+            revision="1.3.9"
+            reboot="false"
+            priority="10">
+
+        <depends package-id="Firefox"/>
+
+        <variable name="PKG_NAME"        value="AddblockPlus" />
+        <variable name="PKG_SIZE"        value="608840" />
+        <variable name="PKG_SOURCE"      value="%SOFTWARE%\Firefox\Add-ons\adblockplus-1.3.9.xpi" />
+        <variable name="PKG_FILE"        value="Mozilla Firefox\extensions\{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}.xpi" />
+        <variable name="PKG_DESTINATION" value="%ProgramFiles%"      architecture="x86"/>
+        <variable name="PKG_DESTINATION" value="%ProgramFiles(x86)%" architecture="x64"/>
+
+        <check type="file" condition="sizeequals" path="%PKG_DESTINATION%\%PKG_FILE%" value="%PKG_SIZE%" />
+
+        <install cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <upgrade cmd='%ComSpec% /c copy /V /Y /B "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_FILE%" &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <remove cmd='%ComSpec% /c del /f /q "%PKG_DESTINATION%\%PKG_FILE%"' />
+    </package>
 </packages>

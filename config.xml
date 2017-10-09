@@ -13,7 +13,7 @@
 		*******************************************************************************
 		*
 		* If you use wpkg_web, you can set wpkg_base to the base URL of your
-		* WPKG_Web installation.  NO TRAILING SLASH (/).  This will allow WPKG to
+		* WPKG_Web installation. NO TRAILING SLASH (/). This will allow WPKG to
 		* use the web generated XML file and not require further XML Exports to the
 		* file system.
 		*
@@ -192,7 +192,7 @@
 		****************************************************************************
 	-->
 	<!--
-		<param name='noRunningState'  value='false' />
+		<param name='noRunningState' value='false' />
 	-->
 
 
@@ -208,7 +208,45 @@
 		****************************************************************************
 	-->
 	<!--
-		<param name='caseSensitivity'  value='true' />
+		<param name='caseSensitivity' value='true' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* True : Match multiple host entries to a single host. 
+		* False: Only match one host entry to the executing host. If a matching host
+		*        entry is found the algorithm stops looking for further matches.
+		*        This way only one profile is assigned to a host.
+		*
+		* Default value      : false
+		* Command-line switch: /applymultiple
+		****************************************************************************
+	-->
+	<!--
+		<param name='applyMultiple' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* True : Disable all downloads. In this mode all download instructions
+		*        will be simply ignored. Exactly the same way as if they were not
+		*        specified in the XML at all. Use this option with caution as your
+		*        install commands might require the files downloaded in download
+		*        specifications.
+		*        This switch/setting might be used on hosts which get the packages
+		*        synchronized to the download target so the download files already
+		*        exist before WPKG execution.
+		* False: Default behavior. All downloads are executed as specified within
+		*        the XML files.
+		*
+		* Default value      : false
+		* Command-line switch: /noDownload
+		****************************************************************************
+	-->
+	<!--
+		<param name='noDownload' value='false' />
 	-->
 
 
@@ -343,6 +381,24 @@
 		<param name='noUpgradeBeforeRemove' value='false' />
 	-->
 
+	<!--
+		****************************************************************************
+		* Allows to disable insert of host attributes to local settings DB. This is
+		* handy for testing as the current test-suite compares the local wpkg.xml
+		* database and the file will look different on all test machines if these
+		* attribute are present. This setting might be removed if all test-cases
+		* are adapted.
+		*
+		* True : Includes host information in local wpkg.xml attributes
+		* False: Does not include any host information in local wpkg.xml
+		*
+		* Default value      : true
+		* Command-line switch: 
+		****************************************************************************
+	-->
+	<!--
+		<param name='settingsHostInfo' value='true' />
+	-->
 
 	<!--
 		****************************************************************************

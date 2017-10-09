@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<packages
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../xsd/packages.xsd" >
+
+    <package id="ShortPackageID"
+            name="Long Package Description"
+            revision="%PKG_VERSION%"
+            reboot="false"
+            priority="10">
+
+        <!--
+            RoboCopy is included in the free Windows Server 2003 Resource Kit Tools,
+            which can be installed on all XP and Server 2003 Editions, including x64 Editions.
+            
+            For Windows 2000 you need to copy RoboCopy.exe from an XP or Server 2003 installation
+            to %SystemRoot%\System32.
+            
+            Windows Vista and higher contain RoboCopy out-of-the-box.
+        -->
+        <depends package-id="RoboCopy"/>
+        
+        <depends package-id="PreRequisitePackageID"/>
+        <include package-id="AdditionalPackageID"/>
+
+        <variable name="PKG_VERSION"       value="" />
+        <variable name="PKG_NAME"          value="" />
+        <variable name="PKG_SOURCE"        value="%SOFTWARE%\"/>
+        <variable name="PKG_DESTINATION"   value="%ProgramFiles%\"      architecture="x86"/>
+        <variable name="PKG_DESTINATION"   value="%ProgramFiles(x86)%\" architecture="x64"/>
+        <variable name="PKG_EXCLUDED_DIRS" value="/XD {folders}" />
+
+        <check type="file" condition="versiongreaterorequal" path="%PKG_DESTINATION%\%PKG_NAME%\" value="%PKG_VERSION%" />
+
+        <install cmd='%ComSpec% /c robocopy "%PKG_SOURCE_DIR%\%PKG_NAME%" "%PKG_DESTINATION%\%PKG_NAME%" /COPYALL /MIR /CREATE /R:0 /W:0 /V /NP /LOG:"%TMP%\%PKG_NAME%_create.log" %PKG_EXCLUDED_DIRS%' >
+            <exit code="1" />
+            <exit code="2" />
+            <exit code="3" />
+            <exit code="4" />
+            <exit code="5" />
+            <exit code="6" />
+            <exit code="7" />
+        </install>
+        <install cmd='%ComSpec% /c robocopy "%PKG_SOURCE_DIR%\%PKG_NAME%" "%PKG_DESTINATION%\%PKG_NAME%" /COPYALL /MIR /R:0 /W:0 /V /NP /LOG:"%TMP%\%PKG_NAME%_copy.log" %PKG_EXCLUDED_DIRS%' >
+            <exit code="1" />
+            <exit code="2" />
+            <exit code="3" />
+            <exit code="4" />
+            <exit code="5" />
+            <exit code="6" />
+            <exit code="7" />
+        </install>
+
+        <upgrade cmd='%ComSpec% /c robocopy "%PKG_SOURCE_DIR%\%PKG_NAME%" "%PKG_DESTINATION%\%PKG_NAME%" /COPYALL /MIR /R:0 /W:0 /V /NP /LOG:"%TMP%\%PKG_NAME%_update.log" %PKG_EXCLUDED_DIRS%' >
+            <exit code="1" />
+            <exit code="2" />
+            <exit code="3" />
+            <exit code="4" />
+            <exit code="5" />
+            <exit code="6" />
+            <exit code="7" />
+        </upgrade>
+
+        <remove cmd='%ComSpec% /c if exist "%PKG_DESTINATION%\%PKG_NAME%" rmdir /s /q "%PKG_DESTINATION%\%PKG_NAME%"' />
+    </package>
+</packages>

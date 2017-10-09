@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<packages
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="../xsd/packages.xsd" >
+
+    <package id="ShortPackageID"
+            name="Long Package Description"
+            revision="%PKG_VERSION%"
+            reboot="false"
+            priority="10">
+
+        <depends package-id="PreRequisitePackageID"/>
+        <include package-id="AdditionalPackageID"/>
+
+        <variable name="PKG_VERSION"     value="" />
+        <variable name="PKG_NAME"        value="" />
+        <variable name="PKG_SOURCE"      value="%SOFTWARE%\"/>
+        <variable name="PKG_DESTINATION" value="%ProgramFiles%\"      architecture="x86"/>
+        <variable name="PKG_DESTINATION" value="%ProgramFiles(x86)%\" architecture="x64"/>
+
+        <check type="file" condition="versiongreaterorequal" path="%PKG_DESTINATION%\%PKG_NAME%\" value="%PKG_VERSION%" />
+
+        <install cmd='%ComSpec% /c if not exist "%PKG_DESTINATION%\%PKG_NAME%"         mkdir "%PKG_DESTINATION%\%PKG_NAME%"' />
+        <install cmd='%ComSpec% /c xcopy "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_NAME%" /S /V /I /R /Y &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <upgrade cmd='%ComSpec% /c if not exist "%PKG_DESTINATION%\%PKG_NAME%"         mkdir "%PKG_DESTINATION%\%PKG_NAME%"' />
+        <upgrade cmd='%ComSpec% /c xcopy "%PKG_SOURCE%" "%PKG_DESTINATION%\%PKG_NAME%" /S /V /I /R /Y &gt;"%TMP%\%PKG_NAME%.log"' />
+
+        <remove cmd='%ComSpec% /c if exist "%PKG_DESTINATION%\%PKG_NAME%" rmdir /s /q "%PKG_DESTINATION%\%PKG_NAME%"' />
+    </package>
+</packages>

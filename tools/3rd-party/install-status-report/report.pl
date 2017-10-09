@@ -4,15 +4,12 @@ use XML::Simple;
 use Data::Dumper;
 use strict;
 
-
-
 my @files; #list of files to read from
 my %hosts; #Key value pair of host regexp to profiles
 my %profiles;
 my %packages;
 my %hosttmp; # Temparary host hash that will be merged into %hosts
 my %xmlfile; # XML file to be parsed
-
 
 # Build Hosts Array
 @files = <hosts/*.xml>;
@@ -45,9 +42,12 @@ foreach my $file (@files) {
 	foreach my $package (keys %{$xmlfile->{'package'}}) {
 		$packages{$xmlfile->{'package'}->{$package}->{'id'}} = $xmlfile->{'package'}->{$package}->{'revision'};
 	}
-	
 }
 
+# Output List Header
+my $separator = "-------------------------------------------------------------------------------------------";
+printf "%-20s %-30s %10s %10s\n", "Hostname", "Package", "Available", "Installed";
+printf "%.20s-%.30s-%.10s-%.10s\n", $separator, $separator, $separator, $separator;
 
 # Start checking host xmlfiles
 @files = <status/*.xml>;
@@ -61,8 +61,8 @@ foreach my $file (@files) {
 	foreach my $profiletest (keys %hosts) {
 		# Match the Hostname
 		if ($hostname =~ /$profiletest/i) {
-			#print "Match! $hostname matches $profiletest using profile: $hosts{$profiletest}\n";
-			# New we populate %testpackages with all of the packages in main and dependent profiles
+			# print "Match! $hostname matches $profiletest using profile: $hosts{$profiletest}\n";
+			# Now we populate %testpackages with all of the packages in main and dependent profiles
 			foreach my $package (@{%profiles->{$hosts{$profiletest}}->{'package'}}) {
 				$testpackages{$package} = $packages{$package};
 			}
@@ -78,9 +78,8 @@ foreach my $file (@files) {
 			# Now we have our %testpackages and %checkpackages hashes made, lets test!
 			foreach my $package (keys %testpackages) {				
 				# In the below line, package is the key, which returns the value of 'revision'
-				if ($testpackages{$package} != $checkpackages{$package}) {
-					print "$hostname:  $package DBv: $testpackages{$package} PCv: $checkpackages{$package}\n"
-				
+				if ( $testpackages{$package} != $checkpackages{$package} ) {
+					printf "%-20s %-30s %10s %10s\n", $hostname, $package, $testpackages{$package}, $checkpackages{$package};
 				}
 			}
 		}

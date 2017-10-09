@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+
+<packages
+        xmlns:xsi="http://www.wpkg.org/packages"
+        xsi:noNamespaceSchemaLocation="../xsd/packages.xsd" >
+
+    <package
+            id="JRE6"
+            name="Java Runtime Environment 6"
+            revision="%PKG_VERSION%"
+            reboot="false"
+            priority="10">
+
+        <variable name="PKG_VERSION"     value="26" />
+        <variable name="PKG_DESTINATION" value="%ProgramFiles%\Java\jre6\bin"      architecture="x86"/>
+        <variable name="PKG_DESTINATION" value="%ProgramFiles(x86)%\Java\jre6\bin" architecture="x64"/>
+
+        <check type="uninstall" condition="exists"                path="Java.TM. 6 Update [0-9]+" />
+        <!-- check 32-bit version -->
+        <check type="file"      condition="versiongreaterorequal" path="%PKG_DESTINATION%\java.exe" value="6.0.%PKG_VERSION%0" />
+
+        <!-- stop quick start service -->
+        <install cmd="%ComSpec% /c net stop JavaQuickStarterService">
+            <exit code="2" />
+        </install>
+        <!-- remove 32-bit version -->
+        <install cmd="%ComSpec% /c for /L %V in (0,1,9) do @msiexec /passive /x {3248F0A8-6813-11D6-A77B-00B0D01600%V0}">
+            <exit code="1605" />
+        </install>
+        <install cmd="%ComSpec% /c for /L %V in (10,1,%PKG_VERSION%) do @msiexec /passive /x {26A24AE4-039D-4CA4-87B4-2F832160%VFF}">
+            <exit code="1605" />
+        </install>
+        <!-- remove 64-bit version -->
+        <install architecture="x64" cmd="%ComSpec% /c for /L %V in (10,1,%PKG_VERSION%) do @msiexec /passive /x {26A24AE4-039D-4CA4-87B4-2F864160%VFF}">
+            <exit code="1605" />
+        </install>
+        <!-- install latest version -->
+        <install cmd='"%SOFTWARE%\Java\jre-6u%PKG_VERSION%-windows-i586.exe" /s /v "/passive /norestart /log %TMP%\JRE6_x86.log ADDLOCAL=ALL IEXPLORER=1 MOZILLA=1 REBOOT=Suppress"' />
+        <install architecture="x64" cmd='"%SOFTWARE%\Java\jre-6u%PKG_VERSION%-windows-x64.exe" /s /v "/passive /norestart /log %TMP%\JRE6_AMD64.log ADDLOCAL=ALL IEXPLORER=1 MOZILLA=1 REBOOT=Suppress"' />
+
+        <!-- stop quick start service -->
+        <upgrade cmd="%ComSpec% /c net stop JavaQuickStarterService">
+            <exit code="2" />
+        </upgrade>
+        <!-- remove 32-bit version -->
+        <upgrade cmd="%ComSpec% /c for /L %V in (0,1,9) do @msiexec /passive /x {3248F0A8-6813-11D6-A77B-00B0D01600%V0}">
+            <exit code="1605" />
+        </upgrade>
+        <upgrade cmd="%ComSpec% /c for /L %V in (10,1,%PKG_VERSION%) do @msiexec /passive /x {26A24AE4-039D-4CA4-87B4-2F832160%VFF}">
+            <exit code="1605" />
+        </upgrade>
+        <!-- remove 64-bit version -->
+        <upgrade architecture="x64" cmd="%ComSpec% /c for /L %V in (10,1,%PKG_VERSION%) do @msiexec /passive /x {26A24AE4-039D-4CA4-87B4-2F864160%VFF}">
+            <exit code="1605" />
+        </upgrade>
+        <!-- install latest version -->
+        <upgrade cmd='"%SOFTWARE%\Java\jre-6u%PKG_VERSION%-windows-i586.exe" /s /v "/passive /norestart /log %TMP%\JRE6_x86.log ADDLOCAL=ALL IEXPLORER=1 MOZILLA=1 REBOOT=Suppress"' />
+        <upgrade architecture="x64" cmd='"%SOFTWARE%\Java\jre-6u%PKG_VERSION%-windows-x64.exe" /s /v "/passive /norestart /log %TMP%\JRE6_AMD64.log ADDLOCAL=ALL IEXPLORER=1 MOZILLA=1 REBOOT=Suppress"' />
+
+        <!-- stop quick start service -->
+        <remove cmd="%ComSpec% /c net stop JavaQuickStarterService">
+            <exit code="2" />
+        </remove>
+        <!-- remove 32-bit version -->
+        <remove cmd="msiexec /passive /x {26A24AE4-039D-4CA4-87B4-2F832160%PKG_VERSION%FF}" />
+        <!-- remove 64-bit version -->
+        <remove architecture="x64" cmd="msiexec /passive /x {26A24AE4-039D-4CA4-87B4-2F864160%PKG_VERSION%FF}" />
+    </package>
+</packages>

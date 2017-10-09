@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 
 
 <profiles>
@@ -6,6 +6,12 @@
     <profile id="room1">
         <package package-id="firefox" />
         <package package-id="thunderbird" />
+        
+        <!-- install Adobe Reader 9 only on Windows 2000 -->
+        <package package-id="AdobeReader9"  os="5\.0\.[0-9][0-9][0-9][0-9]"/>
+        
+        <!-- install Adobe Reader 10 on Windows XP and higher -->
+        <package package-id="AdobeReader10" os="5\.[1-9]\.[0-9][0-9][0-9][0-9]|6\.[0-9]\.[0-9][0-9][0-9][0-9]"/>
     </profile>
 
 </profiles>
