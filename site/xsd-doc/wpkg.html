@@ -764,11 +764,6 @@ if (gc != null) {
 </ul>
 </li>
 </ul>
-<ul id="legendTOC" style="margin-top: 0em">
-<li>
-<a href="#Legend">Legend</a>
-</li>
-</ul>
 <ul id="glossaryTOC" style="margin-top: 0em">
 <li>
 <a href="#Glossary">Glossary</a>
@@ -839,7 +834,7 @@ There might be multiple XML files of this type put to the packages/ sub-director
 <input type="button" id="schema_scbox_button" class="control" onclick="switchState('schema_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="schema_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:schema</span> <span class="scTag">targetNamespace</span>="<span>http://www.wpkg.org/wpkg</span>" <span class="scTag">elementFormDefault</span>="<span>unqualified</span>"&gt;<div class="scContent" style="margin-left: 1.5em">...</div>&lt;/<span>xsd:schema</span>&gt;</div>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:schema</span> <span class="scTag">targetNamespace</span>="<span class="scContent">http://www.wpkg.org/wpkg</span>" <span class="scTag">elementFormDefault</span>="<span class="scContent">unqualified</span>"&gt;<div class="scContent" style="margin-left: 1.5em">...</div>&lt;/<span class="scTag">xsd:schema</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -867,32 +862,32 @@ setState('schema_scbox', false);
 <input type="button" id="attributeGroup_HostMatch_xibox_button" class="control" onclick="switchState('attributeGroup_HostMatch_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="attributeGroup_HostMatch_xibox" class="contents">
-<span> hostname="<span>
+<span style="margin-left: 0em"> hostname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0em"> os="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0em"> ipaddresses="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0em"> domainname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0em"> groups="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0em"> architecture="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0em"> environment="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0em"> lcid="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0em"> lcidOS="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>
 </div>
 <script type="text/javascript">
@@ -906,44 +901,44 @@ setState('attributeGroup_HostMatch_xibox', true);
 <input type="button" id="attributeGroup_HostMatch_scbox_button" class="control" onclick="switchState('attributeGroup_HostMatch_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="attributeGroup_HostMatch_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:attributeGroup</span> <span class="scTag">name</span>="<span>HostMatch</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>hostname</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">name</span>="<span class="scContent">HostMatch</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">hostname</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>os</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">os</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>ipaddresses</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">ipaddresses</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>domainname</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">domainname</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>groups</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">groups</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>architecture</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">architecture</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>x86</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>x64</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>ia64</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>environment</span>" <span class="scTag">type</span>="<span>
-<span>
-<a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>lcid</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">x86</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">x64</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">ia64</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">environment</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>lcidOS</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">lcid</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"/&gt;</div>&lt;/<span>xsd:attributeGroup</span>&gt;</div>
+</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">lcidOS</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:attributeGroup</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1027,45 +1022,45 @@ Valid types include:
 <input type="button" id="type_check_xibox_button" class="control" onclick="switchState('type_check_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_check_xibox" class="contents">
-<div>&lt;...<br/>
-<span> type="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em"> type="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Type of check, valid values are: - file - registry - uninstall - execute - logical'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
 <br/>
-<span> condition="<span>
+<span style="margin-left: 0.5em"> condition="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Check condition. Valid values are: - equals - exists - sizeequals - versionsmallerthan - versionlessorequal - versionequalto - versiongreaterorequal - versiongreaterthan - datemodifyequalto - datemodifynewerthan - datemodfyolderthan - datecreateequalto - datecreatenewerthan - datecreateolderthan - dateaccessequalto - dateaccessnewerthan - dateaccessolderthan - exitcodesmallerthan - exitcodelessorequal - exitcodeequalto - exitcodegreaterorequal - exitcodegreaterthan - not - and - or - atleast - atmost'); viewDocumentation('Attribute', 'condition', docArray);">?</a>"</span>
 <br/>
-<span> path="<span>
+<span style="margin-left: 0.5em"> path="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Path to be used for checks (registry path, file path).'); viewDocumentation('Attribute', 'path', docArray);">?</a>"</span>
 <br/>
-<span> value="<span>
+<span style="margin-left: 0.5em"> value="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('A value is required for some check conditions like VERSION, SIZE or EQUALS checks. Note for registry equals checks: The value should contain a string representing the data within the registry value. In case the value is a DWORD just enter a numeric string. The values will be compared in their string representation (DWORD converted to String). In case you compare to a REG_MULTI_SZ value all data fields will be concatenated to a single string separated by newline characters. Example: REG_MULTI_SZ=\'a b c\' value=\'a b c\' will match. REG_BINARY values will be converted to multiline string as well. Each octett of the binary value is converted to its decimal representation. REG_BINARY= \'11 22 33 44\' value = \'17 34 51 68\' will match.'); viewDocumentation('Attribute', 'value', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em"> hostname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em"> os="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em"> ipaddresses="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em"> domainname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em"> groups="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em"> architecture="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em"> environment="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em"> lcid="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em"> lcidOS="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
 </span>
@@ -1073,8 +1068,8 @@ Valid types include:
 <span class="group" style="margin-left: 3em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..*]</span>
 </span>
 <br/>
-<div>&lt;check&gt; <span>
-<a>check</a>
+<div style="margin-left: 4.5em">&lt;check&gt; <span class="type">
+<a title="Jump to &quot;check&quot; type definition." href="#type_check">check</a>
 </span> &lt;/check&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Checks can be nested. Use logical checks to group checks with logical conditions.'); viewDocumentation('Element', 'check', docArray);">?</a>
 </div>
 <span class="group" style="margin-left: 3em">End Sequence</span>
@@ -1082,8 +1077,8 @@ Valid types include:
 <span class="group" style="margin-left: 3em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
 </span>
 <br/>
-<div>&lt;condition&gt; <span>
-<a>condition</a>
+<div style="margin-left: 4.5em">&lt;condition&gt; <span class="type">
+<a title="Jump to &quot;condition&quot; type definition." href="#type_condition">condition</a>
 </span> &lt;/condition&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify a condition under which this check applies. If the condition does not apply then the check is ignored (exactly as if it would not have been specifyed at all). For example you might add a condition to check for specific OS version. So the check will only be applied if the OS version matches the condition.'); viewDocumentation('Element', 'condition', docArray);">?</a>
 </div>
 <span class="group" style="margin-left: 3em">End Sequence</span>
@@ -1102,35 +1097,35 @@ setState('type_check_xibox', true);
 <input type="button" id="type_check_scbox_button" class="control" onclick="switchState('type_check_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_check_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>check</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span>0</span>" <span class="scTag">maxOccurs</span>="<span>1</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span>unbounded</span>" <span class="scTag">minOccurs</span>="<span>0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>check</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>check</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">check</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">1</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>" <span class="scTag">minOccurs</span>="<span class="scContent">0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">check</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;check&quot; type definition." href="#type_check">check</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span>1</span>" <span class="scTag">minOccurs</span>="<span>0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>condition</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span class="scContent">1</span>" <span class="scTag">minOccurs</span>="<span class="scContent">0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;condition&quot; type definition." href="#type_condition">condition</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>type</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>path</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">path</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>" <span class="scTag">default</span>="<span>%SystemRoot%\explorer.exe</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>value</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>" <span class="scTag">default</span>="<span class="scContent">%SystemRoot%\explorer.exe</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">value</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>" <span class="scTag">default</span>="<span>1.0</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span>
-<a>HostMatch</a>
-</span>"/&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>" <span class="scTag">default</span>="<span class="scContent">1.0</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span class="scContent">
+<a title="Jump to &quot;HostMatch&quot; attribute group definition." href="#attributeGroup_HostMatch">HostMatch</a>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1178,45 +1173,45 @@ setState('type_check_scbox', false);
 <input type="button" id="type_checkExecute_xibox_button" class="control" onclick="switchState('type_checkExecute_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_checkExecute_xibox" class="contents">
-<div>&lt;...<br/>
-<span> hostname="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em" class="inherited"> hostname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em" class="inherited"> os="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em" class="inherited"> ipaddresses="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em" class="inherited"> domainname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em" class="inherited"> groups="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em" class="inherited"> architecture="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em" class="inherited"> environment="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcid="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcidOS="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>
 <br/>
-<span> type="<span class="fixed">execute</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Execute checks need to specify \'execute\' here.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
+<span style="margin-left: 0.5em" class="newFields"> type="<span class="fixed">execute</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Execute checks need to specify \'execute\' here.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
 <br/>
-<span> condition="<span>
-<span>
+<span style="margin-left: 0.5em" class="newFields"> condition="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'exitcodesmallerthan'|'exitcodelessorequal'|'exitcodeequalto'|'exitcodegreaterorequal'|'exitcodegreaterthan'})</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Verify the exit code of the script executed. Please specify the exit code to compare to within the \'value\' attribute. Valid values: exitcodesmallerthan: true in case the script exit code is numerically less than the value specified exitcodelessorequal: true in case the script exit code is numerically less or equal than the value specified exitcodeequalto: true in case the script exit code is numerically equal to the value specified exitcodegreaterorequal: true in case the script exit code is numerically greater or equal to the value specified exitcodegreaterthan: true in case the script exit code is numerically larger than the value specified'); viewDocumentation('Attribute', 'condition', docArray);">?</a>"</span>
 <br/>
-<span> path="<span>
+<span style="margin-left: 0.5em" class="newFields"> path="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Path to the script to be executed.'); viewDocumentation('Attribute', 'path', docArray);">?</a>"</span>
 <br/>
-<span> value="<span>
+<span style="margin-left: 0.5em" class="newFields"> value="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Value used in exit code comparison.'); viewDocumentation('Attribute', 'value', docArray);">?</a>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1230,30 +1225,30 @@ setState('type_checkExecute_xibox', true);
 <input type="button" id="type_checkExecute_scbox_button" class="control" onclick="switchState('type_checkExecute_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_checkExecute_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>checkExecute</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
-<a>check</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">checkExecute</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;check&quot; type definition." href="#type_check">check</a>
 </span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>type</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>" <span class="scTag">fixed</span>="<span>execute</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">use</span>="<span>required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>" <span class="scTag">fixed</span>="<span class="scContent">execute</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>exitcodesmallerthan</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>exitcodelessorequal</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>exitcodeequalto</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>exitcodegreaterorequal</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>exitcodegreaterthan</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>path</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">exitcodesmallerthan</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">exitcodelessorequal</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">exitcodeequalto</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">exitcodegreaterorequal</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">exitcodegreaterthan</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">path</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>value</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">value</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1302,45 +1297,45 @@ setState('type_checkExecute_scbox', false);
 <input type="button" id="type_checkFile_xibox_button" class="control" onclick="switchState('type_checkFile_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_checkFile_xibox" class="contents">
-<div>&lt;...<br/>
-<span> hostname="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em" class="inherited"> hostname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em" class="inherited"> os="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em" class="inherited"> ipaddresses="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em" class="inherited"> domainname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em" class="inherited"> groups="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em" class="inherited"> architecture="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em" class="inherited"> environment="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcid="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcidOS="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>
 <br/>
-<span> type="<span class="fixed">file</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('File checks need to specify \'file\' as the TYPE of check.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
+<span style="margin-left: 0.5em" class="newFields"> type="<span class="fixed">file</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('File checks need to specify \'file\' as the TYPE of check.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
 <br/>
-<span> condition="<span>
-<span>
+<span style="margin-left: 0.5em" class="newFields"> condition="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'exists'|'sizeequals'|'versionsmallerthan'|'versionlessorequal'|'versionequalto'|'versiongreaterorequal'|'versiongreaterthan'|'datemodifyequalto'|'datemodifynewerthan'|'datemodifyolderthan'|'datecreateequalto'|'datecreatenewerthan'|'datecreateolderthan'|'dateaccessequalto'|'dateaccessnewerthan'|'dateaccessolderthan'})</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify what should be tested on the file specified within the \'path\' property. - exists: Check for file existence. - sizeequals: Check for file size (exact size in Bytes specified within the \'value\' attribute. - version*: Compare file version to version specified within the \'value\' attribute. - date*: Compare file date to date specified within the \'value\' attribute.'); viewDocumentation('Attribute', 'condition', docArray);">?</a>"</span>
 <br/>
-<span> path="<span>
+<span style="margin-left: 0.5em" class="newFields"> path="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Path to the file to be checked. You might use environment variables as well: \'C:\Windows\explorer.exe\' \'%TEMP%\somefile.txt\''); viewDocumentation('Attribute', 'path', docArray);">?</a>"</span>
 <br/>
-<span> value="<span>
+<span style="margin-left: 0.5em" class="newFields"> value="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('This value is optional only for existence check. For all other checks it it is required. The value should have the following format: - for \'exists\' condition: For the \'exists\' condition the value attribute is not evaluated. Exists just checks for existence of the file referred within the \'path\' attribute. - for \'sizeequals\' condition: The \'value\' attribute has to tontain the file size (in bytes). - for \'version*\' condition: The value has to contain a version string which can be compared against the file version. Some examples for valid version comparisons: A B Result \'1\' \'2\' B is newer \'1\' \'15\' B is newer \'1.0\' \'1.2.b\' B is newer \'1.35\' \'1.35-2\' B is newer \'1.35-2\' \'1.36\' B is newer \'1.35R3\' \'1.36\' B is newer \'1\' \'1.0.00.0000\' Versions are equal \'1\' \'1.0\' Versions are equal \'1.35\' \'1.35-2\' B is newer \'1.35-2\' \'1.35\' A is newer \'1.35R3\' \'1.36R4\' B is newer \'1.35-2\' \'1.35-2.0\' Versions are equal \'1.35.1\' \'1.35.1.0\' Versions are equal \'1.3RC2\' \'1.3\' B is newer (special case where A is an \'RC\' version) \'1.5\' \'1.5I3656\' A is newer (B is an \'I\'/integration version) \'1.5\' \'1.5M3656\' A is newer (B is an \'M\'/milestone version) \'1.5\' \'1.5u3656\' B is newer (B is an update version) - for \'date*\' condition: This value allwos to do comparison to file creation, modification and access timestamps. The \'value\' attribute has to contain a string in the following format: Relative timestamp (in minutes): -100 Means the file timestamp is compared to the timestamp 100 minutes ago. +50 Means the file timestamp is compared to the timestamp 50 minutes in the future. Absolute timestamp in ISO 8601 format: \'2007-11-23 22:00\' (22:00 local time) \'2007-11-23T22:00\' (Both, \'T\' and space delimiter are allowed) \'2007-11-23 22:00:00\' (specifies seconds which default to 0 above) \'2007-11-23 22:00:00.000\' (specifies milliseconds which default to 0) It is allowed to specify the timezone as well: \'2007-11-23 22:00+01:00\' (22:00 CET) \'2007-11-23 21:00Z\' (21:00 UTC/GMT = 22:00 CET) \'2007-11-23 22:00+00:00\' (21:00 UTC/GMT = 22:00 CET) File-Comparison: Prefix your value with the \'@\' character in order to point to a file to which the timestamp of the file referred in path is compared. Examples: @%SystemRoot%\explorer.exe @c:\myfile.txt Special terms: last-week Check afainst timestamp of exactly one week ago (7 days). last-month Check afainst timestamp of exactly one month ago (30 days). last-year Check afainst timestamp of exactly one year ago (365 days). yesterday Check afainst timestamp of yesterday (24 hours ago).'); viewDocumentation('Attribute', 'value', docArray);">?</a>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1354,41 +1349,41 @@ setState('type_checkFile_xibox', true);
 <input type="button" id="type_checkFile_scbox_button" class="control" onclick="switchState('type_checkFile_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_checkFile_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>checkFile</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
-<a>check</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">checkFile</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;check&quot; type definition." href="#type_check">check</a>
 </span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>type</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>" <span class="scTag">fixed</span>="<span>file</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">use</span>="<span>required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>" <span class="scTag">fixed</span>="<span class="scContent">file</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>exists</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>sizeequals</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>versionsmallerthan</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>versionlessorequal</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>versionequalto</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>versiongreaterorequal</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>versiongreaterthan</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>datemodifyequalto</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>datemodifynewerthan</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>datemodifyolderthan</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>datecreateequalto</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>datecreatenewerthan</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>datecreateolderthan</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>dateaccessequalto</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>dateaccessnewerthan</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>dateaccessolderthan</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>path</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">exists</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">sizeequals</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">versionsmallerthan</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">versionlessorequal</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">versionequalto</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">versiongreaterorequal</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">versiongreaterthan</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">datemodifyequalto</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">datemodifynewerthan</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">datemodifyolderthan</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">datecreateequalto</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">datecreatenewerthan</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">datecreateolderthan</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">dateaccessequalto</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">dateaccessnewerthan</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">dateaccessolderthan</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">path</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>value</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">value</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1438,45 +1433,45 @@ setState('type_checkFile_scbox', false);
 <input type="button" id="type_checkHost_xibox_button" class="control" onclick="switchState('type_checkHost_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_checkHost_xibox" class="contents">
-<div>&lt;...<br/>
-<span> path="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em" class="inherited"> path="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Path to be used for checks (registry path, file path).'); viewDocumentation('Attribute', 'path', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em" class="inherited"> hostname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em" class="inherited"> os="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em" class="inherited"> ipaddresses="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em" class="inherited"> domainname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em" class="inherited"> groups="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em" class="inherited"> architecture="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em" class="inherited"> environment="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcid="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcidOS="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>
 <br/>
-<span> type="<span class="fixed">host</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Type of check. Set this tho \&quot;host\&quot; for host type checks.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
+<span style="margin-left: 0.5em" class="newFields"> type="<span class="fixed">host</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Type of check. Set this tho \&quot;host\&quot; for host type checks.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
 <br/>
-<span> condition="<span>
-<span>
+<span style="margin-left: 0.5em" class="newFields"> condition="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'hostname'|'architecture'|'os'|'ipaddresses'|'domainname'|'groups'|'lcid'|'lcidOS'|'environment'})</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Set condition for host check.'); viewDocumentation('Attribute', 'condition', docArray);">?</a>"</span>
 <br/>
-<span> value="<span>
+<span style="margin-left: 0.5em" class="newFields"> value="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression to match the condition.'); viewDocumentation('Attribute', 'value', docArray);">?</a>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1490,30 +1485,30 @@ setState('type_checkHost_xibox', true);
 <input type="button" id="type_checkHost_scbox_button" class="control" onclick="switchState('type_checkHost_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_checkHost_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>checkHost</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
-<a>check</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">checkHost</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;check&quot; type definition." href="#type_check">check</a>
 </span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>type</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">fixed</span>="<span>host</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">use</span>="<span>required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>" <span class="scTag">fixed</span>="<span class="scContent">host</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>hostname</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>architecture</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>os</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>ipaddresses</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>domainname</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>groups</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>lcid</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>lcidOS</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>environment</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>value</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">hostname</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">architecture</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">os</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">ipaddresses</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">domainname</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">groups</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">lcid</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">lcidOS</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">environment</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">value</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1561,45 +1556,45 @@ setState('type_checkHost_scbox', false);
 <input type="button" id="type_checkLogical_xibox_button" class="control" onclick="switchState('type_checkLogical_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_checkLogical_xibox" class="contents">
-<div>&lt;...<br/>
-<span> path="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em" class="inherited"> path="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Path to be used for checks (registry path, file path).'); viewDocumentation('Attribute', 'path', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em" class="inherited"> hostname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em" class="inherited"> os="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em" class="inherited"> ipaddresses="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em" class="inherited"> domainname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em" class="inherited"> groups="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em" class="inherited"> architecture="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em" class="inherited"> environment="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcid="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcidOS="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>
 <br/>
-<span> type="<span class="fixed">logical</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Type of check has to be set to \'logical\' for logical checks.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
+<span style="margin-left: 0.5em" class="newFields"> type="<span class="fixed">logical</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Type of check has to be set to \'logical\' for logical checks.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
 <br/>
-<span> condition="<span>
-<span>
+<span style="margin-left: 0.5em" class="newFields"> condition="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'not'|'and'|'or'|'atleast'|'atmost'})</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Check condition: not: Requires exactly one single sub-element of type \'check\' whose exit code boolean value is inverted. and: Returns false immediately if one of the contained checks returns false. Only evaluates true in case ALL checks contained evaluate true. or: Returns true immediately as soon as one of the checks return true. Only evaluates false if ALL checks contained evaluate false. atleast: Returns true only if at least the specified amount of checks contained return true. For example if you specify 5 checks and the value for \'atleast\' is set to 3 then it returns true as soon as 3 checks out of 5 evaluated true. atmost: Returns true if maximum the specified amount of checks return true. For example if you specify 5 checks and the value for \'atmost\' is set to 3 it will return true only if no more than 3 checks evaluate true.'); viewDocumentation('Attribute', 'condition', docArray);">?</a>"</span>
 <br/>
-<span> value="<span>
+<span style="margin-left: 0.5em" class="newFields"> value="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Number of checks required for \'atleast\' and \'atmost\' checks. Unused for all other conditions.'); viewDocumentation('Attribute', 'value', docArray);">?</a>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1613,26 +1608,26 @@ setState('type_checkLogical_xibox', true);
 <input type="button" id="type_checkLogical_scbox_button" class="control" onclick="switchState('type_checkLogical_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_checkLogical_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>checkLogical</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
-<a>check</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">checkLogical</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;check&quot; type definition." href="#type_check">check</a>
 </span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>type</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>" <span class="scTag">fixed</span>="<span>logical</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">use</span>="<span>required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>" <span class="scTag">fixed</span>="<span class="scContent">logical</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>not</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>and</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>or</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>atleast</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>atmost</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>value</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">not</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">and</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">or</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">atleast</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">atmost</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">value</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1681,45 +1676,45 @@ setState('type_checkLogical_scbox', false);
 <input type="button" id="type_checkRegistry_xibox_button" class="control" onclick="switchState('type_checkRegistry_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_checkRegistry_xibox" class="contents">
-<div>&lt;...<br/>
-<span> hostname="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em" class="inherited"> hostname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em" class="inherited"> os="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em" class="inherited"> ipaddresses="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em" class="inherited"> domainname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em" class="inherited"> groups="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em" class="inherited"> architecture="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em" class="inherited"> environment="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcid="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcidOS="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>
 <br/>
-<span> type="<span class="fixed">registry</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Registry checks need to specify \'registry\' as the the TYPE of check.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
+<span style="margin-left: 0.5em" class="newFields"> type="<span class="fixed">registry</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Registry checks need to specify \'registry\' as the the TYPE of check.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
 <br/>
-<span> condition="<span>
-<span>
+<span style="margin-left: 0.5em" class="newFields"> condition="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'exists'|'equals'})</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('exist: Check for existence of the key/value supplied within the \'path\' attribute. equals: Check if the specified value contains the data entered within the \'value\' attribute.'); viewDocumentation('Attribute', 'condition', docArray);">?</a>"</span>
 <br/>
-<span> path="<span>
+<span style="margin-left: 0.5em" class="newFields"> path="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Enter registry path to a key which you like to check. Valid examples: \'HKLM\Software\''); viewDocumentation('Attribute', 'path', docArray);">?</a>"</span>
 <br/>
-<span> value="<span>
+<span style="margin-left: 0.5em" class="newFields"> value="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Data to check te specified registry value against. NOTE: This attribute is optional only for registry existence checks. It is REQUIRED if you use equal checks.'); viewDocumentation('Attribute', 'value', docArray);">?</a>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1733,27 +1728,27 @@ setState('type_checkRegistry_xibox', true);
 <input type="button" id="type_checkRegistry_scbox_button" class="control" onclick="switchState('type_checkRegistry_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_checkRegistry_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>checkRegistry</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
-<a>check</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">checkRegistry</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;check&quot; type definition." href="#type_check">check</a>
 </span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>type</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>" <span class="scTag">fixed</span>="<span>registry</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">use</span>="<span>required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>" <span class="scTag">fixed</span>="<span class="scContent">registry</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>exists</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>equals</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>path</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">exists</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">equals</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">path</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>value</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">value</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1803,45 +1798,45 @@ setState('type_checkRegistry_scbox', false);
 <input type="button" id="type_checkUninstall_xibox_button" class="control" onclick="switchState('type_checkUninstall_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_checkUninstall_xibox" class="contents">
-<div>&lt;...<br/>
-<span> hostname="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em" class="inherited"> hostname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em" class="inherited"> os="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em" class="inherited"> ipaddresses="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em" class="inherited"> domainname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em" class="inherited"> groups="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em" class="inherited"> architecture="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em" class="inherited"> environment="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcid="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcidOS="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>
 <br/>
-<span> type="<span class="fixed">uninstall</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Uninstall checks need to specify \'uninstall\' as the the TYPE of check.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
+<span style="margin-left: 0.5em" class="newFields"> type="<span class="fixed">uninstall</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Uninstall checks need to specify \'uninstall\' as the the TYPE of check.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
 <br/>
-<span> condition="<span>
-<span>
+<span style="margin-left: 0.5em" class="newFields"> condition="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'exists'|'versionsmallerthan'|'versionlessorequal'|'versionequalto'|'versiongreaterorequal'|'versiongreaterthan'})</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('- exist: Check if an uninstall entry equal to the value within the \'value\' attribute exists (see Control Pane, Add/Remove software) version*: Compares the uninstall entry version to the value within the \'value\' attribute. NOTE: This only works if the application specifies a \'DisplayVersion\' value within the Windows registry. Valid values: - versionsmallerthan - versionlessorequal - versionequalto - versiongreaterorequal - versiongreaterthan'); viewDocumentation('Attribute', 'condition', docArray);">?</a>"</span>
 <br/>
-<span> path="<span>
+<span style="margin-left: 0.5em" class="newFields"> path="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Name of the uninstall entry as it appears within Control Panel, Add/Remove software.'); viewDocumentation('Attribute', 'path', docArray);">?</a>"</span>
 <br/>
-<span> value="<span>
+<span style="margin-left: 0.5em" class="newFields"> value="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specifies a version if any of the version* checks are used.'); viewDocumentation('Attribute', 'value', docArray);">?</a>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1855,31 +1850,31 @@ setState('type_checkUninstall_xibox', true);
 <input type="button" id="type_checkUninstall_scbox_button" class="control" onclick="switchState('type_checkUninstall_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_checkUninstall_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>checkUninstall</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
-<a>check</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">checkUninstall</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;check&quot; type definition." href="#type_check">check</a>
 </span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>type</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">fixed</span>="<span>uninstall</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">use</span>="<span>required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>" <span class="scTag">fixed</span>="<span class="scContent">uninstall</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>exists</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>versionsmallerthan</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>versionlessorequal</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>versionequalto</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>versiongreaterorequal</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>versiongreaterthan</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>path</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">exists</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">versionsmallerthan</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">versionlessorequal</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">versionequalto</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">versiongreaterorequal</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">versiongreaterthan</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">path</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>value</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">value</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1920,12 +1915,12 @@ setState('type_checkUninstall_scbox', false);
 <input type="button" id="type_condition_xibox_button" class="control" onclick="switchState('type_condition_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_condition_xibox" class="contents">
-<div>&lt;...&gt; <br/>
+<div style="margin-left: 0em">&lt;...&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[1..*]</span>
 </span>
 <br/>
-<div>&lt;check&gt; <span>
-<a>check</a>
+<div style="margin-left: 3em">&lt;check&gt; <span class="type">
+<a title="Jump to &quot;check&quot; type definition." href="#type_check">check</a>
 </span> &lt;/check&gt; <span class="occurs">[1]</span>
 </div>
 <span class="group" style="margin-left: 1.5em">End Sequence</span>
@@ -1942,11 +1937,11 @@ setState('type_condition_xibox', true);
 <input type="button" id="type_condition_scbox_button" class="control" onclick="switchState('type_condition_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_condition_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>condition</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span>1</span>" <span class="scTag">maxOccurs</span>="<span>unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>check</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>check</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">condition</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span class="scContent">1</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">check</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;check&quot; type definition." href="#type_check">check</a>
 </span>
-</span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1991,42 +1986,42 @@ setState('type_condition_scbox', false);
 <input type="button" id="type_packageReference_xibox_button" class="control" onclick="switchState('type_packageReference_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_packageReference_xibox" class="contents">
-<div>&lt;...<br/>
-<span> package-id="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em"> package-id="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Equal to the ID attribute of any existing package.'); viewDocumentation('Attribute', 'package-id', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em"> hostname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em"> os="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em"> ipaddresses="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em"> domainname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em"> groups="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em"> architecture="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em"> environment="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em"> lcid="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em"> lcidOS="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
 </span>
 <br/>
-<div>&lt;condition&gt; <span>
-<a>condition</a>
+<div style="margin-left: 3em">&lt;condition&gt; <span class="type">
+<a title="Jump to &quot;condition&quot; type definition." href="#type_condition">condition</a>
 </span> &lt;/condition&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specifies a condition under which the package reference is taken into account. If the condition is not met, then the package reference is ignored.'); viewDocumentation('Element', 'condition', docArray);">?</a>
 </div>
 <span class="group" style="margin-left: 1.5em">End Sequence</span>
@@ -2043,18 +2038,18 @@ setState('type_packageReference_xibox', true);
 <input type="button" id="type_packageReference_scbox_button" class="control" onclick="switchState('type_packageReference_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_packageReference_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>packageReference</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span>1</span>" <span class="scTag">minOccurs</span>="<span>0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>condition</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">packageReference</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span class="scContent">1</span>" <span class="scTag">minOccurs</span>="<span class="scContent">0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;condition&quot; type definition." href="#type_condition">condition</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>package-id</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">package-id</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span>
-<a>HostMatch</a>
-</span>"/&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span class="scContent">
+<a title="Jump to &quot;HostMatch&quot; attribute group definition." href="#attributeGroup_HostMatch">HostMatch</a>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -2095,45 +2090,45 @@ setState('type_packageReference_scbox', false);
 <input type="button" id="type_variable_xibox_button" class="control" onclick="switchState('type_variable_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_variable_xibox" class="contents">
-<div>&lt;...<br/>
-<span> name="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em"> name="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Variable name.'); viewDocumentation('Attribute', 'name', docArray);">?</a>"</span>
 <br/>
-<span> value="<span>
+<span style="margin-left: 0.5em"> value="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Variable value.'); viewDocumentation('Attribute', 'value', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em"> hostname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em"> os="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em"> ipaddresses="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em"> domainname="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em"> groups="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em"> architecture="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em"> environment="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em"> lcid="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em"> lcidOS="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
 </span>
 <br/>
-<div>&lt;condition&gt; <span>
-<a>condition</a>
+<div style="margin-left: 3em">&lt;condition&gt; <span class="type">
+<a title="Jump to &quot;condition&quot; type definition." href="#type_condition">condition</a>
 </span> &lt;/condition&gt; <span class="occurs">[1]</span>
 </div>
 <span class="group" style="margin-left: 1.5em">End Sequence</span>
@@ -2150,22 +2145,22 @@ setState('type_variable_xibox', true);
 <input type="button" id="type_variable_scbox_button" class="control" onclick="switchState('type_variable_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_variable_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>variable</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span>1</span>" <span class="scTag">minOccurs</span>="<span>0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>condition</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">variable</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span class="scContent">1</span>" <span class="scTag">minOccurs</span>="<span class="scContent">0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;condition&quot; type definition." href="#type_condition">condition</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>name</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">name</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>value</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">value</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span>
-<a>HostMatch</a>
-</span>"/&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span class="scContent">
+<a title="Jump to &quot;HostMatch&quot; attribute group definition." href="#attributeGroup_HostMatch">HostMatch</a>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -2177,171 +2172,6 @@ setState('type_variable_scbox', false);
 <a href="#top">top</a>
 </div>
 <hr/>
-<div id="legend">
-<h2>
-<a name="Legend">Legend</a>
-</h2>
-<div style="float: left; width: 15em;">
-<h3 style="margin-bottom: 0px;">Complex Type:</h3>
-<div class="hint" style="margin-left: 0em;">Schema Component Type</div>
-</div>
-<div style="float: left; width: 15em;">
-<h3 style="margin-bottom: 0px;">
-<span class="name">AusAddress</span>
-</h3>
-<div class="hint" style="margin-left: 0em;">Schema Component Name</div>
-</div>
-<table class="hierarchy" style="clear : both">
-<tr>
-<th>Super-types:</th>
-<td>
-<span class="type" style="color: #0000FF; text-decoration:underline;">Address</span> &lt; <span class="current">AusAddress</span> (by extension)</td>
-</tr>
-<tr>
-<th>Sub-types:</th>
-<td>
-<ul>
-<li>
-<span class="type" style="color: #0000FF; text-decoration:underline;">QLDAddress</span> (by restriction)</li>
-</ul>
-</td>
-</tr>
-</table>
-<div class="hint">If this schema component is a type definition, its type hierarchy is shown in a gray-bordered box.</div>
-<table class="properties">
-<tr>
-<th>Name</th>
-<td>AusAddress</td>
-</tr>
-<tr>
-<th>
-<a title="Look up 'Abstract' in glossary" href="#term_Abstract">Abstract</a>
-</th>
-<td>no</td>
-</tr>
-</table>
-<div class="hint">The table above displays the properties of this schema component.</div>
-<div class="sample box">
-<div>
-<span class="caption">XML Instance Representation</span>
-</div>
-<div class="contents">
-<span style="margin-left: 0em">&lt;...</span>
-<span class="newFields">
-<span> country="<span class="fixed">Australia</span>"</span>
-</span>&gt; <br/>
-<span style="margin-left: 1.5em" class="inherited">&lt;unitNo&gt; <span class="type">string</span> &lt;/unitNo&gt; <span class="occurs">[0..1]</span>
-</span>
-<br/>
-<span style="margin-left: 1.5em" class="inherited">&lt;houseNo&gt; <span class="type">string</span> &lt;/houseNo&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 1.5em" class="inherited">&lt;street&gt; <span class="type">string</span> &lt;/street&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Choice' in glossary" href="#term_Choice">Choice</a>
-<span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 3em" class="inherited">&lt;city&gt; <span class="type">string</span> &lt;/city&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 3em" class="inherited">&lt;town&gt; <span class="type">string</span> &lt;/town&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span class="group" style="margin-left: 1.5em">End Choice</span>
-<br/>
-<span class="newFields">
-<span style="margin-left: 1.5em">&lt;state&gt; <span class="type" style="text-decoration:underline;">AusStates</span> &lt;/state&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 1.5em">&lt;postcode&gt; <span class="constraint">string &lt;&lt;<em>pattern</em> = [1-9][0-9]{3}&gt;&gt;</span> &lt;/postcode&gt; <span class="occurs">[1]</span>
-<a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Post code must be a four-digit number.'); viewDocumentation('Element', 'postcode', docArray);">?</a>
-</span>
-<br/>
-</span>
-<span style="margin-left: 0em">&lt;/...&gt;</span>
-<br/>
-</div>
-</div>
-<div class="hint">
-<p>The XML Instance Representation table above shows the schema component's content as an XML instance.</p>
-<ul>
-<li>The minimum and maximum occurrence of elements and attributes are provided in square brackets, e.g. [0..1].</li>
-<li>Model group information are shown in gray, e.g. Start Choice ... End Choice.</li>
-<li>For type derivations, the elements and attributes that have been added to or changed from the base type's content are shown in <span style="font-weight: bold">bold</span>.</li>
-<li>If an element/attribute has a fixed value, the fixed value is shown in green, e.g. country="Australia".</li>
-<li>Otherwise, the type of the element/attribute is displayed.
-               <ul>
-<li>If the element/attribute's type is in the schema, a link is provided to it.</li>
-<li>For local simple type definitions, the constraints are displayed in angle brackets, e.g. &lt;&lt;<em>pattern</em> = [1-9][0-9]{3}&gt;&gt;.</li>
-</ul>
-</li>
-<li>If a local element/attribute has documentation, it will be displayed in a window that pops up when the question mark inside the attribute or next to the element is clicked, e.g. &lt;postcode&gt;.</li>
-</ul>
-</div>
-<div class="schemaComponent box">
-<div>
-<span class="caption">Schema Component Representation</span>
-</div>
-<div class="contents">
-<span style="margin-left: 0em">&lt;<span class="scTag">complexType</span>
-<span class="scTag">name</span>="<span class="scContent">AusAddress</span>"&gt;</span>
-<br/>
-<span style="margin-left: 1.5em">&lt;<span class="scTag">complexContent</span>&gt;</span>
-<br/>
-<span style="margin-left: 3em">&lt;<span class="scTag">extension</span>
-<span class="scTag">base</span>="<span class="scContent">
-<span class="type" style="text-decoration:underline;">Address</span>
-</span>"&gt;</span>
-<br/>
-<span style="margin-left: 4.5em">&lt;<span class="scTag">sequence</span>&gt;</span>
-<br/>
-<span style="margin-left: 6em">&lt;<span class="scTag">element</span>
-<span class="scTag">name</span>="<span class="scContent">state</span>" <span class="scTag">type</span>="<span class="scContent">
-<span class="type" style="text-decoration:underline;">AusStates</span>
-</span>"/&gt;</span>
-<br/>
-<span style="margin-left: 6em">&lt;<span class="scTag">element</span>
-<span class="scTag">name</span>="<span class="scContent">postcode</span>"&gt;</span>
-<br/>
-<span style="margin-left: 7.5em">&lt;<span class="scTag">simpleType</span>&gt;</span>
-<br/>
-<span style="margin-left: 9em">&lt;<span class="scTag">restriction</span>
-<span class="scTag">base</span>="<span class="scContent">
-<span class="type">string</span>
-</span>"&gt;</span>
-<br/>
-<span style="margin-left: 10.5em">&lt;<span class="scTag">pattern</span>
-<span class="scTag">value</span>="<span class="scContent">[1-9][0-9]{3}</span>"/&gt;</span>
-<br/>
-<span style="margin-left: 9em">&lt;/<span class="scTag">restriction</span>&gt;</span>
-<br/>
-<span style="margin-left: 7.5em">&lt;/<span class="scTag">simpleType</span>&gt;</span>
-<br/>
-<span style="margin-left: 6em">&lt;/<span class="scTag">element</span>&gt;</span>
-<br/>
-<span style="margin-left: 4.5em">&lt;/<span class="scTag">sequence</span>&gt;</span>
-<br/>
-<span style="margin-left: 4.5em">&lt;<span class="scTag">attribute</span>
-<span class="scTag">name</span>="<span class="scContent">country</span>" <span class="scTag">type</span>="<span class="scContent">
-<span class="type">string</span>
-</span>" <span class="scTag">fixed</span>="<span class="scContent">Australia</span>"/&gt;</span>
-<br/>
-<span style="margin-left: 3em">&lt;/<span class="scTag">extension</span>&gt;</span>
-<br/>
-<span style="margin-left: 1.5em">&lt;/<span class="scTag">complexContent</span>&gt;</span>
-<br/>
-<span style="margin-left: 0em">&lt;/<span class="scTag">complexType</span>&gt;</span>
-<br/>
-</div>
-</div>
-<div class="hint">The Schema Component Representation table above displays the underlying XML representation of the schema component. (Annotations are not shown.)</div>
-<div style="text-align: right; clear: both;">
-<a href="#top">top</a>
-</div>
-<hr/>
-</div>
 <div id="glossary">
 <h2>
 <a name="Glossary">Glossary</a>

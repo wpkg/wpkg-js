@@ -1,15 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema targetNamespace="http://www.wpkg.org/config" elementFormDefault="qualified"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.wpkg.org/config">
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.wpkg.org/config" xmlns:Q1="http://www.wpkg.org/wpkg">
+
+	<xsd:import namespace="http://www.wpkg.org/wpkg" schemaLocation="wpkg.xsd">
+		<xsd:annotation>
+			<xsd:documentation>
+				Include WPKG master definition.
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:import>
 
 	<xsd:complexType name="config">
-		<xsd:sequence minOccurs="1" maxOccurs="1">
-			<xsd:sequence minOccurs="0" maxOccurs="1">
-				<xsd:element name="languages" type="languages"></xsd:element>
+        <xsd:annotation>
+        	<xsd:documentation>WPKG configuration root element.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence minOccurs="1" maxOccurs="1">
+			<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+				<xsd:element name="param" type="param">
+					<xsd:annotation>
+						<xsd:documentation>WPKG global configuration parameter.</xsd:documentation>
+					</xsd:annotation></xsd:element>
 			</xsd:sequence>
-			<xsd:choice minOccurs="0" maxOccurs="unbounded">
-				<xsd:element name="param" type="xsd:string"></xsd:element>
-			</xsd:choice>
+			<xsd:element name="languages" type="languages">
+				<xsd:annotation>
+					<xsd:documentation>WPKG language definitions (message localization).</xsd:documentation>
+				</xsd:annotation></xsd:element>
+			<xsd:sequence minOccurs="0" maxOccurs="1">
+				<xsd:element name="variables" type="variables">
+					<xsd:annotation>
+						<xsd:documentation>WPKG global variables (available to all packages).</xsd:documentation>
+					</xsd:annotation></xsd:element>
+			</xsd:sequence>
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -87,4 +108,14 @@
     	<xsd:annotation>
     		<xsd:documentation>Root element of WPKG configuration.</xsd:documentation>
     	</xsd:annotation></xsd:element>
+
+
+    <xsd:complexType name="variables">
+        <xsd:annotation>
+        	<xsd:documentation>WPKG global variables (available to all packages).</xsd:documentation>
+        </xsd:annotation>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+    		<xsd:element name="variable" type="Q1:variable"></xsd:element>
+    	</xsd:choice>
+    </xsd:complexType>
 </xsd:schema>

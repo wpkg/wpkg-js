@@ -34,7 +34,7 @@
         <check type="file" condition="versiongreaterorequal" path="%PKG_DESTINATION%\%PKG_NAME%\" value="%PKG_VERSION%" />
 
         <!-- first just create the folder structure to reduce fragmentation -->
-        <install cmd='%ComSpec% /c robocopy "%PKG_SOURCE_DIR%\%PKG_NAME%" "%PKG_DESTINATION%\%PKG_NAME%" /COPYALL /MIR /CREATE /R:0 /W:0 /V /NP /LOG:"%TMP%\%PKG_NAME%_create.log" %PKG_EXCLUDED_DIRS%' >
+        <install cmd='%ComSpec% /c robocopy "%PKG_SOURCE_DIR%\%PKG_NAME%" "%PKG_DESTINATION%\%PKG_NAME%" /MIR /CREATE /R:0 /W:0 /V /NP /LOG:"%TMP%\%PKG_NAME%_create.log" %PKG_EXCLUDED_DIRS%' >
             <exit code="1" />
             <exit code="2" />
             <exit code="3" />
@@ -45,7 +45,7 @@
         </install>
         <install include="upgrade" />
 
-        <upgrade cmd='%ComSpec% /c robocopy "%PKG_SOURCE_DIR%\%PKG_NAME%" "%PKG_DESTINATION%\%PKG_NAME%" /COPYALL /MIR /R:0 /W:0 /V /NP /LOG:"%TMP%\%PKG_NAME%_update.log" %PKG_EXCLUDED_DIRS%' >
+        <upgrade cmd='%ComSpec% /c robocopy "%PKG_SOURCE_DIR%\%PKG_NAME%" "%PKG_DESTINATION%\%PKG_NAME%" /MIR /R:0 /W:0 /V /NP /LOG:"%TMP%\%PKG_NAME%_update.log" %PKG_EXCLUDED_DIRS%' >
             <exit code="1" />
             <exit code="2" />
             <exit code="3" />

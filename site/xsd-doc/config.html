@@ -368,9 +368,9 @@ div#legend div.hint {
 <script type="text/javascript">
 <!--
 /* IDs of XML Instance Representation boxes */
-var xiBoxes = new Array('type_config_xibox', 'type_param_xibox', 'type_languages_xibox', 'type_language_xibox', 'type_string_xibox', 'element_config_xibox');
+var xiBoxes = new Array('type_config_xibox', 'type_param_xibox', 'type_languages_xibox', 'type_language_xibox', 'type_string_xibox', 'element_config_xibox', 'type_variables_xibox');
 /* IDs of Schema Component Representation boxes */
-var scBoxes = new Array('schema_scbox', 'type_config_scbox', 'type_param_scbox', 'type_languages_scbox', 'type_language_scbox', 'type_string_scbox', 'element_config_scbox');
+var scBoxes = new Array('schema_scbox', 'type_config_scbox', 'type_param_scbox', 'type_languages_scbox', 'type_language_scbox', 'type_string_scbox', 'element_config_scbox', 'type_variables_scbox');
 
 /**
  * Can get the ID of the button controlling
@@ -746,12 +746,11 @@ if (gc != null) {
 <a href="#type_string">Complex Type: <strong>string</strong>
 </a>
 </li>
-</ul>
+<li>
+<a href="#type_variables">Complex Type: <strong>variables</strong>
+</a>
 </li>
 </ul>
-<ul id="legendTOC" style="margin-top: 0em">
-<li>
-<a href="#Legend">Legend</a>
 </li>
 </ul>
 <ul id="glossaryTOC" style="margin-top: 0em">
@@ -785,6 +784,18 @@ if (gc != null) {
 </ul>
 </td>
 </tr>
+<tr>
+<th>Schema Composition</th>
+<td>
+<ul>
+<li>This schema imports schema(s) from the following namespace(s):<ul>
+<li>
+<em>http://www.wpkg.org/wpkg</em> (at <a title="Jump to schema documentation for 'wpkg.xsd'." href="wpkg.html">wpkg.xsd</a>)</li>
+</ul>
+</li>
+</ul>
+</td>
+</tr>
 </table>
 <h3>Declared Namespaces</h3>
 <table class="namespaces">
@@ -812,13 +823,20 @@ if (gc != null) {
 </td>
 <td>http://www.w3.org/2001/XMLSchema</td>
 </tr>
+<tr>
+<td>
+<a name="ns_Q1">Q1</a>
+</td>
+<td>http://www.wpkg.org/wpkg</td>
+</tr>
 </table>
 <div class="schemaComponent box">
 <div>
 <input type="button" id="schema_scbox_button" class="control" onclick="switchState('schema_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="schema_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:schema</span> <span class="scTag">targetNamespace</span>="<span>http://www.wpkg.org/config</span>" <span class="scTag">elementFormDefault</span>="<span>qualified</span>"&gt;<div class="scContent" style="margin-left: 1.5em">...</div>&lt;/<span>xsd:schema</span>&gt;</div>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:schema</span> <span class="scTag">targetNamespace</span>="<span class="scContent">http://www.wpkg.org/config</span>" <span class="scTag">elementFormDefault</span>="<span class="scContent">qualified</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:import</span> <span class="scTag">namespace</span>="<span class="scContent">http://www.wpkg.org/wpkg</span>" <span class="scTag">schemaLocation</span>="<span class="scContent">wpkg.xsd</span>"/&gt;</div>
+<div class="scContent" style="margin-left: 1.5em">...</div>&lt;/<span class="scTag">xsd:schema</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -870,23 +888,28 @@ setState('schema_scbox', false);
 <input type="button" id="element_config_xibox_button" class="control" onclick="switchState('element_config_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="element_config_xibox" class="contents">
-<div>&lt;config&gt; <br/>
-<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
+<div style="margin-left: 0em">&lt;config&gt; <br/>
+<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..*]</span>
 </span>
 <br/>
-<div>&lt;languages&gt; <span>
-<a>languages</a>
-</span> &lt;/languages&gt; <span class="occurs">[1]</span>
+<div style="margin-left: 3em">&lt;param&gt; <span class="type">
+<a title="Jump to &quot;param&quot; type definition." href="#type_param">param</a>
+</span> &lt;/param&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('WPKG global configuration parameter.'); viewDocumentation('Element', 'param', docArray);">?</a>
 </div>
 <span class="group" style="margin-left: 1.5em">End Sequence</span>
 <br/>
-<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Choice' in glossary" href="#term_Choice">Choice</a> <span class="occurs">[0..*]</span>
+<div style="margin-left: 1.5em">&lt;languages&gt; <span class="type">
+<a title="Jump to &quot;languages&quot; type definition." href="#type_languages">languages</a>
+</span> &lt;/languages&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('WPKG language definitions (message localization).'); viewDocumentation('Element', 'languages', docArray);">?</a>
+</div>
+<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
 </span>
 <br/>
-<div>&lt;param&gt; <span>
-<a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> &lt;/param&gt; <span class="occurs">[1]</span>
+<div style="margin-left: 3em">&lt;variables&gt; <span class="type">
+<a title="Jump to &quot;variables&quot; type definition." href="#type_variables">variables</a>
+</span> &lt;/variables&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('WPKG global variables (available to all packages).'); viewDocumentation('Element', 'variables', docArray);">?</a>
 </div>
-<span class="group" style="margin-left: 1.5em">End Choice</span>
+<span class="group" style="margin-left: 1.5em">End Sequence</span>
 <br/>&lt;/config&gt;</div>
 </div>
 <script type="text/javascript">
@@ -900,9 +923,9 @@ setState('element_config_xibox', true);
 <input type="button" id="element_config_scbox_button" class="control" onclick="switchState('element_config_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="element_config_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:element</span> <span class="scTag">name</span>="<span>config</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>config</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">config</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;config&quot; type definition." href="#type_config">config</a>
 </span>
 </span>"/&gt;</div>
 </div>
@@ -942,29 +965,38 @@ setState('element_config_scbox', false);
 </th>
 <td>no</td>
 </tr>
+<tr>
+<th>Documentation</th>
+<td>WPKG configuration root element.</td>
+</tr>
 </table>
 <div class="sample box">
 <div>
 <input type="button" id="type_config_xibox_button" class="control" onclick="switchState('type_config_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_config_xibox" class="contents">
-<div>&lt;...&gt; <br/>
-<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
+<div style="margin-left: 0em">&lt;...&gt; <br/>
+<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..*]</span>
 </span>
 <br/>
-<div>&lt;languages&gt; <span>
-<a>languages</a>
-</span> &lt;/languages&gt; <span class="occurs">[1]</span>
+<div style="margin-left: 3em">&lt;param&gt; <span class="type">
+<a title="Jump to &quot;param&quot; type definition." href="#type_param">param</a>
+</span> &lt;/param&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('WPKG global configuration parameter.'); viewDocumentation('Element', 'param', docArray);">?</a>
 </div>
 <span class="group" style="margin-left: 1.5em">End Sequence</span>
 <br/>
-<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Choice' in glossary" href="#term_Choice">Choice</a> <span class="occurs">[0..*]</span>
+<div style="margin-left: 1.5em">&lt;languages&gt; <span class="type">
+<a title="Jump to &quot;languages&quot; type definition." href="#type_languages">languages</a>
+</span> &lt;/languages&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('WPKG language definitions (message localization).'); viewDocumentation('Element', 'languages', docArray);">?</a>
+</div>
+<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
 </span>
 <br/>
-<div>&lt;param&gt; <span>
-<a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> &lt;/param&gt; <span class="occurs">[1]</span>
+<div style="margin-left: 3em">&lt;variables&gt; <span class="type">
+<a title="Jump to &quot;variables&quot; type definition." href="#type_variables">variables</a>
+</span> &lt;/variables&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('WPKG global variables (available to all packages).'); viewDocumentation('Element', 'variables', docArray);">?</a>
 </div>
-<span class="group" style="margin-left: 1.5em">End Choice</span>
+<span class="group" style="margin-left: 1.5em">End Sequence</span>
 <br/>&lt;/...&gt;</div>
 </div>
 <script type="text/javascript">
@@ -978,15 +1010,21 @@ setState('type_config_xibox', true);
 <input type="button" id="type_config_scbox_button" class="control" onclick="switchState('type_config_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_config_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>config</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span>1</span>" <span class="scTag">maxOccurs</span>="<span>1</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span>0</span>" <span class="scTag">maxOccurs</span>="<span>1</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>languages</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>languages</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">config</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span class="scContent">1</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">1</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">param</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;param&quot; type definition." href="#type_param">param</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:choice</span> <span class="scTag">minOccurs</span>="<span>0</span>" <span class="scTag">maxOccurs</span>="<span>unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>param</span>" <span class="scTag">type</span>="<span>
-<span>
-<a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"/&gt;</div>&lt;/<span class="scTag">xsd:choice</span>&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">languages</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;languages&quot; type definition." href="#type_languages">languages</a>
+</span>
+</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">1</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">variables</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;variables&quot; type definition." href="#type_variables">variables</a>
+</span>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1031,15 +1069,15 @@ setState('type_config_scbox', false);
 <input type="button" id="type_language_xibox_button" class="control" onclick="switchState('type_language_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_language_xibox" class="contents">
-<div>&lt;...<br/>
-<span> lcid="<span>
-<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em"> lcid="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>pattern</em> = [\w]+(,[\w]+)*)</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values for which this language specification is valid. For example specify \&quot;409,809\&quot; to match English locale. For a complete list of LCIDs see http://www.microsoft.com/globaldev/reference/lcid-all.mspx.'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Choice' in glossary" href="#term_Choice">Choice</a> <span class="occurs">[0..*]</span>
 </span>
 <br/>
-<div>&lt;string&gt; <span>
-<a>string</a>
+<div style="margin-left: 3em">&lt;string&gt; <span class="type">
+<a title="Jump to &quot;string&quot; type definition." href="#type_string">string</a>
 </span> &lt;/string&gt; <span class="occurs">[1]</span>
 </div>
 <span class="group" style="margin-left: 1.5em">End Choice</span>
@@ -1056,15 +1094,15 @@ setState('type_language_xibox', true);
 <input type="button" id="type_language_scbox_button" class="control" onclick="switchState('type_language_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_language_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>language</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:choice</span> <span class="scTag">minOccurs</span>="<span>0</span>" <span class="scTag">maxOccurs</span>="<span>unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>string</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>string</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">language</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:choice</span> <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">string</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;string&quot; type definition." href="#type_string">string</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:choice</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>lcid</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">lcid</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span>[\w]+(,[\w]+)*</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span class="scContent">[\w]+(,[\w]+)*</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1109,12 +1147,12 @@ setState('type_language_scbox', false);
 <input type="button" id="type_languages_xibox_button" class="control" onclick="switchState('type_languages_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_languages_xibox" class="contents">
-<div>&lt;...&gt; <br/>
+<div style="margin-left: 0em">&lt;...&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Choice' in glossary" href="#term_Choice">Choice</a> <span class="occurs">[0..*]</span>
 </span>
 <br/>
-<div>&lt;language&gt; <span>
-<a>language</a>
+<div style="margin-left: 3em">&lt;language&gt; <span class="type">
+<a title="Jump to &quot;language&quot; type definition." href="#type_language">language</a>
 </span> &lt;/language&gt; <span class="occurs">[1]</span>
 </div>
 <span class="group" style="margin-left: 1.5em">End Choice</span>
@@ -1131,11 +1169,11 @@ setState('type_languages_xibox', true);
 <input type="button" id="type_languages_scbox_button" class="control" onclick="switchState('type_languages_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_languages_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>languages</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:choice</span> <span class="scTag">minOccurs</span>="<span>0</span>" <span class="scTag">maxOccurs</span>="<span>unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>language</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>language</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">languages</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:choice</span> <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">language</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;language&quot; type definition." href="#type_language">language</a>
 </span>
-</span>"/&gt;</div>&lt;/<span class="scTag">xsd:choice</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:choice</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1180,11 +1218,11 @@ setState('type_languages_scbox', false);
 <input type="button" id="type_param_xibox_button" class="control" onclick="switchState('type_param_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_param_xibox" class="contents">
-<div>&lt;...<br/>
-<span> name="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em"> name="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Name of the configuration parameter.'); viewDocumentation('Attribute', 'name', docArray);">?</a>"</span>
 <br/>
-<span> value="<span>
+<span style="margin-left: 0.5em"> value="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Value to be assigned to the configuration parameter.'); viewDocumentation('Attribute', 'value', docArray);">?</a>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1198,15 +1236,15 @@ setState('type_param_xibox', true);
 <input type="button" id="type_param_scbox_button" class="control" onclick="switchState('type_param_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_param_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>param</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span>/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>name</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">param</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span>/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">name</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>value</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">value</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1251,9 +1289,9 @@ setState('type_param_scbox', false);
 <input type="button" id="type_string_xibox_button" class="control" onclick="switchState('type_string_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_string_xibox" class="contents">
-<div>&lt;...<br/>
-<span> id="<span>
-<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em"> id="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'notifyUserStart'|'notifyUserStop'|'notifyUserFail'|'notifyUserReboot'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Identifier for language string. Identifies the string you are going to localize.'); viewDocumentation('Attribute', 'id', docArray);">?</a>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1267,13 +1305,13 @@ setState('type_string_xibox', true);
 <input type="button" id="type_string_scbox_button" class="control" onclick="switchState('type_string_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_string_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>string</span>" <span class="scTag">mixed</span>="<span>true</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>id</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">string</span>" <span class="scTag">mixed</span>="<span class="scContent">true</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">id</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>notifyUserStart</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>notifyUserStop</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>notifyUserFail</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>notifyUserReboot</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">notifyUserStart</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">notifyUserStop</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">notifyUserFail</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">notifyUserReboot</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1285,41 +1323,22 @@ setState('type_string_scbox', false);
 <a href="#top">top</a>
 </div>
 <hr/>
-<div id="legend">
-<h2>
-<a name="Legend">Legend</a>
-</h2>
-<div style="float: left; width: 15em;">
-<h3 style="margin-bottom: 0px;">Complex Type:</h3>
-<div class="hint" style="margin-left: 0em;">Schema Component Type</div>
-</div>
-<div style="float: left; width: 15em;">
-<h3 style="margin-bottom: 0px;">
-<span class="name">AusAddress</span>
+<h3>Complex Type: <a name="type_variables" class="name">variables</a>
 </h3>
-<div class="hint" style="margin-left: 0em;">Schema Component Name</div>
-</div>
-<table class="hierarchy" style="clear : both">
+<table class="hierarchy">
 <tr>
 <th>Super-types:</th>
-<td>
-<span class="type" style="color: #0000FF; text-decoration:underline;">Address</span> &lt; <span class="current">AusAddress</span> (by extension)</td>
+<td>None</td>
 </tr>
 <tr>
 <th>Sub-types:</th>
-<td>
-<ul>
-<li>
-<span class="type" style="color: #0000FF; text-decoration:underline;">QLDAddress</span> (by restriction)</li>
-</ul>
-</td>
+<td>None</td>
 </tr>
 </table>
-<div class="hint">If this schema component is a type definition, its type hierarchy is shown in a gray-bordered box.</div>
 <table class="properties">
 <tr>
 <th>Name</th>
-<td>AusAddress</td>
+<td>variables</td>
 </tr>
 <tr>
 <th>
@@ -1327,129 +1346,54 @@ setState('type_string_scbox', false);
 </th>
 <td>no</td>
 </tr>
+<tr>
+<th>Documentation</th>
+<td>WPKG global variables (available to all packages).</td>
+</tr>
 </table>
-<div class="hint">The table above displays the properties of this schema component.</div>
 <div class="sample box">
 <div>
-<span class="caption">XML Instance Representation</span>
+<input type="button" id="type_variables_xibox_button" class="control" onclick="switchState('type_variables_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
-<div class="contents">
-<span style="margin-left: 0em">&lt;...</span>
-<span class="newFields">
-<span> country="<span class="fixed">Australia</span>"</span>
-</span>&gt; <br/>
-<span style="margin-left: 1.5em" class="inherited">&lt;unitNo&gt; <span class="type">string</span> &lt;/unitNo&gt; <span class="occurs">[0..1]</span>
+<div id="type_variables_xibox" class="contents">
+<div style="margin-left: 0em">&lt;...&gt; <br/>
+<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Choice' in glossary" href="#term_Choice">Choice</a> <span class="occurs">[0..*]</span>
 </span>
 <br/>
-<span style="margin-left: 1.5em" class="inherited">&lt;houseNo&gt; <span class="type">string</span> &lt;/houseNo&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 1.5em" class="inherited">&lt;street&gt; <span class="type">string</span> &lt;/street&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Choice' in glossary" href="#term_Choice">Choice</a>
-<span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 3em" class="inherited">&lt;city&gt; <span class="type">string</span> &lt;/city&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 3em" class="inherited">&lt;town&gt; <span class="type">string</span> &lt;/town&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
+<div style="margin-left: 3em">&lt;variable&gt; <span class="type">
+<a href="#ns_Q1" title="Find out namespace of 'Q1' prefix">Q1</a>:<a title="Jump to &quot;variable&quot; type definition(located in external schema documentation)." href="wpkg.html#type_variable" class="externalLink">variable</a>
+</span> &lt;/variable&gt; <span class="occurs">[1]</span>
+</div>
 <span class="group" style="margin-left: 1.5em">End Choice</span>
-<br/>
-<span class="newFields">
-<span style="margin-left: 1.5em">&lt;state&gt; <span class="type" style="text-decoration:underline;">AusStates</span> &lt;/state&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 1.5em">&lt;postcode&gt; <span class="constraint">string &lt;&lt;<em>pattern</em> = [1-9][0-9]{3}&gt;&gt;</span> &lt;/postcode&gt; <span class="occurs">[1]</span>
-<a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Post code must be a four-digit number.'); viewDocumentation('Element', 'postcode', docArray);">?</a>
-</span>
-<br/>
-</span>
-<span style="margin-left: 0em">&lt;/...&gt;</span>
-<br/>
+<br/>&lt;/...&gt;</div>
 </div>
-</div>
-<div class="hint">
-<p>The XML Instance Representation table above shows the schema component's content as an XML instance.</p>
-<ul>
-<li>The minimum and maximum occurrence of elements and attributes are provided in square brackets, e.g. [0..1].</li>
-<li>Model group information are shown in gray, e.g. Start Choice ... End Choice.</li>
-<li>For type derivations, the elements and attributes that have been added to or changed from the base type's content are shown in <span style="font-weight: bold">bold</span>.</li>
-<li>If an element/attribute has a fixed value, the fixed value is shown in green, e.g. country="Australia".</li>
-<li>Otherwise, the type of the element/attribute is displayed.
-               <ul>
-<li>If the element/attribute's type is in the schema, a link is provided to it.</li>
-<li>For local simple type definitions, the constraints are displayed in angle brackets, e.g. &lt;&lt;<em>pattern</em> = [1-9][0-9]{3}&gt;&gt;.</li>
-</ul>
-</li>
-<li>If a local element/attribute has documentation, it will be displayed in a window that pops up when the question mark inside the attribute or next to the element is clicked, e.g. &lt;postcode&gt;.</li>
-</ul>
+<script type="text/javascript">
+<!--
+setState('type_variables_xibox', true);
+// -->
+</script>
 </div>
 <div class="schemaComponent box">
 <div>
-<span class="caption">Schema Component Representation</span>
+<input type="button" id="type_variables_scbox_button" class="control" onclick="switchState('type_variables_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
-<div class="contents">
-<span style="margin-left: 0em">&lt;<span class="scTag">complexType</span>
-<span class="scTag">name</span>="<span class="scContent">AusAddress</span>"&gt;</span>
-<br/>
-<span style="margin-left: 1.5em">&lt;<span class="scTag">complexContent</span>&gt;</span>
-<br/>
-<span style="margin-left: 3em">&lt;<span class="scTag">extension</span>
-<span class="scTag">base</span>="<span class="scContent">
-<span class="type" style="text-decoration:underline;">Address</span>
-</span>"&gt;</span>
-<br/>
-<span style="margin-left: 4.5em">&lt;<span class="scTag">sequence</span>&gt;</span>
-<br/>
-<span style="margin-left: 6em">&lt;<span class="scTag">element</span>
-<span class="scTag">name</span>="<span class="scContent">state</span>" <span class="scTag">type</span>="<span class="scContent">
-<span class="type" style="text-decoration:underline;">AusStates</span>
-</span>"/&gt;</span>
-<br/>
-<span style="margin-left: 6em">&lt;<span class="scTag">element</span>
-<span class="scTag">name</span>="<span class="scContent">postcode</span>"&gt;</span>
-<br/>
-<span style="margin-left: 7.5em">&lt;<span class="scTag">simpleType</span>&gt;</span>
-<br/>
-<span style="margin-left: 9em">&lt;<span class="scTag">restriction</span>
-<span class="scTag">base</span>="<span class="scContent">
-<span class="type">string</span>
-</span>"&gt;</span>
-<br/>
-<span style="margin-left: 10.5em">&lt;<span class="scTag">pattern</span>
-<span class="scTag">value</span>="<span class="scContent">[1-9][0-9]{3}</span>"/&gt;</span>
-<br/>
-<span style="margin-left: 9em">&lt;/<span class="scTag">restriction</span>&gt;</span>
-<br/>
-<span style="margin-left: 7.5em">&lt;/<span class="scTag">simpleType</span>&gt;</span>
-<br/>
-<span style="margin-left: 6em">&lt;/<span class="scTag">element</span>&gt;</span>
-<br/>
-<span style="margin-left: 4.5em">&lt;/<span class="scTag">sequence</span>&gt;</span>
-<br/>
-<span style="margin-left: 4.5em">&lt;<span class="scTag">attribute</span>
-<span class="scTag">name</span>="<span class="scContent">country</span>" <span class="scTag">type</span>="<span class="scContent">
-<span class="type">string</span>
-</span>" <span class="scTag">fixed</span>="<span class="scContent">Australia</span>"/&gt;</span>
-<br/>
-<span style="margin-left: 3em">&lt;/<span class="scTag">extension</span>&gt;</span>
-<br/>
-<span style="margin-left: 1.5em">&lt;/<span class="scTag">complexContent</span>&gt;</span>
-<br/>
-<span style="margin-left: 0em">&lt;/<span class="scTag">complexType</span>&gt;</span>
-<br/>
+<div id="type_variables_scbox" class="contents">
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">variables</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:choice</span> <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">variable</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a href="#ns_Q1" title="Find out namespace of 'Q1' prefix">Q1</a>:<a title="Jump to &quot;variable&quot; type definition(located in external schema documentation)." href="wpkg.html#type_variable" class="externalLink">variable</a>
+</span>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:choice</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
+<script type="text/javascript">
+<!--
+setState('type_variables_scbox', false);
+// -->
+</script>
 </div>
-<div class="hint">The Schema Component Representation table above displays the underlying XML representation of the schema component. (Annotations are not shown.)</div>
 <div style="text-align: right; clear: both;">
 <a href="#top">top</a>
 </div>
 <hr/>
-</div>
 <div id="glossary">
 <h2>
 <a name="Glossary">Glossary</a>

@@ -21,7 +21,7 @@
 
 <hosts:wpkg xmlns:hosts="http://www.wpkg.org/hosts" xmlns:wpkg="http://www.wpkg.org/wpkg"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.wpkg.org/hosts xsd/hosts.xsd ">
+	xsi:schemaLocation="http://www.wpkg.org/hosts xsd/hosts.xsd">
 
 	<!--
 		Specifies a match for host name "hostname" and assigns profile "custom"

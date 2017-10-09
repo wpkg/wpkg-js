@@ -42,7 +42,7 @@ set DOWNLOADER_TOOL_WEB=%TOOLS_PATH%wget.exe
 :: Path to UNC/file copy tool (robocopy).
 :: Default (Client with Robocopy already installed):
 set DOWNLOADER_TOOL_UNC=robocopy.exe
-if exist "%TOOLS_PATH%0robocopy.exe" "%TOOLS_PATH%0robocopy.exe"
+if exist "%TOOLS_PATH%robocopy.exe" set DOWNLOADER_TOOL_UNC="%TOOLS_PATH%robocopy.exe"
 
 :: How many download attempts before giving up?
 set DOWNLOAD_RETRY=3
@@ -303,7 +303,7 @@ if not exist "%TARGET_FILE_PATH%%TARGET_FILE_NAME%" (
 :: Need to change to target path as md5sum seems to have issues with paths
 :: containing spaces.
 pushd "%TARGET_FILE_PATH%"
-"%MD5_TOOL%" "%TARGET_FILE_NAME%" | findstr /B /L /I "%MD5SUM%" >NUL
+"%MD5_TOOL%" "%TARGET_FILE_NAME%" | findstr /L /I "%MD5SUM%" >NUL
 set MD5_VERIFICATION=%ERRORLEVEL%
 popd
 if %MD5_VERIFICATION% NEQ 0 (
@@ -334,7 +334,7 @@ if not exist "%TARGET_FILE_PATH%%TARGET_FILE_NAME%" (
 :: Need to change to target path as md5sum seems to have issues with paths
 :: containing spaces.
 :: pushd "%TARGET_FILE_PATH%"
-"%SHA1_TOOL%" "%TARGET_FILE_PATH%%TARGET_FILE_NAME%" | findstr /B /L /I "%SHA1SUM%" >NUL
+"%SHA1_TOOL%" "%TARGET_FILE_PATH%%TARGET_FILE_NAME%" | findstr /L /I "%SHA1SUM%" >NUL
 set SHA1_VERIFICATION=%ERRORLEVEL%
 if %SHA1_VERIFICATION% NEQ 0 (
 	set EXIT_CODE=3

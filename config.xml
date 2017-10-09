@@ -1,4 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+	*******************************************************************************
+	* This is the WPKG configuration file.
+	* Place it within the same directory as you place wpkg.js.
+	* All parameters are optional. If not specified WPKG falls back to the default
+	* values. So it's recommended just to uncomment the values you like to change.
+	*******************************************************************************
+-->
 <config xmlns="http://www.wpkg.org/config" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.wpkg.org/config xsd/config.xsd">
 	<!--
@@ -22,6 +30,15 @@
 		*       method, leave the variable declaration as followed:
 		*       <param name='wpkg_base' value='' />
 		*
+		* NOTE: It is deprecated now to use HTTP URL values in wpkg_base. Instead you
+		*       might have a look at the [packages|hosts|profiles]_paths parameters.
+		*       There you can specify even mixed paths using HTTP and file/directory
+		*       references. If a valid path is specified in wpkg_base then relative
+		*       paths in [packages|hosts|profiles]_paths are relative to wpkg_base.
+		*       If wpkg_base refers to an HTTP URL it is ignored when
+		*       [packages|hosts|profiles]_paths is used and wpkg_base defaults to the
+		*       location of wpkg.js.
+		* 
 		* Default value      : ''
 		* Command-line switch: /base:<base-url>
 		******************************************************************************
@@ -156,6 +173,27 @@
 	-->
 	<!--
 		<param name='notificationDisplayTime' value='10' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		*  Default command execution timeout. This is the default timeout used when
+        * executing external commands. Each command which runs for longer than the
+        * defined amount of seconds will be be regarded as failed and WPKG will
+        * continue execution.
+        * NOTE: You can override the default timeout using the timeout=xxx attribute
+        * on command definition. It is strongly recommended to keep the default as-is
+        * and just define custom timeouts on commands which are known to finish within
+        * a shorter timeframe or of course if commands are known to run longer than
+        * the default timeout.
+		*
+		* Default value      : 3600
+		* Command-line switch: -
+		****************************************************************************
+	-->
+	<!--
+		<param name='execTimeout' value='3600' />
 	-->
 
 
@@ -579,7 +617,16 @@
 	-->
 	<!--
 		****************************************************************************
-		*  Names of the the XML input files.  Not used if base begins with "http"
+		*  Names of the the XML input files.  Not used if base begins with "http".
+		*  If packages_path, profiles_path and/or hosts_path is used then the
+		*  *_file_name files are ignored.
+		*
+		* NOTE: These parameters are deprecated in favor of the more flexible
+		*       [packages|hosts|profiles]_paths parameters which allow to specify
+		*       multiple XML files and/or directories.
+		*       If [packages|hosts|profiles]_paths is used WPKG will ignore the
+		*       files specified in [package|profiles|hosts]_file_name parameters
+		*       entirely.
 		****************************************************************************
 	-->
 	<!--
@@ -589,10 +636,48 @@
 	-->
 
 	<!--
-		 ****************************************************************************
-		 *  Names of the PHP scripts which output the XML files.  Only used if
-		 *  base begins with "http"
-		 ****************************************************************************
+		****************************************************************************
+		*  Define paths where WPKG looks for XML files. Multiple paths can be
+		*  specified using the pipe symbol (|) as paths-separrator.
+		*  If any of the paths are specified WPKG will ignore the built-in defaults.
+		*  For example if you specify packages_path WPKG will neither automatically
+		*  open packags.xml nor look for XML files in the packages/ sub-folder.
+		*  If a path points to a directory WPKG will look for *.xml files within the
+		*  directory and parse them.
+		*  Paths should be specified relative to the base path (see wpkg_base
+		*  property). Absolute paths might work too but beware of authentication
+		*  issues if you refer to a different host than the one WPKG is read from.
+		*  Note: Do not forget to encode backslashes correctly using double-backslash.
+		*        Alternatively you might use unix-like forward slashes.
+		*
+		* Examples:
+		*     <param name='packages_path' value='packages.xml|packages' />
+		*     <param name='packages_path' value='packages|custom-packages' />
+		*     <param name='packages_path' value='packages|path\\directory' />
+		*     <param name='packages_path' value='http://USER:PASS@wpkg.mydomain.com/packages.php' />
+		*
+		* Default value      : ""
+		****************************************************************************
+	-->
+	<!--
+		<param name='packages_path' value='packages.xml|packages' />
+		<param name='profiles_path' value='profiles.xml|profiles' />
+		<param name='hosts_path'    value='hosts.xml|hosts' />
+	-->
+
+	<!--
+		****************************************************************************
+		*  Names of the PHP scripts which output the XML files.  Only used if
+		*  base begins with "http"
+		*
+		* NOTE: These parameters are deprecated in favor of the more flexible
+		*       [packages|hosts|profiles]_paths parameters which allow to specify
+		*       multiple XML files and/or directories as well as HTTP URLs.
+		*       If [packages|hosts|profiles]_paths is used WPKG will ignore the
+		*       HTTP URL specified in wpkg_base and therefore also the files
+		*       specified in web_[packages|profiles|hosts]_file_name. So just insert
+		*       complete URLs into [packages|hosts|profiles]_paths.
+		****************************************************************************
 	-->
 	<!--
 		<param name='web_packages_file_name' value='packages_xml_out.php' />
@@ -610,6 +695,32 @@
 		<param name='sRegWPKG_Running' value='HKLM\\Software\\WPKG\\running' />
 	-->
 
+	<!--
+		****************************************************************************
+		****************************************************************************
+		* Variable definitions
+		*
+		* Use this section to define global variables which can be used during WPKG
+		* runtime. Variables defined here are defined before WPKG execution starts.
+		* Hots, Porfiles and Packages might overwrite these variables but the
+		* initial value will be set as defined here.		
+		* 
+		* You can use WPKG conditional logic in order to define specific values for
+		* individual system environemnts like architecture or operating system.
+		* 
+		* Some examples are provided below.
+		*
+		****************************************************************************
+		****************************************************************************
+	-->
+	<!--
+		<variables>
+			<variable name="PROG_FILES32" value="%PROGRAMFILES%\SomeSoftware" architecture="x86" />
+			<variable name="PROG_FILES32" value="%PROGRAMFILES(x86)%\SomeSoftware" architecture="x64" />
+			<variable name="DESKTOP" value="%ALLUSERSPROFILE%\Desktop" os="windows xp" />
+			<variable name="DESKTOP" value="%PUBLIC%\Desktop" os="windows 7" />
+		</variables>
+	-->
 
 	<!--
 		****************************************************************************
@@ -664,6 +775,14 @@
 			<string id="notifyUserStop">L'utilità di installazione automatica del software ha terminato di aggiornare il sistema. Non si è reso necessario un riavvio. Tutti gli aggiornamenti sono andati a buon fine.</string>
 			<string id="notifyUserFail">Qualcosa nell'aggiornamento del sistema è fallito.</string>
 			<string id="notifyUserReboot">Riavvia per completare l'aggiornamento del sistema. Qualche programma potrebbe non funzionare correttamente senza un riavvio.</string>
+		</language>
+
+		<!-- Spanish LCIDs -->
+		<language lcid="0c0a,040a,2c0a,400a,340a,240a,140a,1c0a,300a,440a,100a,480a,580a,080a,4c0a,180a,3c0a,280a,500a,540a,380a,200a">
+			<string id="notifyUserStart">La utilidad de instalación automática de software está actualizando el sistema. Por favor corrobore la fecha mostrada al inicio de este mensaje para determinar si está desactualizada; si no por favor guarde todos sus documentos abiertos, dado que es posible que el sistema necesite reiniciarse. Si fuera necesario, el sistema será reiniciado sin previo aviso cuando la instalación finalice. Muchas gracias.</string>
+			<string id="notifyUserStop">La utilidad de instalación automática de software ha completado de instalar o actualizar el sistema. No ha sido necesario reiniciar. Todas las actualizaciones fueron completadas.</string>
+			<string id="notifyUserFail">Ha habido un error con la instalación de software.</string>
+			<string id="notifyUserReboot">Reniciando el sistema para completar la instalación de software. Por favor note que algún aplicativo puede que no funcione hasta que se reinicie el sistema.</string>
 		</language>
 	</languages>
 </config>

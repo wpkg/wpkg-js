@@ -4,6 +4,230 @@
 
 Change notes
 ============
+WPKG Version: 1.3.1
+Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
+Date        : 2014-05-14
+Status      : release pending
+
+Changes/fixes visible to the user:
+- Disable generating "Legend" in XSD documentation.
+- Fixed environment variable expansion in settings_file_path.
+- Reverted variable evaluation to pre WPKG-1.3 order.
+- Allow using of lower level variables in higher priority levels.
+- Allow check for empty/undefined variables.
+- Extra spaces in hosts.xml removed.
+- Extra spaces in profiles.mxl removed.
+- Grammar, spelling and whitespace in wpkg.js fixed (non-functional).
+- Fixed config.xsd.
+- Fixed expansion of package variables in remove command conditions.
+- Omit printing of error if optional database file does not exist.
+- Updated package templates.
+- Added Spanish translation of WPKG messages.
+- UTF-8 BOM encoding fixed for config.xml.
+- Fixed use of robocopy.exe on share by downloader.cmd.
+- Fixed another issue finding robocopy.exe on share by downloader.cmd.
+- Relaxed MD5/SHA1 checksum validation parsing.
+- Added ability to define global variables in config.xml.
+- Added ability to use regular expressions in registry equal checks.
+- Added ability to set default command execution timeout in conifg.xml.
+- Allow execTimeout to be specified in config.xml.
+- Expanding environment variables in settings file path.
+- Fixed removing manually installed package dependencies during sync.
+- Added *_path parameters in config.xml to specify multiple databases.
+- Do not exit if no matching host definition is found.
+- Read numeric values as unsigned integer from registry DWORD values.
+
+
+MOD: Disable "Legend" in XSD documentation as it's not meaningful to WPKG.
+FIX: Fixed environment variable expansion in settings_file_path parameter
+     within config.xml. Functionality has been lost when introducing [HOSTNAME]
+     and [PROFILE] expansion in settings file name.
+     Thanks to Daniel Rickenbacher for reporting.
+MOD: Reverted variable evaluation order to pre WPKG-1.3 behavior. Now profile
+     variables are allowed to override package variables and host variables
+     are allowed to override profile variables.
+     So the order of variable evaluation is as follows:
+     - Package variables (lowest priority)
+     - Profile variables
+     - Host variables    (highest priority)
+     This allows you to specify variables on hosts or profile level which do
+     override variables at package level.
+     Fixes bug 262. Thanks to Kalyniak Oleksandr for report and discussion.
+NEW: WPKG now allows to use environment variables of lower priority
+     stage in higher priority stage conditional statements.
+     For example you can use a condition on a variable defined on package level
+     within the profile or host definition.
+     Fixes bug 262. Thanks to Kalyniak Oleksandr for report and discussion.
+NEW: WPKG does not immediately abort conditional comparison if environment host
+     environment variable condition is used on a variable which is undefined.
+     This allows conditions to check for empty variables as well.
+     This feature can be used to define conditional variables at host or
+     profile level which will check for empty variable. For example:
+
+     <variable name="MY_VAR" value="true">
+       <condition>
+         <check type="host" condition="environment" value="MY_VAR=^$" />
+       </condition>
+     </variable>
+     
+     The example only defines MY_VAR if it has not been defined already. If
+     such a declaration is used in hosts or profile definition it allows to
+     define a variable only if it's not defined on package level already.
+     Fixes bug 262. Thanks to Kalyniak Oleksandr for report and discussion.
+FIX: Fixed extraneous trailing space in hosts.xml.
+     Fixes Bug 263. Thanks to Urs Rau.
+FIX: Fixed extraneous trailing space in profiles.xml.
+     Fixes Bug 263. Thanks to Urs Rau.
+FIX: Fixed spelling and whitespace issues (cosmetic fixes, no functional
+     impact) in wpkg.js.
+     Fixes Bug 264. Thanks to Urs Rau.
+FIX: Fixed bug in config.xsd. Unable to validate config.xml using config.xsd.
+     Thanks to Urs Rau.
+FIX: Fixed issue that remove command conditions did not correctly expand
+     package variables.
+     Thanks to Malte Hohmann for reporting.
+MOD: Omit error message printed if any of the combined database files do not
+     exist (packages.xml, hosts.xml, profiles.xml). As these files are
+     completely optional WPKG shall not print error if they do not exist.
+     Thanks to "Mi" for reporting.
+MOD: Updated package templates.
+     Thanks to Stefan Pendl for updating!
+     Fixes bug 236.
+NEW: Added Spanish translation of notification texts in config.xml.
+     Thanks to Carlos R. Pasqualini for sending the complete translation!
+FIX: Fixed UTF-8 with BOM encoding for config.xml.
+     Fixes Bug 269. Thanks to Stefan Pendl.
+FIX: Fixed downloader.cmd bug to read robocopy.exe from same folder where
+     downloader.cmd is stored (if present).
+     Thanks to Neil for reporting.
+FIX: Fixed another issue searching for robocopy.exe in current folder when
+     executing downloader.cmd.
+     Thanks to Neil for reporting.
+MOD: Relaxed MD5/SHA1 checks to allow checksums appearing anywhere in the
+     output of the MD5/SH1 checksum tool. This might be required for some tools
+     printing checksums at the end of the line instead of standard unix-like
+     output with the checksum at the beginning of the line.
+     This change introduces a small risk of overmatching if the checksum string
+     appears somewhere else on the output as downloader.cmd will just check
+     that the required checksum appears anywhere in the checksum tool output.
+     Fixes Bug 271. Thanks to Neil for reporting. 
+NEW: Added possibility to specify variables in config.xml. All variables
+     defined in config.xml are WPKG-wide and globally defined during WPKG
+     execution. However these variables might be overwritten by host-,
+     profile- or package variables.
+     Configuration variables are an alternative way to specify global
+     environment variables in central location when not using a WPKG wrapper
+     script or WPKG-client or any other WPKG launcher with capabilities to
+     define global environment variables before wpkg.js is launched.
+
+     Variables are also allowed to use conditional expressions and therefore
+     allow variable evaluation based on system parameters like architecture,
+     file existence etc.
+     Example:
+     <config>
+      <variables>
+       <variable name="PROG_FILES32" value="%ProgramFiles%"
+                 architecture="x86" />
+       <variable name="PROG_FILES32" value="%ProgramFiles(x86)%"
+                 architecture="x64" />
+      </variables>
+     </config>
+     The example above defines the PROG_FILES32 environment variable to point
+     to the 32-bit program installation folder on 64-bit and 32-bit Windows.
+
+     Example:
+     <config>
+      <variables>
+       <variable name="DESKTOP" value="%ALLUSERSPROFILE%\Desktop"
+                 os="windows xp" />
+       <variable name="DESKTOP" value="%PUBLIC%\Desktop"
+                 os="Windows 7" />
+      </variables>
+     </config>
+     The example above defines a variable named DESKTOP which points to the
+     location of the public desktop. Therefore accessing %DESKTOP% in packages
+     will point to the right location on either Windows XP or 7. 
+
+     This is supposed to support an enhancement request reported in Bug 260.
+     Thanks to Peter Hoeg for reporting.
+NEW: Added support of regular expressions in registry equal checks. Now WPKG
+     first tries to match the values literally, then it tries to match the
+     expanded (expanded environment variables) value in case-insensitive mode
+     and if there is still no match found the check condition is used as a
+     regular expression. 
+NEW: Allow to define execTimeout in config.xml. This allows to specify longer
+     or shorter timeout values for command executions. Plese note that shorter
+     values will not necessarily warranty shorter WPKG execution times since
+     execution time depends mainly on number of commands run in total.
+     Moreover if commands run into timeout while executing normally WPKG will
+     skip to the next command and mark package installation as failed due to
+     incomplete command.
+     Change requested by Marco Gaiarin.
+NEW: Allow to define execTimeout in config.xml. This allows to specify longer
+     or shorter timeout values for command executions. Plese note that shorter
+     values will not necessarily warranty shorter WPKG execution times since
+     execution time depends mainly on number of commands run in total.
+     Moreover if commands run into timeout while executing normally WPKG will
+     skip to the next command and mark package installation as failed due to
+     incomplete command.
+     Change requested by Marco Gaiarin.
+NEW: Expanding environment variables in settings file path.
+     Fixes bug 282. Thanks to droussel.
+FIX: Prevent to remove dependencies of manually installed packages during
+     regular package synchronization.
+     Thanks to Dafydd Jones.
+NEW: Added possibility for flexible definition of XML database files in
+     config.xml.
+     packages_path      Defines path to one or multiple package XML files or
+                        directories containing package XML files.
+     profiles_path      Defines path to one or multiple profile XML files or
+                        directories containing profile XML files.
+     hosts_path         Defines path to one or multiple host XML files or
+                        directories containing host XML files.
+     The paths can be separated by pipe and list either individual XML files
+     or directories which contains XML files. URLs can either contain paths
+     relative to wpkg_base, absolute paths or or HTTP URLs. Please be aware
+     that absolute paths to external SMB/CIFS shares are supported but you
+     might have to make sure authentication on all paths is provided prior
+     to WPKG execution.
+
+     Also note that when using *_path settings WPKG will ignore the default
+     XML databases. So if you use packages_path you might like to include
+     the default databases as well. For example
+     <param name='packages_path' value='packages.xml|packages' />
+     is equal to the default setting of WPKG.
+
+     Files will be parsed in the order they are listed in the parameter
+     definition. Files stored within a directory are parsed in alphabetical
+     order.
+     Make sure not to have overlapping package/profile/host definitions as
+     duplicated unique IDs might lead to unexpected/undefined results.
+
+     Due to the enhanced flexibility of [packages|profiles|hosts]_path
+     parameters it's deprecated to use an HTTP URL as wpkg_base as well as
+     it's deprecated to use [package|profiles|hosts]_file_name and
+     web_[packages|profiles|hosts]_file_name parameters. This simplifies
+     configuration as you can now simply define wpkg_base to define the base
+     for relative paths and then use [packages|profiles|hosts]_path to specify
+     any number of relative, absolute and URL paths.
+
+     Corresponding notes have been added to config.xml.
+MOD: Do not stop processing if no matching host definition is found. It is only
+     an error if no profiles are found. However it's possible to have no
+     matching host definition but using the /profile: arguemnt to assign a
+     profile.
+MOD: DWORD values read from registry should be interpreted ad unsigned integers
+     as registry does also store unsigned integers only.
+     WPKG will now convert numeric values from registry into unsigned integer.
+     This allows to compare 0xffffffff to 4294967295 decimal value rather than
+     "-1" which (signed integer representation of 0xffffffff).
+     Note: WPKG can not read 64-bit DWORT values properly as since the WSH
+     regRead method is unable to read 64-bit values.
+     Thanks to Joe for reporting on the mailing list.
+
+
+Change notes
+============
 WPKG Version: 1.3.0
 Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
 Date        : 2011-12-08

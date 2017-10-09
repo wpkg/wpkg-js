@@ -25,7 +25,7 @@
 
 <profiles:profiles xmlns:profiles="http://www.wpkg.org/profiles"
 	xmlns:wpkg="http://www.wpkg.org/wpkg" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.wpkg.org/profiles xsd/profiles.xsd ">
+	xsi:schemaLocation="http://www.wpkg.org/profiles xsd/profiles.xsd">
 	<!--
 		Default set of software to be assigned to all hosts.
 	-->

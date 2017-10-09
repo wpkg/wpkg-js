@@ -18,7 +18,7 @@
         <variable name="PKG_SOURCE"         value="%SOFTWARE%\"/>
         <variable name="PKG_DESTINATION"    value="%ProgramFiles%\"      architecture="x86"/>
         <variable name="PKG_DESTINATION"    value="%ProgramFiles(x86)%\" architecture="x64"/>
-        <variable name="PKG_INSTALL_SWITCH" value="/S"/>
+        <variable name="PKG_INSTALL_SWITCH" value="/S /D=%PKG_DESTINATION%"/>
         <variable name="PKG_REMOVE_SWITCH"  value="/S _?=%PKG_DESTINATION%"/>
 
         <check type="uninstall" condition="versiongreaterorequal" path="UninstallRegistryKeyName" value="%PKG_VERSION%" />

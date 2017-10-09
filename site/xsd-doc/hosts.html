@@ -741,11 +741,6 @@ if (gc != null) {
 </ul>
 </li>
 </ul>
-<ul id="legendTOC" style="margin-top: 0em">
-<li>
-<a href="#Legend">Legend</a>
-</li>
-</ul>
 <ul id="glossaryTOC" style="margin-top: 0em">
 <li>
 <a href="#Glossary">Glossary</a>
@@ -828,8 +823,8 @@ if (gc != null) {
 <input type="button" id="schema_scbox_button" class="control" onclick="switchState('schema_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="schema_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:schema</span> <span class="scTag">targetNamespace</span>="<span>http://www.wpkg.org/hosts</span>" <span class="scTag">elementFormDefault</span>="<span>unqualified</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:import</span> <span class="scTag">namespace</span>="<span>http://www.wpkg.org/wpkg</span>" <span class="scTag">schemaLocation</span>="<span>wpkg.xsd</span>"/&gt;</div>
-<div class="scContent" style="margin-left: 1.5em">...</div>&lt;/<span>xsd:schema</span>&gt;</div>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:schema</span> <span class="scTag">targetNamespace</span>="<span class="scContent">http://www.wpkg.org/hosts</span>" <span class="scTag">elementFormDefault</span>="<span class="scContent">unqualified</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:import</span> <span class="scTag">namespace</span>="<span class="scContent">http://www.wpkg.org/wpkg</span>" <span class="scTag">schemaLocation</span>="<span class="scContent">wpkg.xsd</span>"/&gt;</div>
+<div class="scContent" style="margin-left: 1.5em">...</div>&lt;/<span class="scTag">xsd:schema</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -882,12 +877,12 @@ setState('schema_scbox', false);
 <input type="button" id="element_wpkg_xibox_button" class="control" onclick="switchState('element_wpkg_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="element_wpkg_xibox" class="contents">
-<div>&lt;wpkg&gt; <br/>
+<div style="margin-left: 0em">&lt;wpkg&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[1..*]</span>
 </span>
 <br/>
-<div>&lt;host&gt; <span>
-<a>host</a>
+<div style="margin-left: 3em">&lt;host&gt; <span class="type">
+<a title="Jump to &quot;host&quot; type definition." href="#type_host">host</a>
 </span> &lt;/host&gt; <span class="occurs">[1]</span>
 </div>
 <span class="group" style="margin-left: 1.5em">End Sequence</span>
@@ -904,9 +899,9 @@ setState('element_wpkg_xibox', true);
 <input type="button" id="element_wpkg_scbox_button" class="control" onclick="switchState('element_wpkg_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="element_wpkg_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:element</span> <span class="scTag">name</span>="<span>wpkg</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>wpkg</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">wpkg</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;wpkg&quot; type definition." href="#type_wpkg">wpkg</a>
 </span>
 </span>"/&gt;</div>
 </div>
@@ -952,39 +947,39 @@ setState('element_wpkg_scbox', false);
 <input type="button" id="type_host_xibox_button" class="control" onclick="switchState('type_host_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_host_xibox" class="contents">
-<div>&lt;...<br/>
-<span> name="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em"> name="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Hostname specification. It might contain regular expressions as well as well as IP-address ranges. Direct match: This is tried first always. If the hostname matches exactly the value of \'name\' this host node is applied to the machine. IP-Ranges: format has to be specified as follows: start[-end].start[-end].start[-end].start[-end] examples: 192.168.1.1 192.168.1.1-254 192.168.1-5.20-50 Regular expressions: example: \&quot;test-.*\&quot; will match all machines where the hostname is starting with \&quot;test-\&quot; string. If no name attribute exists then the host entry will always match. You can omit the name attribute and use extended attribute matching like hostname (which matches the host name only, but not IP), ipaddresses, domainname etc.'); viewDocumentation('Attribute', 'name', docArray);">?</a>"</span>
 <br/>
-<span> profile-id="<span>
+<span style="margin-left: 0.5em"> profile-id="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Main profile. You can specify the applying profile as separate \&quot;profile\&quot; nodes as well but if there is only one single profile it is recommended to use the profile-id attribute.'); viewDocumentation('Attribute', 'profile-id', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em"> hostname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em"> os="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em"> ipaddresses="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em"> domainname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em"> groups="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em"> architecture="<span class="constraint">
+<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em"> environment="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em"> lcid="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em"> lcidOS="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
 </span>
@@ -992,8 +987,8 @@ setState('element_wpkg_scbox', false);
 <span class="group" style="margin-left: 3em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
 </span>
 <br/>
-<div>&lt;condition&gt; <span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>condition</a>
+<div style="margin-left: 4.5em">&lt;condition&gt; <span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;condition&quot; type definition(located in external schema documentation)." href="wpkg.html#type_condition" class="externalLink">condition</a>
 </span> &lt;/condition&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define condition under which this host entry is applied.'); viewDocumentation('Element', 'condition', docArray);">?</a>
 </div>
 <span class="group" style="margin-left: 3em">End Sequence</span>
@@ -1001,12 +996,12 @@ setState('element_wpkg_scbox', false);
 <span class="group" style="margin-left: 3em">Start <a title="Look up 'Choice' in glossary" href="#term_Choice">Choice</a> <span class="occurs">[0..*]</span>
 </span>
 <br/>
-<div>&lt;variable&gt; <span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>variable</a>
+<div style="margin-left: 4.5em">&lt;variable&gt; <span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;variable&quot; type definition(located in external schema documentation)." href="wpkg.html#type_variable" class="externalLink">variable</a>
 </span> &lt;/variable&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define an environment variable to be set when the host entry applies.'); viewDocumentation('Element', 'variable', docArray);">?</a>
 </div>
-<div>&lt;profile&gt; <span>
-<a>profileReference</a>
+<div style="margin-left: 4.5em">&lt;profile&gt; <span class="type">
+<a title="Jump to &quot;profileReference&quot; type definition." href="#type_profileReference">profileReference</a>
 </span> &lt;/profile&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define profile which should be applied to matching host.'); viewDocumentation('Element', 'profile', docArray);">?</a>
 </div>
 <span class="group" style="margin-left: 3em">End Choice</span>
@@ -1025,32 +1020,32 @@ setState('type_host_xibox', true);
 <input type="button" id="type_host_scbox_button" class="control" onclick="switchState('type_host_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_host_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>host</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span>1</span>" <span class="scTag">minOccurs</span>="<span>0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span>1</span>" <span class="scTag">minOccurs</span>="<span>0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">type</span>="<span>
-<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>condition</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">host</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span class="scContent">1</span>" <span class="scTag">minOccurs</span>="<span class="scContent">0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span class="scContent">1</span>" <span class="scTag">minOccurs</span>="<span class="scContent">0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;condition&quot; type definition(located in external schema documentation)." href="wpkg.html#type_condition" class="externalLink">condition</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:choice</span> <span class="scTag">maxOccurs</span>="<span>unbounded</span>" <span class="scTag">minOccurs</span>="<span>0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>variable</span>" <span class="scTag">type</span>="<span>
-<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>variable</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:choice</span> <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>" <span class="scTag">minOccurs</span>="<span class="scContent">0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">variable</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;variable&quot; type definition(located in external schema documentation)." href="wpkg.html#type_variable" class="externalLink">variable</a>
 </span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>profile</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>profileReference</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">profile</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;profileReference&quot; type definition." href="#type_profileReference">profileReference</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:choice</span>&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>name</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">name</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>profile-id</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">profile-id</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>HostMatch</a>
-</span>"/&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span class="scContent">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;HostMatch&quot; attribute group definition(located in external schema documentation)." href="wpkg.html#attributeGroup_HostMatch" class="externalLink">HostMatch</a>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1091,42 +1086,42 @@ setState('type_host_scbox', false);
 <input type="button" id="type_profileReference_xibox_button" class="control" onclick="switchState('type_profileReference_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_profileReference_xibox" class="contents">
-<div>&lt;...<br/>
-<span> id="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em"> id="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('ID referencing to the profile defined in profiles.xml'); viewDocumentation('Attribute', 'id', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em"> hostname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em"> os="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em"> ipaddresses="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em"> domainname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em"> groups="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em"> architecture="<span class="constraint">
+<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em"> environment="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em"> lcid="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em"> lcidOS="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
 </span>
 <br/>
-<div>&lt;condition&gt; <span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>condition</a>
+<div style="margin-left: 3em">&lt;condition&gt; <span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;condition&quot; type definition(located in external schema documentation)." href="wpkg.html#type_condition" class="externalLink">condition</a>
 </span> &lt;/condition&gt; <span class="occurs">[1]</span>
 </div>
 <span class="group" style="margin-left: 1.5em">End Sequence</span>
@@ -1143,18 +1138,18 @@ setState('type_profileReference_xibox', true);
 <input type="button" id="type_profileReference_scbox_button" class="control" onclick="switchState('type_profileReference_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_profileReference_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>profileReference</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span>1</span>" <span class="scTag">minOccurs</span>="<span>0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">type</span>="<span>
-<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>condition</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">profileReference</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">maxOccurs</span>="<span class="scContent">1</span>" <span class="scTag">minOccurs</span>="<span class="scContent">0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;condition&quot; type definition(located in external schema documentation)." href="wpkg.html#type_condition" class="externalLink">condition</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>id</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">id</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>HostMatch</a>
-</span>"/&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span class="scContent">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;HostMatch&quot; attribute group definition(located in external schema documentation)." href="wpkg.html#attributeGroup_HostMatch" class="externalLink">HostMatch</a>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1195,12 +1190,12 @@ setState('type_profileReference_scbox', false);
 <input type="button" id="type_wpkg_xibox_button" class="control" onclick="switchState('type_wpkg_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_wpkg_xibox" class="contents">
-<div>&lt;...&gt; <br/>
+<div style="margin-left: 0em">&lt;...&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[1..*]</span>
 </span>
 <br/>
-<div>&lt;host&gt; <span>
-<a>host</a>
+<div style="margin-left: 3em">&lt;host&gt; <span class="type">
+<a title="Jump to &quot;host&quot; type definition." href="#type_host">host</a>
 </span> &lt;/host&gt; <span class="occurs">[1]</span>
 </div>
 <span class="group" style="margin-left: 1.5em">End Sequence</span>
@@ -1217,11 +1212,11 @@ setState('type_wpkg_xibox', true);
 <input type="button" id="type_wpkg_scbox_button" class="control" onclick="switchState('type_wpkg_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_wpkg_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>wpkg</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span>1</span>" <span class="scTag">maxOccurs</span>="<span>unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>host</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>host</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">wpkg</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span class="scContent">1</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">host</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;host&quot; type definition." href="#type_host">host</a>
 </span>
-</span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1233,171 +1228,6 @@ setState('type_wpkg_scbox', false);
 <a href="#top">top</a>
 </div>
 <hr/>
-<div id="legend">
-<h2>
-<a name="Legend">Legend</a>
-</h2>
-<div style="float: left; width: 15em;">
-<h3 style="margin-bottom: 0px;">Complex Type:</h3>
-<div class="hint" style="margin-left: 0em;">Schema Component Type</div>
-</div>
-<div style="float: left; width: 15em;">
-<h3 style="margin-bottom: 0px;">
-<span class="name">AusAddress</span>
-</h3>
-<div class="hint" style="margin-left: 0em;">Schema Component Name</div>
-</div>
-<table class="hierarchy" style="clear : both">
-<tr>
-<th>Super-types:</th>
-<td>
-<span class="type" style="color: #0000FF; text-decoration:underline;">Address</span> &lt; <span class="current">AusAddress</span> (by extension)</td>
-</tr>
-<tr>
-<th>Sub-types:</th>
-<td>
-<ul>
-<li>
-<span class="type" style="color: #0000FF; text-decoration:underline;">QLDAddress</span> (by restriction)</li>
-</ul>
-</td>
-</tr>
-</table>
-<div class="hint">If this schema component is a type definition, its type hierarchy is shown in a gray-bordered box.</div>
-<table class="properties">
-<tr>
-<th>Name</th>
-<td>AusAddress</td>
-</tr>
-<tr>
-<th>
-<a title="Look up 'Abstract' in glossary" href="#term_Abstract">Abstract</a>
-</th>
-<td>no</td>
-</tr>
-</table>
-<div class="hint">The table above displays the properties of this schema component.</div>
-<div class="sample box">
-<div>
-<span class="caption">XML Instance Representation</span>
-</div>
-<div class="contents">
-<span style="margin-left: 0em">&lt;...</span>
-<span class="newFields">
-<span> country="<span class="fixed">Australia</span>"</span>
-</span>&gt; <br/>
-<span style="margin-left: 1.5em" class="inherited">&lt;unitNo&gt; <span class="type">string</span> &lt;/unitNo&gt; <span class="occurs">[0..1]</span>
-</span>
-<br/>
-<span style="margin-left: 1.5em" class="inherited">&lt;houseNo&gt; <span class="type">string</span> &lt;/houseNo&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 1.5em" class="inherited">&lt;street&gt; <span class="type">string</span> &lt;/street&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Choice' in glossary" href="#term_Choice">Choice</a>
-<span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 3em" class="inherited">&lt;city&gt; <span class="type">string</span> &lt;/city&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 3em" class="inherited">&lt;town&gt; <span class="type">string</span> &lt;/town&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span class="group" style="margin-left: 1.5em">End Choice</span>
-<br/>
-<span class="newFields">
-<span style="margin-left: 1.5em">&lt;state&gt; <span class="type" style="text-decoration:underline;">AusStates</span> &lt;/state&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 1.5em">&lt;postcode&gt; <span class="constraint">string &lt;&lt;<em>pattern</em> = [1-9][0-9]{3}&gt;&gt;</span> &lt;/postcode&gt; <span class="occurs">[1]</span>
-<a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Post code must be a four-digit number.'); viewDocumentation('Element', 'postcode', docArray);">?</a>
-</span>
-<br/>
-</span>
-<span style="margin-left: 0em">&lt;/...&gt;</span>
-<br/>
-</div>
-</div>
-<div class="hint">
-<p>The XML Instance Representation table above shows the schema component's content as an XML instance.</p>
-<ul>
-<li>The minimum and maximum occurrence of elements and attributes are provided in square brackets, e.g. [0..1].</li>
-<li>Model group information are shown in gray, e.g. Start Choice ... End Choice.</li>
-<li>For type derivations, the elements and attributes that have been added to or changed from the base type's content are shown in <span style="font-weight: bold">bold</span>.</li>
-<li>If an element/attribute has a fixed value, the fixed value is shown in green, e.g. country="Australia".</li>
-<li>Otherwise, the type of the element/attribute is displayed.
-               <ul>
-<li>If the element/attribute's type is in the schema, a link is provided to it.</li>
-<li>For local simple type definitions, the constraints are displayed in angle brackets, e.g. &lt;&lt;<em>pattern</em> = [1-9][0-9]{3}&gt;&gt;.</li>
-</ul>
-</li>
-<li>If a local element/attribute has documentation, it will be displayed in a window that pops up when the question mark inside the attribute or next to the element is clicked, e.g. &lt;postcode&gt;.</li>
-</ul>
-</div>
-<div class="schemaComponent box">
-<div>
-<span class="caption">Schema Component Representation</span>
-</div>
-<div class="contents">
-<span style="margin-left: 0em">&lt;<span class="scTag">complexType</span>
-<span class="scTag">name</span>="<span class="scContent">AusAddress</span>"&gt;</span>
-<br/>
-<span style="margin-left: 1.5em">&lt;<span class="scTag">complexContent</span>&gt;</span>
-<br/>
-<span style="margin-left: 3em">&lt;<span class="scTag">extension</span>
-<span class="scTag">base</span>="<span class="scContent">
-<span class="type" style="text-decoration:underline;">Address</span>
-</span>"&gt;</span>
-<br/>
-<span style="margin-left: 4.5em">&lt;<span class="scTag">sequence</span>&gt;</span>
-<br/>
-<span style="margin-left: 6em">&lt;<span class="scTag">element</span>
-<span class="scTag">name</span>="<span class="scContent">state</span>" <span class="scTag">type</span>="<span class="scContent">
-<span class="type" style="text-decoration:underline;">AusStates</span>
-</span>"/&gt;</span>
-<br/>
-<span style="margin-left: 6em">&lt;<span class="scTag">element</span>
-<span class="scTag">name</span>="<span class="scContent">postcode</span>"&gt;</span>
-<br/>
-<span style="margin-left: 7.5em">&lt;<span class="scTag">simpleType</span>&gt;</span>
-<br/>
-<span style="margin-left: 9em">&lt;<span class="scTag">restriction</span>
-<span class="scTag">base</span>="<span class="scContent">
-<span class="type">string</span>
-</span>"&gt;</span>
-<br/>
-<span style="margin-left: 10.5em">&lt;<span class="scTag">pattern</span>
-<span class="scTag">value</span>="<span class="scContent">[1-9][0-9]{3}</span>"/&gt;</span>
-<br/>
-<span style="margin-left: 9em">&lt;/<span class="scTag">restriction</span>&gt;</span>
-<br/>
-<span style="margin-left: 7.5em">&lt;/<span class="scTag">simpleType</span>&gt;</span>
-<br/>
-<span style="margin-left: 6em">&lt;/<span class="scTag">element</span>&gt;</span>
-<br/>
-<span style="margin-left: 4.5em">&lt;/<span class="scTag">sequence</span>&gt;</span>
-<br/>
-<span style="margin-left: 4.5em">&lt;<span class="scTag">attribute</span>
-<span class="scTag">name</span>="<span class="scContent">country</span>" <span class="scTag">type</span>="<span class="scContent">
-<span class="type">string</span>
-</span>" <span class="scTag">fixed</span>="<span class="scContent">Australia</span>"/&gt;</span>
-<br/>
-<span style="margin-left: 3em">&lt;/<span class="scTag">extension</span>&gt;</span>
-<br/>
-<span style="margin-left: 1.5em">&lt;/<span class="scTag">complexContent</span>&gt;</span>
-<br/>
-<span style="margin-left: 0em">&lt;/<span class="scTag">complexType</span>&gt;</span>
-<br/>
-</div>
-</div>
-<div class="hint">The Schema Component Representation table above displays the underlying XML representation of the schema component. (Annotations are not shown.)</div>
-<div style="text-align: right; clear: both;">
-<a href="#top">top</a>
-</div>
-<hr/>
-</div>
 <div id="glossary">
 <h2>
 <a name="Glossary">Glossary</a>

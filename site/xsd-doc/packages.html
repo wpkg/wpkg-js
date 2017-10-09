@@ -769,11 +769,6 @@ if (gc != null) {
 </ul>
 </li>
 </ul>
-<ul id="legendTOC" style="margin-top: 0em">
-<li>
-<a href="#Legend">Legend</a>
-</li>
-</ul>
 <ul id="glossaryTOC" style="margin-top: 0em">
 <li>
 <a href="#Glossary">Glossary</a>
@@ -856,8 +851,8 @@ if (gc != null) {
 <input type="button" id="schema_scbox_button" class="control" onclick="switchState('schema_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="schema_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:schema</span> <span class="scTag">targetNamespace</span>="<span>http://www.wpkg.org/packages</span>" <span class="scTag">elementFormDefault</span>="<span>unqualified</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:import</span> <span class="scTag">namespace</span>="<span>http://www.wpkg.org/wpkg</span>" <span class="scTag">schemaLocation</span>="<span>wpkg.xsd</span>"/&gt;</div>
-<div class="scContent" style="margin-left: 1.5em">...</div>&lt;/<span>xsd:schema</span>&gt;</div>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:schema</span> <span class="scTag">targetNamespace</span>="<span class="scContent">http://www.wpkg.org/packages</span>" <span class="scTag">elementFormDefault</span>="<span class="scContent">unqualified</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:import</span> <span class="scTag">namespace</span>="<span class="scContent">http://www.wpkg.org/wpkg</span>" <span class="scTag">schemaLocation</span>="<span class="scContent">wpkg.xsd</span>"/&gt;</div>
+<div class="scContent" style="margin-left: 1.5em">...</div>&lt;/<span class="scTag">xsd:schema</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -905,12 +900,12 @@ setState('schema_scbox', false);
 <input type="button" id="element_packages_xibox_button" class="control" onclick="switchState('element_packages_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="element_packages_xibox" class="contents">
-<div>&lt;packages&gt; <br/>
+<div style="margin-left: 0em">&lt;packages&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..*]</span>
 </span>
 <br/>
-<div>&lt;package&gt; <span>
-<a>package</a>
+<div style="margin-left: 3em">&lt;package&gt; <span class="type">
+<a title="Jump to &quot;package&quot; type definition." href="#type_package">package</a>
 </span> &lt;/package&gt; <span class="occurs">[1]</span>
 </div>
 <span class="group" style="margin-left: 1.5em">End Sequence</span>
@@ -927,9 +922,9 @@ setState('element_packages_xibox', true);
 <input type="button" id="element_packages_scbox_button" class="control" onclick="switchState('element_packages_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="element_packages_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:element</span> <span class="scTag">name</span>="<span>packages</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>packages</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">packages</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;packages&quot; type definition." href="#type_packages">packages</a>
 </span>
 </span>"/&gt;</div>
 </div>
@@ -1001,49 +996,49 @@ setState('element_packages_scbox', false);
 <input type="button" id="type_command_xibox_button" class="control" onclick="switchState('type_command_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_command_xibox" class="contents">
-<div>&lt;...<br/>
-<span> type="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em"> type="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('This attribute allows command grouping. All commands with the same type are executed at the specified package stage. The following types are supported by WPKG currently: install: Commands of type install are executed during package installation. upgrade: Commands of type upgrade are executed if a package revision is incremented and therefore the package is updated to a new version. downgrade: Commands of type downgrade are executed if a package revision is decremented and therefore the package is downgraded to an older version. remove: Commands of type remove are executed when a package is uninstalled from the system. You can also specify any other type identifier here. WPKG however will not execute these commands automatically during any package phase. But you can use these package types in include references. For example this allows you to define packages of type \'prepare\' and then refer to it by includes by specifying include=\'prepare\' within another command node. Example: &lt;command type=\'prepare\' cmd=\'do-something\' /&gt; &lt;command type=\'prepare\' cmd=\'do-something-else\' /&gt; &lt;command type=\'install\' include=\'prepare\' /&gt; &lt;command type=\'install\' cmd=\'install-command\' /&gt; &lt;command type=\'remove\' include=\'prepare\' /&gt; &lt;command type=\'remove\' cmd=\'install-command\' /&gt; This will include the \'prepare\' commands during installation and during remove.'); viewDocumentation('Attribute', 'type', docArray);">?</a>"</span>
 <br/>
-<span> include="<span>
-<span>
+<span style="margin-left: 0.5em"> include="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>pattern</em> = install)</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify to inherit all commands from a specific type of commands. For example specify \'install\' to include all install commands. The package will be processed the same way as if the specified type of commands would be duplicated and inserted exactly where you specified the include command. It is allowed to specify multiple include commands. Be careful no to create inclusion loops. For example including all install commands within the upgrade node and including the upgrade node within the install node.'); viewDocumentation('Attribute', 'include', docArray);">?</a>"</span>
 <br/>
-<span> cmd="<span>
+<span style="margin-left: 0.5em"> cmd="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify the command to be executed in order to install the application in silent mode. Example: \'%SOFTWARE%\pidgin\pidgin.exe /L=1033 /DS=1 /NOUI\'. Note that a command is required in order to perform any action. Although this attribute is optional it is required for normal commands. Either the include or the cmd attribute shall be filled.'); viewDocumentation('Attribute', 'cmd', docArray);">?</a>"</span>
 <br/>
-<span> timeout="<span>
+<span style="margin-left: 0.5em"> timeout="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:int</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify timeout for command (in seconds). Timeout has no effect on inheritance.'); viewDocumentation('Attribute', 'timeout', docArray);">?</a>"</span>
 <br/>
-<span> workdir="<span>
+<span style="margin-left: 0.5em"> workdir="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify working directory in which the command is executed.'); viewDocumentation('Attribute', 'workdir', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em"> hostname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em"> os="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em"> ipaddresses="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em"> domainname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em"> groups="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em"> architecture="<span class="constraint">
+<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em"> environment="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em"> lcid="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em"> lcidOS="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
 </span>
@@ -1051,8 +1046,8 @@ setState('element_packages_scbox', false);
 <span class="group" style="margin-left: 3em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
 </span>
 <br/>
-<div>&lt;condition&gt; <span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>condition</a>
+<div style="margin-left: 4.5em">&lt;condition&gt; <span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;condition&quot; type definition(located in external schema documentation)." href="wpkg.html#type_condition" class="externalLink">condition</a>
 </span> &lt;/condition&gt; <span class="occurs">[1]</span>
 </div>
 <span class="group" style="margin-left: 3em">End Sequence</span>
@@ -1060,12 +1055,12 @@ setState('element_packages_scbox', false);
 <span class="group" style="margin-left: 3em">Start <a title="Look up 'Choice' in glossary" href="#term_Choice">Choice</a> <span class="occurs">[0..*]</span>
 </span>
 <br/>
-<div>&lt;exit&gt; <span>
-<a>exit</a>
+<div style="margin-left: 4.5em">&lt;exit&gt; <span class="type">
+<a title="Jump to &quot;exit&quot; type definition." href="#type_exit">exit</a>
 </span> &lt;/exit&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify exit code handling for this command. This allows you to define some exit codes as successful even if they are non-zero.'); viewDocumentation('Element', 'exit', docArray);">?</a>
 </div>
-<div>&lt;download&gt; <span>
-<a>download</a>
+<div style="margin-left: 4.5em">&lt;download&gt; <span class="type">
+<a title="Jump to &quot;download&quot; type definition." href="#type_download">download</a>
 </span> &lt;/download&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify downloads which are executed only for this command to be run.'); viewDocumentation('Element', 'download', docArray);">?</a>
 </div>
 <span class="group" style="margin-left: 3em">End Choice</span>
@@ -1084,48 +1079,48 @@ setState('type_command_xibox', true);
 <input type="button" id="type_command_scbox_button" class="control" onclick="switchState('type_command_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_command_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>command</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span>0</span>" <span class="scTag">maxOccurs</span>="<span>1</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span>0</span>" <span class="scTag">maxOccurs</span>="<span>1</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">type</span>="<span>
-<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>condition</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">command</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">1</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">1</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;condition&quot; type definition(located in external schema documentation)." href="wpkg.html#type_condition" class="externalLink">condition</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:choice</span> <span class="scTag">minOccurs</span>="<span>0</span>" <span class="scTag">maxOccurs</span>="<span>unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>exit</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>exit</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:choice</span> <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">exit</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;exit&quot; type definition." href="#type_exit">exit</a>
 </span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>download</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>download</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">download</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;download&quot; type definition." href="#type_download">download</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:choice</span>&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>type</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>include</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">include</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span>install</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span>upgrade</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span>downgrade</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span>remove</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span>\w+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>cmd</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span class="scContent">install</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span class="scContent">upgrade</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span class="scContent">downgrade</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span class="scContent">remove</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span class="scContent">\w+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">cmd</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>timeout</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">timeout</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:int</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>workdir</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">workdir</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>HostMatch</a>
-</span>"/&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span class="scContent">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;HostMatch&quot; attribute group definition(located in external schema documentation)." href="wpkg.html#attributeGroup_HostMatch" class="externalLink">HostMatch</a>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1175,48 +1170,48 @@ setState('type_command_scbox', false);
 <input type="button" id="type_commandDowngrade_xibox_button" class="control" onclick="switchState('type_commandDowngrade_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_commandDowngrade_xibox" class="contents">
-<div>&lt;...<br/>
-<span> include="<span>
-<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em" class="inherited"> include="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>pattern</em> = install)</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify to inherit all commands from a specific type of commands. For example specify \'install\' to include all install commands. The package will be processed the same way as if the specified type of commands would be duplicated and inserted exactly where you specified the include command. It is allowed to specify multiple include commands. Be careful no to create inclusion loops. For example including all install commands within the upgrade node and including the upgrade node within the install node.'); viewDocumentation('Attribute', 'include', docArray);">?</a>"</span>
 <br/>
-<span> timeout="<span>
+<span style="margin-left: 0.5em" class="inherited"> timeout="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:int</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify timeout for command (in seconds). Timeout has no effect on inheritance.'); viewDocumentation('Attribute', 'timeout', docArray);">?</a>"</span>
 <br/>
-<span> workdir="<span>
+<span style="margin-left: 0.5em" class="inherited"> workdir="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify working directory in which the command is executed.'); viewDocumentation('Attribute', 'workdir', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em" class="inherited"> hostname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em" class="inherited"> os="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em" class="inherited"> ipaddresses="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em" class="inherited"> domainname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em" class="inherited"> groups="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em" class="inherited"> architecture="<span class="constraint">
+<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em" class="inherited"> environment="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcid="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcidOS="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>
 <br/>
-<span> type="<span class="fixed">downgrade</span> <span class="occurs">[0..1]</span>"</span>
+<span style="margin-left: 0.5em" class="newFields"> type="<span class="fixed">downgrade</span> <span class="occurs">[0..1]</span>"</span>
 <br/>
-<span> cmd="<span>
+<span style="margin-left: 0.5em" class="newFields"> cmd="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1230,18 +1225,18 @@ setState('type_commandDowngrade_xibox', true);
 <input type="button" id="type_commandDowngrade_scbox_button" class="control" onclick="switchState('type_commandDowngrade_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_commandDowngrade_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>commandDowngrade</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
-<a>command</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">commandDowngrade</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>type</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">fixed</span>="<span>downgrade</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>cmd</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">fixed</span>="<span class="scContent">downgrade</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">cmd</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1291,48 +1286,48 @@ setState('type_commandDowngrade_scbox', false);
 <input type="button" id="type_commandInstall_xibox_button" class="control" onclick="switchState('type_commandInstall_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_commandInstall_xibox" class="contents">
-<div>&lt;...<br/>
-<span> include="<span>
-<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em" class="inherited"> include="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>pattern</em> = install)</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify to inherit all commands from a specific type of commands. For example specify \'install\' to include all install commands. The package will be processed the same way as if the specified type of commands would be duplicated and inserted exactly where you specified the include command. It is allowed to specify multiple include commands. Be careful no to create inclusion loops. For example including all install commands within the upgrade node and including the upgrade node within the install node.'); viewDocumentation('Attribute', 'include', docArray);">?</a>"</span>
 <br/>
-<span> timeout="<span>
+<span style="margin-left: 0.5em" class="inherited"> timeout="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:int</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify timeout for command (in seconds). Timeout has no effect on inheritance.'); viewDocumentation('Attribute', 'timeout', docArray);">?</a>"</span>
 <br/>
-<span> workdir="<span>
+<span style="margin-left: 0.5em" class="inherited"> workdir="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify working directory in which the command is executed.'); viewDocumentation('Attribute', 'workdir', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em" class="inherited"> hostname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em" class="inherited"> os="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em" class="inherited"> ipaddresses="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em" class="inherited"> domainname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em" class="inherited"> groups="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em" class="inherited"> architecture="<span class="constraint">
+<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em" class="inherited"> environment="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcid="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcidOS="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>
 <br/>
-<span> type="<span class="fixed">install</span> <span class="occurs">[1]</span>"</span>
+<span style="margin-left: 0.5em" class="newFields"> type="<span class="fixed">install</span> <span class="occurs">[1]</span>"</span>
 <br/>
-<span> cmd="<span>
+<span style="margin-left: 0.5em" class="newFields"> cmd="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1346,18 +1341,18 @@ setState('type_commandInstall_xibox', true);
 <input type="button" id="type_commandInstall_scbox_button" class="control" onclick="switchState('type_commandInstall_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_commandInstall_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>commandInstall</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
-<a>command</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">commandInstall</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>type</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">fixed</span>="<span>install</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>cmd</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">fixed</span>="<span class="scContent">install</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">cmd</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1407,48 +1402,48 @@ setState('type_commandInstall_scbox', false);
 <input type="button" id="type_commandRemove_xibox_button" class="control" onclick="switchState('type_commandRemove_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_commandRemove_xibox" class="contents">
-<div>&lt;...<br/>
-<span> include="<span>
-<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em" class="inherited"> include="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>pattern</em> = install)</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify to inherit all commands from a specific type of commands. For example specify \'install\' to include all install commands. The package will be processed the same way as if the specified type of commands would be duplicated and inserted exactly where you specified the include command. It is allowed to specify multiple include commands. Be careful no to create inclusion loops. For example including all install commands within the upgrade node and including the upgrade node within the install node.'); viewDocumentation('Attribute', 'include', docArray);">?</a>"</span>
 <br/>
-<span> timeout="<span>
+<span style="margin-left: 0.5em" class="inherited"> timeout="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:int</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify timeout for command (in seconds). Timeout has no effect on inheritance.'); viewDocumentation('Attribute', 'timeout', docArray);">?</a>"</span>
 <br/>
-<span> workdir="<span>
+<span style="margin-left: 0.5em" class="inherited"> workdir="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify working directory in which the command is executed.'); viewDocumentation('Attribute', 'workdir', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em" class="inherited"> hostname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em" class="inherited"> os="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em" class="inherited"> ipaddresses="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em" class="inherited"> domainname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em" class="inherited"> groups="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em" class="inherited"> architecture="<span class="constraint">
+<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em" class="inherited"> environment="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcid="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcidOS="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>
 <br/>
-<span> type="<span class="fixed">remove</span> <span class="occurs">[0..1]</span>"</span>
+<span style="margin-left: 0.5em" class="newFields"> type="<span class="fixed">remove</span> <span class="occurs">[0..1]</span>"</span>
 <br/>
-<span> cmd="<span>
+<span style="margin-left: 0.5em" class="newFields"> cmd="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1462,18 +1457,18 @@ setState('type_commandRemove_xibox', true);
 <input type="button" id="type_commandRemove_scbox_button" class="control" onclick="switchState('type_commandRemove_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_commandRemove_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>commandRemove</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
-<a>command</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">commandRemove</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>type</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">fixed</span>="<span>remove</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>cmd</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">fixed</span>="<span class="scContent">remove</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">cmd</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1514,12 +1509,12 @@ setState('type_commandRemove_scbox', false);
 <input type="button" id="type_commands_xibox_button" class="control" onclick="switchState('type_commands_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_commands_xibox" class="contents">
-<div>&lt;...&gt; <br/>
+<div style="margin-left: 0em">&lt;...&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[1..*]</span>
 </span>
 <br/>
-<div>&lt;command&gt; <span>
-<a>command</a>
+<div style="margin-left: 3em">&lt;command&gt; <span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span> &lt;/command&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify any numer of commands for any type of command.'); viewDocumentation('Element', 'command', docArray);">?</a>
 </div>
 <span class="group" style="margin-left: 1.5em">End Sequence</span>
@@ -1536,11 +1531,11 @@ setState('type_commands_xibox', true);
 <input type="button" id="type_commands_scbox_button" class="control" onclick="switchState('type_commands_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_commands_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>commands</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span>1</span>" <span class="scTag">maxOccurs</span>="<span>unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>command</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>command</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">commands</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span class="scContent">1</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">command</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span>
-</span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1590,48 +1585,48 @@ setState('type_commands_scbox', false);
 <input type="button" id="type_commandUpgrade_xibox_button" class="control" onclick="switchState('type_commandUpgrade_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_commandUpgrade_xibox" class="contents">
-<div>&lt;...<br/>
-<span> include="<span>
-<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em" class="inherited"> include="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>pattern</em> = install)</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify to inherit all commands from a specific type of commands. For example specify \'install\' to include all install commands. The package will be processed the same way as if the specified type of commands would be duplicated and inserted exactly where you specified the include command. It is allowed to specify multiple include commands. Be careful no to create inclusion loops. For example including all install commands within the upgrade node and including the upgrade node within the install node.'); viewDocumentation('Attribute', 'include', docArray);">?</a>"</span>
 <br/>
-<span> timeout="<span>
+<span style="margin-left: 0.5em" class="inherited"> timeout="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:int</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify timeout for command (in seconds). Timeout has no effect on inheritance.'); viewDocumentation('Attribute', 'timeout', docArray);">?</a>"</span>
 <br/>
-<span> workdir="<span>
+<span style="margin-left: 0.5em" class="inherited"> workdir="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify working directory in which the command is executed.'); viewDocumentation('Attribute', 'workdir', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em" class="inherited"> hostname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em" class="inherited"> os="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em" class="inherited"> ipaddresses="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em" class="inherited"> domainname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em" class="inherited"> groups="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em" class="inherited"> architecture="<span class="constraint">
+<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em" class="inherited"> environment="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcid="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em" class="inherited"> lcidOS="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>
 <br/>
-<span> type="<span class="fixed">upgrade</span> <span class="occurs">[0..1]</span>"</span>
+<span style="margin-left: 0.5em" class="newFields"> type="<span class="fixed">upgrade</span> <span class="occurs">[0..1]</span>"</span>
 <br/>
-<span> cmd="<span>
+<span style="margin-left: 0.5em" class="newFields"> cmd="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1645,18 +1640,18 @@ setState('type_commandUpgrade_xibox', true);
 <input type="button" id="type_commandUpgrade_scbox_button" class="control" onclick="switchState('type_commandUpgrade_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_commandUpgrade_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>commandUpgrade</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
-<a>command</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">commandUpgrade</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:complexContent</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>type</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">type</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">fixed</span>="<span>upgrade</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>cmd</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">fixed</span>="<span class="scContent">upgrade</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">cmd</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:complexContent</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1704,51 +1699,51 @@ setState('type_commandUpgrade_scbox', false);
 <input type="button" id="type_download_xibox_button" class="control" onclick="switchState('type_download_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_download_xibox" class="contents">
-<div>&lt;...<br/>
-<span> url="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em"> url="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('URL where the file is downloaded: \'http://server.example.org/path/to/file.exe\''); viewDocumentation('Attribute', 'url', docArray);">?</a>"</span>
 <br/>
-<span> expandURL="<span>
+<span style="margin-left: 0.5em"> expandURL="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:boolean</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Defines whether the url attribute is expanded (ie. environment variables are replaced). Note: As URLs are used to contain some percentage characters (like \'%20\' for spaces) these might be expanded too if the URL matches an environment variable which is defined. For example downloading from an URL like url=\'http://host/softwareX%20release%20.exe\' would try to expand the environment\'20release\' as well. It\'s very unlikely that this collides with an environment variable you have actually defined but keep it in mind when defining download URLs. If you really need to disable expansion because the URL collides with existing environment variables then use the expandURL=\'false\' attribute: &lt;download expandURL=\'false\' url=\'http://host/softwareX%20release%20.exe\' target=\'release.exe\' /&gt;'); viewDocumentation('Attribute', 'expandURL', docArray);">?</a>"</span>
 <br/>
-<span> target="<span>
+<span style="margin-left: 0.5em"> target="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Target path to store the file to. The path has to be specified relative to the downloadDir property within config.xml. By default relative to %TEMP%. For example specify \'pidgin\pidgin.exe\' to download the file at the specified URL to \'%TEMP%\pidgin\pigin.exe\'. The file is removed after the commands are executed.'); viewDocumentation('Attribute', 'target', docArray);">?</a>"</span>
 <br/>
-<span> timeout="<span>
+<span style="margin-left: 0.5em"> timeout="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Optional download timeout (specified in seconds).'); viewDocumentation('Attribute', 'timeout', docArray);">?</a>"</span>
 <br/>
-<span> hostname="<span>
+<span style="margin-left: 0.5em"> hostname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host name. If hostname attribute is specified then this node is only applied if the host name is matched by the specified attribute regular expression.'); viewDocumentation('Attribute', 'hostname', docArray);">?</a>"</span>
 <br/>
-<span> os="<span>
+<span style="margin-left: 0.5em"> os="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression which matches host operating system. e.g. \'microsoft windows 7 professional\' Host OS description string will have the following format: \'[OS-caption], [OS-description],[CSD-version], [OS-version]\''); viewDocumentation('Attribute', 'os', docArray);">?</a>"</span>
 <br/>
-<span> ipaddresses="<span>
+<span style="margin-left: 0.5em"> ipaddresses="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching machine IP address. Any IP address of the host (if it has multiple) will have to match this expression. e.g. ^192\.168\.1\..*'); viewDocumentation('Attribute', 'ipaddresses', docArray);">?</a>"</span>
 <br/>
-<span> domainname="<span>
+<span style="margin-left: 0.5em"> domainname="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching domain name of the host. e.g. ^domain$'); viewDocumentation('Attribute', 'domainname', docArray);">?</a>"</span>
 <br/>
-<span> groups="<span>
+<span style="margin-left: 0.5em"> groups="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching group membership of host. At least one group has to match the regular expression. e.g. ^group.*$'); viewDocumentation('Attribute', 'groups', docArray);">?</a>"</span>
 <br/>
-<span> architecture="<span>
-<span>
+<span style="margin-left: 0.5em"> architecture="<span class="constraint">
+<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'x86'|'x64'|'ia64'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Regular expression matching the host architecture. Currently the following architecture are supported: x86: 32-bit Windows operating system running on x86 instruction set x64: 64-bit Windows operating system running on x86-64 instruction set ia64: 64-bit Windows operating system running on IA64 instruction set Note: Note: You will have to match x86 also if you run Windows 32-bit on AMD64/EMT64/x64 hardware.'); viewDocumentation('Attribute', 'architecture', docArray);">?</a>"</span>
 <br/>
-<span> environment="<span>
+<span style="margin-left: 0.5em"> environment="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define environment variables which have to match in order to match the host. Environment variables need to be specified in the following format: environment=\'variable1=^regexp$|variable2=regexp...\' Please note that regular expressions are matched case-insensitive and multiple variables have to be separated by the pipe (\'|\') character. Please also note that in case you use WPKG-client the system-user environment might differ from the environment you see when opening a command prompt and typing \'set\'. Some variables might be missing and others might have different content. So use with caution.'); viewDocumentation('Attribute', 'environment', docArray);">?</a>"</span>
 <br/>
-<span> lcid="<span>
+<span style="margin-left: 0.5em"> lcid="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID seetting of executing user locale). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcid', docArray);">?</a>"</span>
 <br/>
-<span> lcidOS="<span>
+<span style="margin-left: 0.5em"> lcidOS="<span class="type">
 <a href="wpkg.html#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Comma-separated list of LCID values to be matched against executing host (LCID setting of Windows install language). A full list of LCIDs might be found at: http://www.microsoft.com/globaldev/reference/lcid-all.mspx'); viewDocumentation('Attribute', 'lcidOS', docArray);">?</a>"</span>&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..1]</span>
 </span>
 <br/>
-<div>&lt;condition&gt; <span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>condition</a>
+<div style="margin-left: 3em">&lt;condition&gt; <span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;condition&quot; type definition(located in external schema documentation)." href="wpkg.html#type_condition" class="externalLink">condition</a>
 </span> &lt;/condition&gt; <span class="occurs">[1]</span>
 </div>
 <span class="group" style="margin-left: 1.5em">End Sequence</span>
@@ -1765,30 +1760,30 @@ setState('type_download_xibox', true);
 <input type="button" id="type_download_scbox_button" class="control" onclick="switchState('type_download_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_download_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>download</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span>0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>condition</span>" <span class="scTag">type</span>="<span>
-<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>condition</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">download</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span class="scContent">0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">condition</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;condition&quot; type definition(located in external schema documentation)." href="wpkg.html#type_condition" class="externalLink">condition</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>url</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">url</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>expandURL</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">expandURL</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:boolean</span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>target</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">target</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>timeout</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">timeout</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>HostMatch</a>
-</span>"/&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attributeGroup</span> <span class="scTag">ref</span>="<span class="scContent">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;HostMatch&quot; attribute group definition(located in external schema documentation)." href="wpkg.html#attributeGroup_HostMatch" class="externalLink">HostMatch</a>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1835,13 +1830,13 @@ setState('type_download_scbox', false);
 <input type="button" id="type_exit_xibox_button" class="control" onclick="switchState('type_exit_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_exit_xibox" class="contents">
-<div>&lt;...<br/>
-<span> code="<span>
-<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em"> code="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>pattern</em> = any)</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify integer value which matches the exit code of the installer. Or specify the string \'any\' or \'*\' to match any exit code.'); viewDocumentation('Attribute', 'code', docArray);">?</a>"</span>
 <br/>
-<span> reboot="<span>
-<span>
+<span style="margin-left: 0.5em"> reboot="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'true'|'false'|'delayed'|'postponed'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify this attribute if the exit code should initiate/shedule any type of reboot. Valid values: false: Do not require any reboot. true: Reuire immediate reboot after this command. delayed: Schedule reboot after execution of all commands of this package has been finished. postponed: Schedule reboot after execution of all packages (when WPKG terminates).'); viewDocumentation('Attribute', 'reboot', docArray);">?</a>"</span>/&gt; </div>
 </div>
 <script type="text/javascript">
@@ -1855,19 +1850,19 @@ setState('type_exit_xibox', true);
 <input type="button" id="type_exit_scbox_button" class="control" onclick="switchState('type_exit_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_exit_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>exit</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>code</span>" <span class="scTag">use</span>="<span>required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">exit</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">code</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span>any</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span>\d+</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span>\*</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>reboot</span>" <span class="scTag">use</span>="<span>optional</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span class="scContent">any</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span class="scContent">\d+</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:pattern</span> <span class="scTag">value</span>="<span class="scContent">\*</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">reboot</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>true</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>false</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>delayed</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>postponed</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">true</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">false</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">delayed</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">postponed</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -1915,90 +1910,90 @@ setState('type_exit_scbox', false);
 <input type="button" id="type_package_xibox_button" class="control" onclick="switchState('type_package_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_package_xibox" class="contents">
-<div>&lt;...<br/>
-<span> id="<span>
+<div style="margin-left: 0em">&lt;...<br/>
+<span style="margin-left: 0.5em"> id="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Package identification. Needs to be a unique ID among all the packages. The package ID is case-sensitive unless the /ignoreCase switch is passed to wpkg.js. Example: \'pidgin\''); viewDocumentation('Attribute', 'id', docArray);">?</a>"</span>
 <br/>
-<span> name="<span>
+<span style="margin-left: 0.5em"> name="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Descriptive name of the package. e.g. \'Pidgin multi-protocol instant messenger\''); viewDocumentation('Attribute', 'name', docArray);">?</a>"</span>
 <br/>
-<span> revision="<span>
+<span style="margin-left: 0.5em"> revision="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Revision of the package. WPKG allows to specify a versions in quite flexible format. It is important to know how versions are compared in order to know whether WPKG needs to perform an upgrade or a downgrade. Here are some notes about version comparison: Some version number contain appendices to the version string indicating \'volatile\' versions like \'pre releases\'. For example some packages use versions like \'1.0RC1\' or \'1.0alpha2\'. Usually a version like \'1.0RC1\' would be considered to be newer than \'1.0\' by the algorithm but in case of \'RC\' versions this would be wrong. To handle such cases a number of strings are defined in order to define such volatile releases. The list of prefixes is defined in the global volatileReleaseMarker array. Valid comparisons include: A B Result \'1\' \'2\' B is newer \'1\' \'15\' B is newer \'1.0\' \'1.2.b\' B is newer \'1.35\' \'1.35-2\' B is newer \'1.35-2\' \'1.36\' B is newer \'1.35R3\' \'1.36\' B is newer \'1\' \'1.0.00.0000\' Versions are equal \'1\' \'1.0\' Versions are equal \'1.35\' \'1.35-2\' B is newer \'1.35-2\' \'1.35\' A is newer \'1.35R3\' \'1.36R4\' B is newer \'1.35-2\' \'1.35-2.0\' Versions are equal \'1.35.1\' \'1.35.1.0\' Versions are equal \'1.3RC2\' \'1.3\' B is newer (special case where A is an \'RC\' version) \'1.5\' \'1.5I3656\' A is newer (B is an \'I\'/integration version) \'1.5\' \'1.5M3656\' A is newer (B is an \'M\'/milestone version) \'1.5\' \'1.5u3656\' B is newer (B is an update version) This attribute is optional. Defaults to 0.'); viewDocumentation('Attribute', 'revision', docArray);">?</a>"</span>
 <br/>
-<span> priority="<span>
+<span style="margin-left: 0.5em"> priority="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:int</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Package priority. Packages with higher priorities are installed first. Optional. Defaults to 0.'); viewDocumentation('Attribute', 'priority', docArray);">?</a>"</span>
 <br/>
-<span> reboot="<span>
-<span>
+<span style="margin-left: 0.5em"> reboot="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'true'|'false'|'postponed'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify if a reboot should be initiated after package installation. Valid values: true: reboot immediately after package actions have been executed. false: do not reboot after executing commands. postponed: reboot after all packages have been installed (not after this one but schedule reboot to WPKG termination).'); viewDocumentation('Attribute', 'reboot', docArray);">?</a>"</span>
 <br/>
-<span> execute="<span>
-<span>
+<span style="margin-left: 0.5em"> execute="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'default'|'once'|'always'|'changed'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify how the package should be executed: always: Execute on each synchronization - regardless of the current install state or the result of any defined checks. changed: Execute on each synchronization but only if there are other changes done to the system. once: Execute only once. No checks will be executed on following synchronization requests unless the package version on the server side is changed.'); viewDocumentation('Attribute', 'execute', docArray);">?</a>"</span>
 <br/>
-<span> notify="<span>
+<span style="margin-left: 0.5em"> notify="<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:boolean</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify if the user should be notified about the installation of packages due to this package.'); viewDocumentation('Attribute', 'notify', docArray);">?</a>"</span>
 <br/>
-<span> precheck-install="<span>
-<span>
+<span style="margin-left: 0.5em"> precheck-install="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'always'|'never'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Defines how package checks are used during package installation. Currently supported values: always (default): When a package is new to the host then first the checks are run in order to verify whether the package is already installed. If the checks succeed then it is assumed that no further installation is needed. The package is silently added to the host without executing any commands. never: When a package is new to the host then the install commands are run in any case (without doing checks first). Note: Checks will still be done after package installation to verify whether installation was successful.'); viewDocumentation('Attribute', 'precheck-install', docArray);">?</a>"</span>
 <br/>
-<span> precheck-remove="<span>
-<span>
+<span style="margin-left: 0.5em"> precheck-remove="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'always'|'never'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Defines how package checks are used during package removal. Currently supported values: always: When a package is removed from a host then the checks will be executed before removal is processes. If the checks fail this potentially means that the package has been removed already. In such case the package remove commands will be skipped. never (default): When a package is about to be removed from the host then WPKG will execute the remove commands in any case without executing the checks first. Note: Checks will still be done after package removal to verify whether the removal was successful.'); viewDocumentation('Attribute', 'precheck-remove', docArray);">?</a>"</span>
 <br/>
-<span> precheck-upgrade="<span>
-<span>
+<span style="margin-left: 0.5em"> precheck-upgrade="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'always'|'never'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Defines how package checks are used during package upgrade. Currently supported values: always: When a package is upgraded the checks specified will be be executed before the upgrade takes place. If checks succeed, then the upgrade will not be performed (WPKG just assumes that the new version is already applied correctly. Please note that your checks shall verify a specific software version and not just a generic check which is true for all versions. If your checks are true for the old version too then WPKG would never perform the upgrade in this mode. never (default): When a package is about to be upgraded then WPKG will execute the upgrade commands in any case without executing the checks first. This is the recommended behavior. Note: Checks will still be done after package upgrade to verify whether the upgrade was successful.'); viewDocumentation('Attribute', 'precheck-upgrade', docArray);">?</a>"</span>
 <br/>
-<span> precheck-downgrade="<span>
-<span>
+<span style="margin-left: 0.5em"> precheck-downgrade="<span class="constraint">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span> (<em>value</em> comes from list: {'always'|'never'})</span> <span class="occurs">[0..1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Defines how package checks are used during package downgrade. Currently supported values: always: When a package is downgraded the checks specified will be be executed before the downgrade takes place. If checks succeed, then the downgrade will not be performed (WPKG just assumes that the old version is already applied correctly. Please note that your checks shall verify a specific software version and not just a generic check which is true for all versions. If your checks are true for the new/current version too then WPKG would never perform the downgrade in this mode. never (default): When a package is about to be downgraded then WPKG will execute the downgrade commands in any case without executing the checks first. This is the recommended behavior. Note: Checks will still be done after package downgrade to verify whether the downgrade was successful.'); viewDocumentation('Attribute', 'precheck-downgrade', docArray);">?</a>"</span>&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Choice' in glossary" href="#term_Choice">Choice</a> <span class="occurs">[0..*]</span>
 </span>
 <br/>
-<div>&lt;variable&gt; <span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>variable</a>
+<div style="margin-left: 3em">&lt;variable&gt; <span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;variable&quot; type definition(located in external schema documentation)." href="wpkg.html#type_variable" class="externalLink">variable</a>
 </span> &lt;/variable&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define an environment variable which is valid during package execution. Variables can be used within other variables, commands and checks.'); viewDocumentation('Element', 'variable', docArray);">?</a>
 </div>
-<div>&lt;check&gt; <span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>check</a>
+<div style="margin-left: 3em">&lt;check&gt; <span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;check&quot; type definition(located in external schema documentation)." href="wpkg.html#type_check" class="externalLink">check</a>
 </span> &lt;/check&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define checks which are used to verify whether a package has been applied properly to the target system.'); viewDocumentation('Element', 'check', docArray);">?</a>
 </div>
-<div>&lt;commands&gt; <span>
-<a>commands</a>
+<div style="margin-left: 3em">&lt;commands&gt; <span class="type">
+<a title="Jump to &quot;commands&quot; type definition." href="#type_commands">commands</a>
 </span> &lt;/commands&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define a list of commands to be executed for installation/upgrade/downgrade/remove.'); viewDocumentation('Element', 'commands', docArray);">?</a>
 </div>
-<div>&lt;install&gt; <span>
-<a>command</a>
+<div style="margin-left: 3em">&lt;install&gt; <span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span> &lt;/install&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define a command which is executed during package installation. This is still supported but in the future commands shall be grouped within the commands sub-node. Please regard the install node as deprecated. It might be removed in future WPKG releases.'); viewDocumentation('Element', 'install', docArray);">?</a>
 </div>
-<div>&lt;upgrade&gt; <span>
-<a>command</a>
+<div style="margin-left: 3em">&lt;upgrade&gt; <span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span> &lt;/upgrade&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define a comamnd which is executed during package upgrade. This is still supported but in the future commands shall be grouped within the commands sub-node. Please regard the upgrade node as deprecated. It might be removed in future WPKG releases.'); viewDocumentation('Element', 'upgrade', docArray);">?</a>
 </div>
-<div>&lt;downgrade&gt; <span>
-<a>command</a>
+<div style="margin-left: 3em">&lt;downgrade&gt; <span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span> &lt;/downgrade&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define a comamnd which is executed during package downgrade. This is still supported but in the future commands shall be grouped within the commands sub-node. Please regard the downgrade node as deprecated. It might be removed in future WPKG releases.'); viewDocumentation('Element', 'downgrade', docArray);">?</a>
 </div>
-<div>&lt;remove&gt; <span>
-<a>command</a>
+<div style="margin-left: 3em">&lt;remove&gt; <span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span> &lt;/remove&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Define a command which is executed during package removal. This is still supported but in the future commands shall be grouped within the commands sub-node. Please regard the remove node as deprecated. It might be removed in future WPKG releases.'); viewDocumentation('Element', 'remove', docArray);">?</a>
 </div>
-<div>&lt;download&gt; <span>
-<a>download</a>
+<div style="margin-left: 3em">&lt;download&gt; <span class="type">
+<a title="Jump to &quot;download&quot; type definition." href="#type_download">download</a>
 </span> &lt;/download&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify a list of \'global\' downloads. These downloads will be processes before each package command (like install, upgrade, downgrade, remove). Please consider this as deprecated. It\'s recommended to use the download sub-node of a command in order to specify downloads. This also allows one to specify downloads which are not executed when not needed.'); viewDocumentation('Element', 'download', docArray);">?</a>
 </div>
-<div>&lt;depends&gt; <span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>packageReference</a>
+<div style="margin-left: 3em">&lt;depends&gt; <span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;packageReference&quot; type definition(located in external schema documentation)." href="wpkg.html#type_packageReference" class="externalLink">packageReference</a>
 </span> &lt;/depends&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify a dependency between this and another package. The package referenced is a pre-requirement to install this package.'); viewDocumentation('Element', 'depends', docArray);">?</a>
 </div>
-<div>&lt;include&gt; <span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>packageReference</a>
+<div style="margin-left: 3em">&lt;include&gt; <span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;packageReference&quot; type definition(located in external schema documentation)." href="wpkg.html#type_packageReference" class="externalLink">packageReference</a>
 </span> &lt;/include&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify that this package includes another package into the package tree. Note that this is different from a dependency in the sense that the package included does not need to be installed BEFORE this package is applied. A package which is included is just added to the tree in the same way as it would when it\'s applied to the profile. It will be executed in order of priority. Please consider specifying a dependency rather than an include whenever possible.'); viewDocumentation('Element', 'include', docArray);">?</a>
 </div>
-<div>&lt;chain&gt; <span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>packageReference</a>
+<div style="margin-left: 3em">&lt;chain&gt; <span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;packageReference&quot; type definition(located in external schema documentation)." href="wpkg.html#type_packageReference" class="externalLink">packageReference</a>
 </span> &lt;/chain&gt; <span class="occurs">[1]</span> <a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Specify a package which is installed/verified right after applying this package.'); viewDocumentation('Element', 'chain', docArray);">?</a>
 </div>
 <span class="group" style="margin-left: 1.5em">End Choice</span>
@@ -2015,114 +2010,114 @@ setState('type_package_xibox', true);
 <input type="button" id="type_package_scbox_button" class="control" onclick="switchState('type_package_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_package_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>package</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:choice</span> <span class="scTag">maxOccurs</span>="<span>unbounded</span>" <span class="scTag">minOccurs</span>="<span>0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>variable</span>" <span class="scTag">type</span>="<span>
-<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>variable</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">package</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:choice</span> <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>" <span class="scTag">minOccurs</span>="<span class="scContent">0</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">variable</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;variable&quot; type definition(located in external schema documentation)." href="wpkg.html#type_variable" class="externalLink">variable</a>
 </span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>check</span>" <span class="scTag">type</span>="<span>
-<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>check</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">check</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;check&quot; type definition(located in external schema documentation)." href="wpkg.html#type_check" class="externalLink">check</a>
 </span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>commands</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>commands</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">commands</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;commands&quot; type definition." href="#type_commands">commands</a>
 </span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>install</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>command</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">install</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>upgrade</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>command</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">upgrade</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>downgrade</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>command</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">downgrade</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>remove</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>command</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">remove</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;command&quot; type definition." href="#type_command">command</a>
 </span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>download</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>download</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">download</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;download&quot; type definition." href="#type_download">download</a>
 </span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>depends</span>" <span class="scTag">type</span>="<span>
-<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>packageReference</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">depends</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;packageReference&quot; type definition(located in external schema documentation)." href="wpkg.html#type_packageReference" class="externalLink">packageReference</a>
 </span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>include</span>" <span class="scTag">type</span>="<span>
-<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>packageReference</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">include</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;packageReference&quot; type definition(located in external schema documentation)." href="wpkg.html#type_packageReference" class="externalLink">packageReference</a>
 </span>
 </span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>chain</span>" <span class="scTag">type</span>="<span>
-<span>
-<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a>packageReference</a>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">chain</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a href="#ns_wpkg" title="Find out namespace of 'wpkg' prefix">wpkg</a>:<a title="Jump to &quot;packageReference&quot; type definition(located in external schema documentation)." href="wpkg.html#type_packageReference" class="externalLink">packageReference</a>
 </span>
 </span>"/&gt;</div>&lt;/<span class="scTag">xsd:choice</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>id</span>" <span class="scTag">type</span>="<span>
-<span>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">id</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>name</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">name</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>required</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>revision</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">required</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">revision</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>priority</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">priority</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:int</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>reboot</span>" <span class="scTag">use</span>="<span>optional</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">reboot</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>true</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>false</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>postponed</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>execute</span>" <span class="scTag">use</span>="<span>optional</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">true</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">false</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">postponed</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">execute</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>default</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>once</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>always</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>changed</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>notify</span>" <span class="scTag">type</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">default</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">once</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">always</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">changed</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">notify</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:boolean</span>
-</span>" <span class="scTag">use</span>="<span>optional</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>precheck-install</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>" <span class="scTag">use</span>="<span class="scContent">optional</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">precheck-install</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>always</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>never</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>precheck-remove</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">always</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">never</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">precheck-remove</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>always</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>never</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>precheck-upgrade</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">always</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">never</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">precheck-upgrade</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>always</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>never</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span>precheck-downgrade</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span>
-<span>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">always</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">never</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:attribute</span> <span class="scTag">name</span>="<span class="scContent">precheck-downgrade</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:simpleType</span>&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:restriction</span> <span class="scTag">base</span>="<span class="scContent">
+<span class="type">
 <a href="#ns_xsd" title="Find out namespace of 'xsd' prefix">xsd</a>:string</span>
-</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>always</span>"/&gt;</div>
-<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span>never</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">always</span>"/&gt;</div>
+<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:enumeration</span> <span class="scTag">value</span>="<span class="scContent">never</span>"/&gt;</div>&lt;/<span class="scTag">xsd:restriction</span>&gt;</div>&lt;/<span class="scTag">xsd:simpleType</span>&gt;</div>&lt;/<span class="scTag">xsd:attribute</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -2170,12 +2165,12 @@ setState('type_package_scbox', false);
 <input type="button" id="type_packages_xibox_button" class="control" onclick="switchState('type_packages_xibox'); return false;" style="display: none"/> <span class="caption">XML Instance Representation</span>
 </div>
 <div id="type_packages_xibox" class="contents">
-<div>&lt;...&gt; <br/>
+<div style="margin-left: 0em">&lt;...&gt; <br/>
 <span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Sequence' in glossary" href="#term_Sequence">Sequence</a> <span class="occurs">[0..*]</span>
 </span>
 <br/>
-<div>&lt;package&gt; <span>
-<a>package</a>
+<div style="margin-left: 3em">&lt;package&gt; <span class="type">
+<a title="Jump to &quot;package&quot; type definition." href="#type_package">package</a>
 </span> &lt;/package&gt; <span class="occurs">[1]</span>
 </div>
 <span class="group" style="margin-left: 1.5em">End Sequence</span>
@@ -2192,11 +2187,11 @@ setState('type_packages_xibox', true);
 <input type="button" id="type_packages_scbox_button" class="control" onclick="switchState('type_packages_scbox'); return false;" style="display: none"/> <span class="caption">Schema Component Representation</span>
 </div>
 <div id="type_packages_scbox" class="contents">
-<div style="margin-left: 0em">&lt;<span>xsd:complexType</span> <span class="scTag">name</span>="<span>packages</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span>0</span>" <span class="scTag">maxOccurs</span>="<span>unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span>package</span>" <span class="scTag">type</span>="<span>
-<span>
-<a>package</a>
+<div style="margin-left: 0em">&lt;<span class="scTag">xsd:complexType</span> <span class="scTag">name</span>="<span class="scContent">packages</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:sequence</span> <span class="scTag">minOccurs</span>="<span class="scContent">0</span>" <span class="scTag">maxOccurs</span>="<span class="scContent">unbounded</span>"&gt;<div style="margin-left: 1.5em">&lt;<span class="scTag">xsd:element</span> <span class="scTag">name</span>="<span class="scContent">package</span>" <span class="scTag">type</span>="<span class="scContent">
+<span class="type">
+<a title="Jump to &quot;package&quot; type definition." href="#type_package">package</a>
 </span>
-</span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>&lt;/<span>xsd:complexType</span>&gt;</div>
+</span>"/&gt;</div>&lt;/<span class="scTag">xsd:sequence</span>&gt;</div>&lt;/<span class="scTag">xsd:complexType</span>&gt;</div>
 </div>
 <script type="text/javascript">
 <!--
@@ -2208,171 +2203,6 @@ setState('type_packages_scbox', false);
 <a href="#top">top</a>
 </div>
 <hr/>
-<div id="legend">
-<h2>
-<a name="Legend">Legend</a>
-</h2>
-<div style="float: left; width: 15em;">
-<h3 style="margin-bottom: 0px;">Complex Type:</h3>
-<div class="hint" style="margin-left: 0em;">Schema Component Type</div>
-</div>
-<div style="float: left; width: 15em;">
-<h3 style="margin-bottom: 0px;">
-<span class="name">AusAddress</span>
-</h3>
-<div class="hint" style="margin-left: 0em;">Schema Component Name</div>
-</div>
-<table class="hierarchy" style="clear : both">
-<tr>
-<th>Super-types:</th>
-<td>
-<span class="type" style="color: #0000FF; text-decoration:underline;">Address</span> &lt; <span class="current">AusAddress</span> (by extension)</td>
-</tr>
-<tr>
-<th>Sub-types:</th>
-<td>
-<ul>
-<li>
-<span class="type" style="color: #0000FF; text-decoration:underline;">QLDAddress</span> (by restriction)</li>
-</ul>
-</td>
-</tr>
-</table>
-<div class="hint">If this schema component is a type definition, its type hierarchy is shown in a gray-bordered box.</div>
-<table class="properties">
-<tr>
-<th>Name</th>
-<td>AusAddress</td>
-</tr>
-<tr>
-<th>
-<a title="Look up 'Abstract' in glossary" href="#term_Abstract">Abstract</a>
-</th>
-<td>no</td>
-</tr>
-</table>
-<div class="hint">The table above displays the properties of this schema component.</div>
-<div class="sample box">
-<div>
-<span class="caption">XML Instance Representation</span>
-</div>
-<div class="contents">
-<span style="margin-left: 0em">&lt;...</span>
-<span class="newFields">
-<span> country="<span class="fixed">Australia</span>"</span>
-</span>&gt; <br/>
-<span style="margin-left: 1.5em" class="inherited">&lt;unitNo&gt; <span class="type">string</span> &lt;/unitNo&gt; <span class="occurs">[0..1]</span>
-</span>
-<br/>
-<span style="margin-left: 1.5em" class="inherited">&lt;houseNo&gt; <span class="type">string</span> &lt;/houseNo&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 1.5em" class="inherited">&lt;street&gt; <span class="type">string</span> &lt;/street&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span class="group" style="margin-left: 1.5em">Start <a title="Look up 'Choice' in glossary" href="#term_Choice">Choice</a>
-<span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 3em" class="inherited">&lt;city&gt; <span class="type">string</span> &lt;/city&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 3em" class="inherited">&lt;town&gt; <span class="type">string</span> &lt;/town&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span class="group" style="margin-left: 1.5em">End Choice</span>
-<br/>
-<span class="newFields">
-<span style="margin-left: 1.5em">&lt;state&gt; <span class="type" style="text-decoration:underline;">AusStates</span> &lt;/state&gt; <span class="occurs">[1]</span>
-</span>
-<br/>
-<span style="margin-left: 1.5em">&lt;postcode&gt; <span class="constraint">string &lt;&lt;<em>pattern</em> = [1-9][0-9]{3}&gt;&gt;</span> &lt;/postcode&gt; <span class="occurs">[1]</span>
-<a href="javascript:void(0)" title="View Documentation" class="documentation" onclick="docArray = new Array('Post code must be a four-digit number.'); viewDocumentation('Element', 'postcode', docArray);">?</a>
-</span>
-<br/>
-</span>
-<span style="margin-left: 0em">&lt;/...&gt;</span>
-<br/>
-</div>
-</div>
-<div class="hint">
-<p>The XML Instance Representation table above shows the schema component's content as an XML instance.</p>
-<ul>
-<li>The minimum and maximum occurrence of elements and attributes are provided in square brackets, e.g. [0..1].</li>
-<li>Model group information are shown in gray, e.g. Start Choice ... End Choice.</li>
-<li>For type derivations, the elements and attributes that have been added to or changed from the base type's content are shown in <span style="font-weight: bold">bold</span>.</li>
-<li>If an element/attribute has a fixed value, the fixed value is shown in green, e.g. country="Australia".</li>
-<li>Otherwise, the type of the element/attribute is displayed.
-               <ul>
-<li>If the element/attribute's type is in the schema, a link is provided to it.</li>
-<li>For local simple type definitions, the constraints are displayed in angle brackets, e.g. &lt;&lt;<em>pattern</em> = [1-9][0-9]{3}&gt;&gt;.</li>
-</ul>
-</li>
-<li>If a local element/attribute has documentation, it will be displayed in a window that pops up when the question mark inside the attribute or next to the element is clicked, e.g. &lt;postcode&gt;.</li>
-</ul>
-</div>
-<div class="schemaComponent box">
-<div>
-<span class="caption">Schema Component Representation</span>
-</div>
-<div class="contents">
-<span style="margin-left: 0em">&lt;<span class="scTag">complexType</span>
-<span class="scTag">name</span>="<span class="scContent">AusAddress</span>"&gt;</span>
-<br/>
-<span style="margin-left: 1.5em">&lt;<span class="scTag">complexContent</span>&gt;</span>
-<br/>
-<span style="margin-left: 3em">&lt;<span class="scTag">extension</span>
-<span class="scTag">base</span>="<span class="scContent">
-<span class="type" style="text-decoration:underline;">Address</span>
-</span>"&gt;</span>
-<br/>
-<span style="margin-left: 4.5em">&lt;<span class="scTag">sequence</span>&gt;</span>
-<br/>
-<span style="margin-left: 6em">&lt;<span class="scTag">element</span>
-<span class="scTag">name</span>="<span class="scContent">state</span>" <span class="scTag">type</span>="<span class="scContent">
-<span class="type" style="text-decoration:underline;">AusStates</span>
-</span>"/&gt;</span>
-<br/>
-<span style="margin-left: 6em">&lt;<span class="scTag">element</span>
-<span class="scTag">name</span>="<span class="scContent">postcode</span>"&gt;</span>
-<br/>
-<span style="margin-left: 7.5em">&lt;<span class="scTag">simpleType</span>&gt;</span>
-<br/>
-<span style="margin-left: 9em">&lt;<span class="scTag">restriction</span>
-<span class="scTag">base</span>="<span class="scContent">
-<span class="type">string</span>
-</span>"&gt;</span>
-<br/>
-<span style="margin-left: 10.5em">&lt;<span class="scTag">pattern</span>
-<span class="scTag">value</span>="<span class="scContent">[1-9][0-9]{3}</span>"/&gt;</span>
-<br/>
-<span style="margin-left: 9em">&lt;/<span class="scTag">restriction</span>&gt;</span>
-<br/>
-<span style="margin-left: 7.5em">&lt;/<span class="scTag">simpleType</span>&gt;</span>
-<br/>
-<span style="margin-left: 6em">&lt;/<span class="scTag">element</span>&gt;</span>
-<br/>
-<span style="margin-left: 4.5em">&lt;/<span class="scTag">sequence</span>&gt;</span>
-<br/>
-<span style="margin-left: 4.5em">&lt;<span class="scTag">attribute</span>
-<span class="scTag">name</span>="<span class="scContent">country</span>" <span class="scTag">type</span>="<span class="scContent">
-<span class="type">string</span>
-</span>" <span class="scTag">fixed</span>="<span class="scContent">Australia</span>"/&gt;</span>
-<br/>
-<span style="margin-left: 3em">&lt;/<span class="scTag">extension</span>&gt;</span>
-<br/>
-<span style="margin-left: 1.5em">&lt;/<span class="scTag">complexContent</span>&gt;</span>
-<br/>
-<span style="margin-left: 0em">&lt;/<span class="scTag">complexType</span>&gt;</span>
-<br/>
-</div>
-</div>
-<div class="hint">The Schema Component Representation table above displays the underlying XML representation of the schema component. (Annotations are not shown.)</div>
-<div style="text-align: right; clear: both;">
-<a href="#top">top</a>
-</div>
-<hr/>
-</div>
 <div id="glossary">
 <h2>
 <a name="Glossary">Glossary</a>
