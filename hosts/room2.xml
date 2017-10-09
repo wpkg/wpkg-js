@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<wpkg>
+
+<!-- Will match all hosts with hostnames beginning with room2-pc -->
+    <host name="room2-pc.+" profile-id="room2" />
+
+</wpkg>

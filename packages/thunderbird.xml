@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<packages>
+
+<package
+     id="thunderbird"
+     name="Mozilla Thunderbird"
+     revision="15041"
+     reboot="false"
+     priority="10">
+
+ <check type="uninstall" condition="exists" path="Mozilla Thunderbird (1.5)" />
+
+ <install cmd='"%SOFTWARE%\thunderbird\Thunderbird Setup 1.5.0.4.exe" -ms' />
+
+ <upgrade cmd='"%SOFTWARE%\thunderbird\Thunderbird Setup 1.5.0.4.exe" -ms' />
+
+ <remove cmd='"%PROGRAMFILES%\Mozilla Thunderbird\uninstall\uninstall.exe" -ms' />
+
+</package>
+
+</packages>

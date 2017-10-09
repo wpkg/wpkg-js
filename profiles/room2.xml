@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<profiles>
+
+    <profile id="room2">
+        <package package-id="firefox" />
+        <package package-id="thunderbird" />
+	<package package-id="acrobat7" />
+    </profile>
+
+</profiles>

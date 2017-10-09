@@ -16,7 +16,7 @@
 :: You can also use variables...
 
 set WPKGROOT=\\server\wpkg
-set PACKAGES=%WPKGROOT%\packages
+set PACKAGES=%WPKGROOT%\software
 %WPKGROOT%\wpkg.js /synchronize /debug
 
 :: ...and then, you can put into packages.xml something like:

@@ -1,8 +1,8 @@
 /*******************************************************************************
  *
- * WPKG 0.9.8 - Windows Packager
+ * WPKG 0.9.9 - Windows Packager
  * Copyright 2003 Jerry Haltom
- * Copyright 2005 Tomasz Chmielewski <tch (at) wpkg . org>
+ * Copyright 2005-2006 Tomasz Chmielewski <tch (at) wpkg . org>
  * Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>
  *
  * Please report your issues to the list on http://wpkg.org/
@@ -258,10 +258,12 @@ function main(argv) {
     settings_file = fso.BuildPath(settings_folder, settings_file_name);
 
 
+/*-------------------------------code changed start------------------------------------*/
     // load packages and profiles
-    packages = loadXml(packages_file);
-    profiles = loadXml(profiles_file);
-    hosts = loadXml(hosts_file);
+	hosts = loadXml( hosts_file, createXsl( base, "hosts" ) );
+	profiles = loadXml( profiles_file, createXsl( base, "profiles" ) );
+	packages = loadXml( packages_file, createXsl( base, "packages" ) );
+/*-------------------------------code changed end------------------------------------*/
 
 
     if (force  &&  isArgSet(argv, "/synchronize")) {
@@ -277,14 +279,22 @@ function main(argv) {
             if (debug)  info("Settings file does not exist. Creating a new file.");
 
             settings = createXml("wpkg");
-
             saveXml(settings, settings_file);
         } else {
             settings = loadXml(settings_file);
         }
     }
 
-
+	if( debug ) {
+		var hst = hosts.selectNodes( "host" );
+		info( "Hosts file contains " + hst.length + " hosts:" );
+		var dsds = 0;
+		for( dsds = 0; dsds < hst.length; ++dsds ) {
+			info( hst[dsds].getAttribute( "profile-id" ) );
+		}
+		info( "" );
+	}
+	
     if (debug) {
         var packs = settings.selectNodes("package");
         info("settings file contains " + packs.length + " packages:");
@@ -311,6 +321,18 @@ function main(argv) {
         info("");
     }
 
+	if( debug ) {
+		var profs = profiles.selectNodes( "profile" );
+		info( "profiles file contains " + profs.length + " profiles:" );
+        var dsds=0;
+        for (dsds=0; dsds<profs.length; ++dsds) {
+            if (null != profs[dsds]) {
+               info(profs[dsds].getAttribute("id"));
+            }
+        }
+        info("");
+	}
+	
 
 
     // set the profile from either the command line or the hosts file
@@ -371,9 +393,9 @@ function main(argv) {
  */
 function showUsage() {
     var message = "";
-    message += "WPKG 0.9.8 - Windows Packager\n";
+    message += "WPKG 0.9.9 - Windows Packager\n";
     message += "Copyright 2004 Jerry Haltom\n";
-    message += "Copyright 2005 Tomasz Chmielewski <tch (at) wpkg . org>\n";
+    message += "Copyright 2005-2006 Tomasz Chmielewski <tch (at) wpkg . org>\n";
     message += "Copyright 2005 Aleksander Wysocki <papopypu (at) op . pl>\n";
     message += "\n";
     message += "Please report your issues to the list on http://wpkg.org/\n";
@@ -2057,50 +2079,93 @@ function retrieveProfile(hosts, hostName) {
 
     throw new Error("Could not find profile for host " + hostName + ".");
 }
-
-
 /**
  * Loads an XML file and returns the root element.
  */
-function loadXml(path) {
-//    var xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
-    var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
-
-    xmlDoc.async = false;
-    xmlDoc.resolveExternals= false;
-    xmlDoc.validateOnParse = false;
-
-    if (xmlDoc.load(path)) {
-        return xmlDoc.documentElement;
-    } else {
-        // Obtain the ParseError object
-        var  xPE = xmlDoc.parseError;
-
-        error("Error while parsing XML document:  " + path);
-        //error("url       " + xPE.url);
-        error("Reason    " + xPE.reason);
-        error("Line      " + xPE.line);
-        error("Linepos   " + xPE.linepos);
-        error("Filepos   " + xPE.filepos);
-        error("srcText   " + xPE.srcText);
-
-        throw new Error(0, "Unable to load specified XML document from " +
-            path);
-    }
+function loadXml( xmlPath, xslPath ) {
+	var source = new ActiveXObject("Msxml2.DOMDocument.3.0");
+	source.async = false;
+	source.validateOnParse = false;
+	source.load( xmlPath );
+	
+	if (source.parseError.errorCode != 0) {
+	   var myErr = source.parseError;
+	   info("Error parsing xml: " + myErr.reason );
+           info("File      " + xmlPath);
+           info("Line      " + myErr.line);
+           info("Linepos   " + myErr.linepos);
+           info("Filepos   " + myErr.filepos);
+           info("srcText   " + myErr.srcText);
+	   
+	   exit(2);
+	}
+	else {
+		if( xslPath != null ) {
+			var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0")
+			xmlDoc.async="false"
+			xmlDoc.validateOnParse = false;
+			xmlDoc.loadXML( source.transformNode( xslPath ) );
+			return xmlDoc.documentElement;
+		}
+		else {
+			return source.documentElement;
+		}
+	}
 }
 
+/**
+ * Creates xsl document object and returns it.
+ */
+function createXsl( base, folder ) {
+	var fso = new ActiveXObject("Scripting.FileSystemObject");
+	var file;
+	if( !fso.folderExists( base + "\\" + folder ) ) {
+		return null;
+	}
+	var e = new Enumerator(fso.GetFolder( base + "\\" + folder ).files);
+	var str = "";
+	var root = "";
+	if( folder == "hosts" ) {
+		root = "wpkg";
+	}
+	else {
+		root = folder;
+	}
+
+	str = "<?xml version=\"1.0\"?>\r\n";
+	str = str + "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\r\n";
+	str = str + "	<xsl:output encoding=\"ISO-8859-1\" indent=\"yes\" method=\"xml\" version=\"1.0\"/>\r\n";
+	str = str + "	<xsl:template match=\"/\">\r\n";
+	str = str + "		<" + root + ">\r\n";
+	str = str + "			<xsl:copy-of select=\""+ root + "/child::*\"/>\r\n";
+	for( e.moveFirst(); ! e.atEnd(); e.moveNext() ) {
+		file = e.item();
+		var DotSpot = file.name.toString().lastIndexOf('.');
+		var extension = file.name.toString().substr(DotSpot + 1,file.name.toString().length);
+
+		if(extension == "xml") {
+				str = str + "			<xsl:copy-of select=\"document('" + 
+					base.replace( /\\/g, "/" ) + "/" + folder + "/" + file.name + 
+					"')/" + root + "/child::*\"/>\r\n";
+		}
+	}
+	str = str + "		</" + root + ">\r\n";
+	str = str + "	</xsl:template>\r\n";
+	str = str + "</xsl:stylesheet>\r\n";
+	var xsl = new ActiveXObject( "Msxml2.DOMDocument.3.0" );
+	xsl.async = false;
+	xsl.loadXML( str );
+	return xsl.documentElement;
+}
 
 /**
  * Saves the root element to the specified XML file.
  */
 function saveXml(root, path) {
-
     if (dryrun) {
         path += ".dryrun";
     }
-
     if (debug) { info("saving XML : " + path); }
-
     var xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
     xmlDoc.appendChild(root);
     if (xmlDoc.save(path)) {

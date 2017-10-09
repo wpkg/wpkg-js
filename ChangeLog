@@ -1,3 +1,35 @@
+Wed Jun 14 2006
+-----------------------------
+V 0.9.9
+
+WPKG-0.9.9-test3 released as 0.9.9 (stable) - no changes.
+
+
+Thu Jun 08 2006
+-----------------------------
+V 0.9.9-test3
+
+- fixed bug 26 (XML error reporting is less detailed than in 0.9.8)
+
+
+Sat Jun 02 2006
+-----------------------------
+V 0.9.9-test2
+
+- read only XML files
+
+Thanks to Chris Freeze for the patch.
+
+
+Sun May 28 2006
+-----------------------------
+V 0.9.9-test1
+
+- packages, profiles and hosts can be defined in separate files.
+
+Big thanks to Knud Ahrnell Albrechtsen for the patch.
+
+
 Mon Apr 24 2006
 -----------------------------
 V 0.9.8

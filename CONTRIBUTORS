@@ -1,18 +1,22 @@
 If you would like to contribute, you can consider the following:
 
-- help complete the documentation on http://wpkg.org/wiki
-- add your Silent installers to the wiki on http://wpkg.org/wiki (it's OK if they don't have the uninstallers)
+- help complete the documentation on http://wpkg.org/
+- add your Silent installers to the wiki on http://wpkg.org/ (it's OK if they don't have the uninstallers)
 - see the TODO list and see if you can help
-- share your ideas and problems on the mailing list - http://wpkg.org/lists.php
+- share your ideas and problems on the mailing list
 
 
 
 The following people contributed code to WPKG:
 
 
+Knud Ahrnell Albrechtsen - sneakbyte ##at# email (dot) dk
+
 K. Dohmann - harlekin_666 #at# gmx (dot) net
 
 Andre Fantomass - ai #at# bsdler (dot) de
+
+Chris Freeze - cfreeze #at# cfreeze (dot) com
 
 Paul Griffith - paulg #at# cs (dot) yorku (dot) ca
 

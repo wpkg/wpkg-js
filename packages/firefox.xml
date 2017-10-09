@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<packages>
+
+<package
+   id="firefox"
+   name="Mozilla Firefox"
+   revision="15041"
+   reboot="false"
+   priority="10">
+
+   <check type="uninstall" condition="exists" path="Mozilla Firefox (1.5.0.4)" />
+
+   <install cmd='"%SOFTWARE%\firefox\Firefox Setup 1.5.0.4.exe" -ms' />
+
+   <upgrade cmd='"%SOFTWARE%\firefox\Firefox Setup 1.5.0.4.exe" -ms' />
+
+   <remove cmd='"%PROGRAMFILES%\Mozilla Firefox\uninstall\uninstall.exe" -ms' />
+
+</package>
+
+</packages>
