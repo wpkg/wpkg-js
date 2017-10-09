@@ -1,5 +1,5 @@
 /** Version as it appears within the log file */
-var WPKG_VERSION = "1.0";
+var WPKG_VERSION = "1.0.1";
 /*******************************************************************************
  *
  * WPKG - Windows Packager
@@ -649,12 +649,30 @@ function checkCondition(checkNode) {
 			}
 			break;
 		case "equals":
-			var val = getRegistryValue(checkPath);
+			// read registry value and convert it to string in order to compare to supplied
+			// string within the 'value' attribute
+			var readValue = getRegistryValue(checkPath);
 
 			// check if value is eventually null (non-existing)
-			if (val == null) {
+			if (readValue == null) {
 				dinfo("The registry path '" + checkPath + "' did not exist. Check failed.");
 				return false;
+			}
+
+			// try treating the value as array
+			var val = "";
+			try {
+				var readArray = readValue.toArray();;
+				dinfo("The registry value received is an array, concatenating values for comparison.");
+				for (var i=0; i<readArray.length; i++) {
+					val = val + readArray[i] + "";
+					if ( (i+1) < readArray.length) {
+						val += "\n";
+					}
+				}
+			} catch(notAnArray) {
+				dinfo("The registry value received is a scalar value");
+				val = readValue + "";
 			}
 
 			if (val == checkValue) {
@@ -689,7 +707,7 @@ function checkCondition(checkNode) {
 		// Sanity check: must have Cond and Path set for all file checks.
 		if ((checkCond == null) ||
 			(checkPath == null)) {
-			throw new Error("condition and / or path is null for a file check. Perhaps " +
+			throw new Error("Condition and / or path is null for a file check. Perhaps " +
 							"a typo? To help find it, here are the other pieces of information: " +
 							"condition='"+checkCond+"', path='"+checkPath+"', value='"+checkValue+"'");
 		}
@@ -709,12 +727,14 @@ function checkCondition(checkNode) {
 			}
 
 		} else if (checkCond == "sizeequals") {
-			// Sanity check: must have Value set for a size check.
+			// sanity check: must have Value set for a size check.
 			if (checkValue == null) {
 				throw new Error("Value is null for a file sizeequals check. Perhaps " +
-								"a type? To help find it, here are the other pieces of information: " +
-								"condition='"+checkCond+"', path='"+checkPath+"', value='"+checkValue+"'");
-			} // if checkValue == null
+								"a typo? To help find it, here are the other pieces of information: " +
+								"condition='" + checkCond +
+								"', path='" + checkPath +
+								"', value='" + checkValue + "'");
+			}
 
 			filesize=getFileSize(checkPath);
 			if (filesize == checkValue) {
@@ -793,7 +813,7 @@ function checkCondition(checkNode) {
 		// Sanity check: must have Cond and Path set for all uninstall checks.
 		if ((checkCond == null) ||
 			(checkPath == null)) {
-			throw new Error("condition and / or path is null for an uninstall check. Perhaps " +
+			throw new Error("Condition and / or path is null for an uninstall check. Perhaps " +
 							"a typo? To help find it, here are the other pieces of information: " +
 							"condition='"+checkCond+"', path='"+checkPath+"', value='"+checkValue+"'");
 		} // if checkCond == null || checkPath == null
@@ -1009,24 +1029,24 @@ function getCommandExitCodeAction(cmdNode, exitCode) {
 	if (exitNode != null) {
 		if (exitNode.getAttribute("reboot") == "true") {
 			// This exit code forces a reboot.
-			info("Command '" + getCommandCmd(cmdNode) + " returned " +
-				"non-zero exit code [" + exitCode + "]. This exit code " +
+			info("Command '" + getCommandCmd(cmdNode) + "' returned " +
+				" exit code [" + exitCode + "]. This exit code " +
 				"requires an immediate reboot.");
 			returnValue = "reboot";
 		} else if (exitNode.getAttribute("reboot") == "delayed")  {
-			info("Command '" + getCommandCmd(cmdNode) + " returned " +
-				"non-zero exit code [" + exitCode + "]. This exit code " +
+			info("Command '" + getCommandCmd(cmdNode) + "' returned " +
+				" exit code [" + exitCode + "]. This exit code " +
 				"shedules a reboot after execution of all commands.");
 			returnValue = "delayedReboot";
 		} else if (exitNode.getAttribute("reboot") == "postponed")  {
-			info("Command '" + getCommandCmd(cmdNode) + " returned " +
-				"non-zero exit code [" + exitCode + "]. This exit code " +
+			info("Command '" + getCommandCmd(cmdNode) + "' returned " +
+				" exit code [" + exitCode + "]. This exit code " +
 				"shedules a reboot after execution of all packages.");
 			returnValue = "postponedReboot";
 		} else {
 			// This exit code is successful.
-			info("Command '" + getCommandCmd(cmdNode) + " returned " +
-				"non-zero exit code [" + exitCode + "]. This exit code " +
+			info("Command '" + getCommandCmd(cmdNode) + "' returned " +
+				" exit code [" + exitCode + "]. This exit code " +
 				"is not an error.");
 			returnValue = "success";
 		}
@@ -4964,7 +4984,8 @@ function getRegistrySubkeys(parentKey) {
  * @return registry value, key default value (or "") or null if path does not
  *         exist. In case the read value is a REG_DWORD returns an integer.
  *         In case the value is of type REG_MULTI_SZ returns a VBArray of
- *         strings.
+ *         strings. In case value is of type REG_BINARY returns VBArray of
+ *         integer.
  */
 function getRegistryValue(registryPath) {
 	registryPath = trim(registryPath);
@@ -4987,7 +5008,8 @@ function getRegistryValue(registryPath) {
 			try {
 				val = WshShell.RegRead(registryPath);
 			} catch (keyErr) {
-				readError = keyErr.description;
+				val = null;
+				// readError = keyErr.description;
 				// dinfo("Error reading key'" + registryPath + "': "  + readError);
 			}
 		}

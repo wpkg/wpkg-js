@@ -4,12 +4,45 @@
 
 Change notes
 ============
+NOT RELEASED YET - NOT RELEASED YET - NOT RELEASED YET - NOT RELEASED YET
+WPKG Version: 1.0.1
+Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
+Date        : 2008-04-10
 
-WPKG Version: 1.0
-Date        : 2008-04-06
+Changes/fixes visible to the user:
 
 Summary:
-- WPKG 1-0-rc9 released as WPKG 1.0 with no changes
+- Fixed Bug 107. Registry equality checks fail on REG_DWORD values.
+- Changed confusing info message about non-zero exit code even if code was 0
+
+FIX: Fixed Bug 107. Registry equality checks throw an error in case of checked
+     value is of type REG_DWORD or REG_BINARY. Now the values are converted to
+     strings before comparing it to the 'value' attribute. REG_MULTI_SZ and
+     REG_BINARY values are concatenated using newline characters. For
+     REG_BINARY values each octett is converted to its decinal number
+     representation. Examples:
+     REG_MULTI_SZ = a
+                    b
+                    c
+     value = "a
+     b
+     c"
+     will match.
+     REG_BINARY values will be converted to multiline string as well. Each octett of the binary value
+     is converted to its decimal representation.
+     REG_BINARY = "11 22 33 44"
+     value = "17
+     34
+     51
+     68"
+     will match.
+
+MOD: Misleading/confusing info message about non-zero exit code (even if exit
+     code was 0) changed from:
+     Command '<cmd> returned non-zero exit code [<code>]. This exit code...
+     to
+     Command '<cmd>' returned exit code [<code>]. This exit code...
+     The quoting has been fixed as well (see above).
 
 
 Change notes
