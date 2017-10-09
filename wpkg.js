@@ -1,5 +1,5 @@
 /** Version as it appears within the log file */
-var WPKG_VERSION = "1.1.0";
+var WPKG_VERSION = "1.1.1";
 /*******************************************************************************
  *
  * WPKG - Windows Packager
@@ -90,6 +90,11 @@ var message = "" +
 "/sendStatus \n" + 
 "	Send status messages on STDOUT which can be parsed by calling programm to \n" + 
 "	display status information to the user. \n" + 
+"\n" + 
+"/noUpgradeBeforeRemove \n" +
+"   Usually WPKG upgrades a package to the latest available version before it \n" +
+"   removes the package. This allows administrators to fix bugs in the package \n" +
+"   and assure proper removal.\n" +
 "\n" + 
 "\n" + 
 "Rarely used parameters (mainly for testing): \n" + 
@@ -318,6 +323,11 @@ var logAppend = false;
  */
 var sendStatus = false;
 
+/**
+ * Set to true to disable upgrade-before-remove feature by default
+ */
+var noUpgradeBeforeRemove = false;
+
 /** use the following values:
  * Log level is defined as a bitmask. Just add sum up the values of each log
  * severity you would like to include within the log file and add this value
@@ -451,6 +461,18 @@ var skipEventLog = false;
 
 /** holds an array of packages which were not removed due to the /noremove flag */
 var skippedRemoveNodes = null;
+
+/**
+ * Marks volatile releases and "inverts" the algorithm that a longer
+ * version number is newer. For example 1.0RC2 would be newer than 1.0 because
+ * it appends characters to the version. Using "rc" as a volatile release
+ * marker the algorithm ignores the appendix and assumes that the string which
+ * omits the marker is newer.
+ * Resulting in 1.0 to be treated as newer than 1.0RC2.
+ * NOTE: The strings are compared as lower-case. So use lower-case
+ * definitions only!
+ */
+var volatileReleaseMarkers = ["rc", "i", "m", "alpha", "beta", "pre", "prerelease"];
 
 /** stores if system is running on a 64-bit OS */
 var x64 = null;
@@ -2116,7 +2138,7 @@ function getPackageNodeFromAnywhere(packageID) {
 			packageNode = packageSettingsNode;
 		} else {
 			var messageNotFound = "Database inconsistency: Package with ID '" + packageID +
-					"' is does not exist within the package database or the local settings file. " +
+					"' does not exist within the package database or the local settings file. " +
 					"Please contact your system administrator!";
 			if (isQuitOnError()) {
 				throw new Error(messageNotFound);
@@ -2805,12 +2827,35 @@ function getVariables(XMLNode, dictionary) {
 		variables = dictionary;
 	}
 
+	// create a shell to expand variables immediately
+	var shell = new ActiveXObject("WScript.Shell");
 	var variableNodes = XMLNode.selectNodes("variable");
 	for (var i=0; i < variableNodes.length; i++) {
 		var variableName = variableNodes[i].getAttribute("name");
 		var variableValue = variableNodes[i].getAttribute("value");
+		variableValue = shell.ExpandEnvironmentStrings(variableValue);
 		dinfo("Got variable '" + variableName + "' of value '" + variableValue + "'");
-		variables.Add(variableName, variableValue);
+
+		// remove eventually existing variable
+		// I don't like to use
+		// variables.Item(variableName)=variableValue;
+		// because my IDE/parser treats it as an error:
+		// "The left-hand side of an assignment must be a variable"
+		try {
+			variables.Remove(variableName);
+		} catch(e) {
+			dinfo("Variable '" + variableName + "' was not defined before. Creating now.");
+		}
+		try {
+			variables.Add(variableName, variableValue);
+		} catch(e) {
+			var message = "Variable '" + variableName + "' of value '" + variableValue + "'" +
+				" could not be assigned to dictionary!";
+			if (isQuitOnError()) {
+				throw new Error(message);
+			}
+			error(message);
+		}
 	}
 
 	return variables;
@@ -3182,7 +3227,7 @@ function installPackage(packageNode) {
 				var chainedStatus = installPackageReferences(packageNode, "chained");
 				if (chainedStatus) {
 					info(packageMessage +
-						 "Package and all chained packages are already installed successfully.");
+						 "Package and all chained packages installed successfully.");
 
 				} else {
 					info(packageMessage +
@@ -3523,6 +3568,15 @@ function isPostponedReboot() {
  */
 function isSendStatus() {
 	return sendStatus;
+}
+
+/**
+ * Returns the current value of the upgrade-before-remove feature flag.
+ * 
+ * @return true in case upgrade-before-remove should be enabled, otherwise returns false.
+ */
+function isUpgradeBeforeRemove() {
+	return !noUpgradeBeforeRemove;
 }
 
 /**
@@ -4535,16 +4589,18 @@ function synchronizeProfile() {
 	 * in order to prevent re-installing already removed dependencies.
 	 */
 	// sort packages to upgrade the ones with highest priority first
-	var sortedUpgradeList = sortPackageNodes(removablesArray, "PRIORITY", 2);
-	for (var iSortedPkg = 0; iSortedPkg < sortedUpgradeList.length; iSortedPkg++) {
-		var upgradePkgNode = sortedUpgradeList[iSortedPkg];
-		// upgrade package if package is available on server database
-		var serverPackage = getPackageNode(getPackageID(upgradePkgNode));
-		if (serverPackage != null) {
-			logStatus("Remove: Checking status of '" + getPackageName(serverPackage) +
-					"' (" + (iSortedPkg+1) + "/" + sortedUpgradeList.length + ")");
-			// start upgrade first
-			installPackage(serverPackage);
+	if (isUpgradeBeforeRemove()) {
+		var sortedUpgradeList = sortPackageNodes(removablesArray, "PRIORITY", 2);
+		for (var iSortedPkg = 0; iSortedPkg < sortedUpgradeList.length; iSortedPkg++) {
+			var upgradePkgNode = sortedUpgradeList[iSortedPkg];
+			// upgrade package if package is available on server database
+			var serverPackage = getPackageNode(getPackageID(upgradePkgNode));
+			if (serverPackage != null) {
+				logStatus("Remove: Checking status of '" + getPackageName(serverPackage) +
+						"' (" + (iSortedPkg+1) + "/" + sortedUpgradeList.length + ")");
+				// start upgrade first
+				installPackage(serverPackage);
+			}
 		}
 	}
 
@@ -5053,22 +5109,25 @@ function initializeConfig() {
 
 	// loop through all parameters
 	for (var i=0; i < param.length; i++) {
-		if(param[i].getAttribute("value") === "true" || param[i].getAttribute("value") === "false" ||
-			 param[i].getAttribute("value") === "null") {
+		var name = param[i].getAttribute("name");
+		var value= param[i].getAttribute("value");
+		if (name == "volatileReleaseMarker") {
+			volatileReleaseMarkers.push((param[i].getAttribute("value")).toLowerCase());
+		} else if(value === "true" || value === "false" || value === "null") {
 			// If value is boolean or null, we don't want " around it.
 			// Otherwise it'll be assigned as a string.
 
 			// Here is where the <param name='...' ... /> is used as the variable name and assigned the
 			// <param ... value='...' /> value from the config.xml file.  We're using eval to do variable
 			// substitution for the variable name.
-			eval ( param[i].getAttribute("name") + " = " + param[i].getAttribute("value") );
+			eval ( name + " = " + value );
 		} else {
 			// Non-Boolean value, put " around it.
 
 			// Here is where the <param name='...' ... /> is used as the variable name and assigned the
 			// <param ... value='...' /> value from the config.xml file.  We're using eval to do variable
 			// substitution for the variable name.
-			eval ( param[i].getAttribute("name") + " = \"" + param[i].getAttribute("value") + "\"" );
+			eval ( name + " = \"" + value + "\"" );
 		}
 	}
 }
@@ -5327,6 +5386,11 @@ function parseArguments(argv) {
 	// check if status messages should be sent
 	if (isArgSet(argv, "/sendStatus")) {
 		setSendStatus(true);
+	}
+
+	// check if upgrade-before-remove feature should be enabled
+	if (isArgSet(argv, "/noUpgradeBeforeRemove")) {
+		setUpgradeBeforeRemove(false);
 	}
 
 	// Process property named arguments that set values.
@@ -5687,6 +5751,16 @@ function setNoNotify(newState) {
 }
 
 /**
+ * Sets new state for the upgrade-before-remove flag.
+ * 
+ * @param newState set to true if you want to enable the
+ *                 upgraede-before-remove feature. Otherwise set false.
+ */
+function setUpgradeBeforeRemove(newState) {
+	noUpgradeBeforeRemove = !newState;
+}
+
+/**
  * Logs or presents a warning message depending on interactivity.
  */
 function warning(message) {
@@ -5873,38 +5947,7 @@ function exec(cmd, timeout, workdir) {
 			shell.CurrentDirectory = workdir;
 		}
 
-		/*
-		 * This code has been added to make sure STDOUT & STDERR is redirected
-		 * to NUL. This is due to a bug in WSH which causes executed processes
-		 * to "hang" if they write more than 4k of output to STDOUT/STDERR.
-		 * It is currently not possible to flush these buffers without blocking
-		 * WPKG itself. So the work-around currently is to make sure the output
-		 * is redirected to NUL.
-		 */
-		// check if STDOUT needs to be redirected
-		var stdOutReg = new RegExp(" [1]{0,1}>", "i");
-		var useCmd = false;
-		if (!stdOutReg.test(cmd)) {
-			cmd += " >NUL";
-			useCmd = true;
-		}
-
-		// check if STDERR needs to be redirected
-		var stdErrReg = new RegExp(" 2>", "i");
-		if (!stdErrReg.test(cmd)) {
-			cmd += " 2>&1";
-			useCmd = true;
-		}
-		
-		/* prepend %COMSPEC% to make sure STDOUT can be redirected
-		 * Unfortunately on Windows the commands have to take care by themself
-		 * about handling this parameter.
-		 */
-		if (useCmd) {
-			cmd = "%COMSPEC% /c " + cmd;
-		}
 		dinfo("Executing command: " + cmd);
-		
 		var shellExec = shell.exec(cmd);
 
 		var count = 0;
@@ -6655,31 +6698,217 @@ function uniqueArray(array) {
 }
 
 /**
- * versionCompare - compare two executable versions.
+ * versionCompare - compare two version strings.
+ * The algorithm is supposed to deliver "human" results. It's not just
+ * comparing numbers but also allows versions with characters.
+ * Some version number contain appendices to the version string indicating
+ * "volatile" versions like "pre releases". For example some packages use
+ * versions like "1.0RC1" or "1.0alpha2". Usually a version like "1.0RC1" would
+ * be considered to be newer than "1.0" by the algorithm but in case of "RC"
+ * versions this would be wrong. To handle such cases a number of strings are
+ * defined in order to define such volatile releases.
+ * The list of prefixes is defined in the global volatileReleaseMarker array.
+ * Valid comparisons include:
+ * A        B              Result
+ * "1"      "2"            B is newer
+ * "1"      "15"           B is newer
+ * "1.0"    "1.2.b"        B is newer
+ * "1.35"   "1.35-2"       B is newer
+ * "1.35-2" "1.36"         B is newer
+ * "1.35R3" "1.36"         B is newer
+ * "1"      "1.0.00.0000"  Versions are equal
+ * "1"      "1.0"          Versions are equal
+ * "1.35"   "1.35-2"       B is newer
+ * "1.35-2" "1.35"         A is newer
+ * "1.35R3" "1.36R4"       B is newer
+ * "1.35-2" "1.35-2.0"     Versions are equal
+ * "1.35.1" "1.35.1.0"     Versions are equal
+ * "1.3RC2" "1.3"          B is newer (special case where A is an "RC" version)
+ * "1.5"    "1.5I3656"     A is newer (B is an "I"/intgration version)
+ * "1.5"    "1.5M3656"     A is newer (B is an "M"/milestone version)
+ * "1.5"    "1.5u3656"     B is newer (B is an update version)
+ *
  * @return  0 if equal,<br>
  *         -1 if a < b,<br>
  *         +1 if a > b
- * NOTE: Version needs to follow the following format:
- * <number>.<number>[.<number>]*
- * Where number is an integer (non alpha-numeric)
  */
 function versionCompare(a, b) {
-	var as = a.split(".");
-	var bs = b.split(".");
-	var length = as.length;
-	var ret = 0;
+	// first split the version into sub-versions separated by dots
+	// eg. "1.00.1b20-R0" => 1, 00, 1b20-R0
+	// constants defining the return values
+	dinfo("Comparing version: '" + a + "' <=> '" + b + "'.");
+	var BNEWER = -1;
+	var ANEWER = 1;
+	var EQUAL = 0;
 
-	// start on the left side and search for the first number which is different
+	// small optimization, in most cases the strings will be equal.
+	if (a == b) {
+		return EQUAL;
+	}
+
+	var versionA = a.split(".");
+	var versionB = b.split(".");
+	var length = 0;
+	versionA.length >= versionB.length ? length = versionA.length : length = versionB.length;
+	var result = EQUAL;
+
+	// split by sub-version-numbers
+	// e.g. 1b20-R0" => 1b20, R0
 	for (var i = 0; i < length; i++) {
-		var av = parseInt(as[i]);
-		var bv = parseInt(bs[i]);
-		if (av < bv) {
-			ret = -1;
-			break;
-		} else if (av > bv) {
-			ret = 1;
+		var versionPartsA = new Array();
+		var versionPartsB = new Array();
+		var partsSplitter = new RegExp("[^0-9a-zA-Z]");
+		if( i < versionA.length ) {
+			versionPartsA = versionA[i].split(partsSplitter);
+		} else {
+			// there is no such part on A side
+			// assume 0
+			versionPartsA.push(0);
+		}
+		if( i < versionB.length ) {
+			versionPartsB = versionB[i].split(partsSplitter);
+		} else {
+			// there is no such part on B side
+			// assume 0
+			versionPartsB.push(0);
+		}
+		var versionParts = 0;
+		versionPartsA.length > versionPartsB.length ? versionParts = versionPartsA.length : versionParts = versionPartsB.length;
+
+		// split these parts into char/number fields
+		// e.g "1b20" => 1, b, 20
+		for (var j = 0; j < versionParts; j++) {
+			// get A-side version part
+			var versionPartA;
+			if( j < versionPartsA.length ) {
+				versionPartA = "" + versionPartsA[j];
+			} else {
+				// A does not have such a part, so B seems to be a higher revision
+				result = BNEWER;
+				break;
+			}
+			// get B-side version part
+			var versionPartB;
+			if( j < versionPartsB.length ) {
+				versionPartB = "" + versionPartsB[j];
+			} else {
+				// B does not have such a part, so A seems to be a higher revision
+				result = ANEWER;
+				break;
+			}
+			
+			// both versions have such a part, compare them
+			dinfo("Comparing version fragments: '" + versionPartA + "' <=> '" + versionPartB + "'");
+			
+			// first split the part into number/character parts
+			var numCharSplitter = new RegExp("([0-9]+)|([a-zA-Z]+)", "g");
+			var numCharPartsA = versionPartA.match(numCharSplitter);
+			var numCharPartsB = versionPartB.match(numCharSplitter);
+			var numCharLength = 0;
+			numCharPartsA.length > numCharPartsB.length ? numCharLength = numCharPartsA.length : numCharLength = numCharPartsB.length;
+			// now start comparing the parts
+			for (var k = 0; k < numCharLength; k++) {
+				var numCharPartA;
+				var numCharPartB;
+				// get A-side
+				if( k < numCharPartsA.length ) {
+					numCharPartA = numCharPartsA[k];
+				} else {
+					// A-side does not have such a part, so B seems to be either
+					// a higher revision or appends a volatile version identifier
+					var bSideString = numCharPartsB[k];
+					// check if it matches one from the volatile list
+					for (var vId = 0; vId < volatileReleaseMarkers.length; vId++) {
+						if (bSideString.toLowerCase() == volatileReleaseMarkers[vId]) {
+							dinfo("Special case: '" + a + "' is newer because '" + b + "' " +
+									"is considered to have a volatile version appendix (" +
+									volatileReleaseMarkers[vId] + ").");
+							result = ANEWER;
+							break;
+						}
+					}
+					if (result == EQUAL) {
+						// B is newer
+						result = BNEWER;
+					}
+					break;
+				}
+				if( k < numCharPartsB.length ) {
+					numCharPartB = numCharPartsB[k];
+				} else {
+					// B-side does not have such a part, so A seems to be either
+					// a higher revision or appends a volatile version identifier
+					var aSideString = numCharPartsA[k];
+					// check if it matches one from the volatile list
+					for (var volId = 0; volId < volatileReleaseMarkers.length; volId++) {
+						if (aSideString.toLowerCase() == volatileReleaseMarkers[volId]) {
+							dinfo("Special case: '" + a + "' is newer because '" + b + "' " +
+									"is considered to have a volatile version appendix (" +
+									volatileReleaseMarkers[volId] + ").");
+							result = BNEWER;
+							break;
+						}
+					}
+					if (result == EQUAL) {
+						result = ANEWER;
+					}
+					break;
+				}
+				
+				// both versions have such a part, compare them
+				// strip off leading zeroes first
+				var stripExpression = new RegExp("^[0 \t]*(.+)$")
+				var strippedA = numCharPartA.match(stripExpression);
+				numCharPartA = strippedA[1];
+
+				var strippedB = numCharPartB.match(stripExpression);
+				numCharPartB = strippedB[1];
+
+				var numCharSplitA = numCharPartA.split("");
+				var numCharSplitB = numCharPartB.split("");
+				if (numCharSplitB.length > numCharSplitA.length) {
+					// version B seems to be higher
+					result = BNEWER;
+					break;
+				} else if (numCharSplitA.length > numCharSplitB.length) {
+					// version a seems to be higher
+					result = ANEWER;
+					break;
+				}
+				
+				// both versions seem to have equal length, compare them
+				for (var l = 0; l < numCharSplitA.length; l++) {
+					var characterA = numCharSplitA[l];
+					var characterB = numCharSplitB[l];
+					if (characterB > characterA) {
+						// B seems to be newer
+						result = BNEWER;
+						break;
+					} else if( characterA > characterB) {
+						// A seems to be newer
+						result = ANEWER
+						break;
+					}
+				}
+				
+				// stop evaluating
+				if(result != EQUAL) {
+					break;
+				}
+			}
+			
+			// stop evaluating
+			if(result != EQUAL) {
+				break;
+			}
+		}
+		
+		// stop evaluating
+		if(result != EQUAL) {
 			break;
 		}
 	}
-	return ret;
+
+	return result;
 }
+

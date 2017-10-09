@@ -1,6 +1,108 @@
 ===============================================================================
 = CHANGES FOR 1.1 release
 ===============================================================================
+Changes 2009-06-25, v1.1.1 by Rainer Meier <r.meier (at) wpkg.org>
+NEW: Final release of WPKG 1.1.1
+
+Changes 2009-06-25, v1.1.1-RC9 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Fixed WPKG quit if a variable definition appears twice (re-defined). For
+     example if a variable is defined in profiles.xml and overwritten in
+     hosts.xml.
+     Thanks to Jindrich Vorlicek for reporting.
+     Fixes Bug 156.
+
+Changes 2009-06-19, v1.1.1-RC8 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: Fixed typo in install-success notification:
+     "Package and all chained packages ininstalled successfully."
+     changed to
+     "Package and all chained packages installed successfully."
+     Thanks to Stefan Pendl for reporting.
+     Fixes Bug 163.
+
+Changes 2009-06-18, v1.1.1-RC7 by Rainer Meier <r.meier (at) wpkg.org>
+FIX: The /noUpgradeBeforeRemove remove switch was "on" by default. Somehow I
+     left that in the code by accident from my testing sessions.
+     Thanks to Stefan Pendl for reporting.
+
+Changes 2009-06-17, v1.1.1-RC6 by Rainer Meier <r.meier (at) wpkg.org>
+MOD: Updated profiles.xsd. However I could not find a problem with the current
+     profile definition but Brian reported on the mailing list that his editor
+     throws a validation error. So I changed the definition according to his
+     proposal.
+
+Changes 2009-06-15, v1.1.1-RC5 by Rainer Meier <r.meier (at) wpkg.org>
+MOD: Updated the list of volatile release markers (see previous change).
+NEW: Added the possibility to define "volatileReleaseMarker" parameters within
+     config.xml. This allows users to extend the list of volatile release
+     markers on-the-fly.
+
+Changes 2009-06-15, v1.1.1-RC4 by Rainer Meier <r.meier (at) wpkg.org>
+MOD: Updated version comparison algorithm to treat some version appendixes as
+     "volatile". Volatile means that WPKG would claim that a revision witout
+     that suffix is newer than the one which carries this suffix. Usually a
+     version is assumed to be higher if it has an additional suffix but in case
+     of RC (Release Candidate), M (Milestone) and I (Integration) releases it's
+     usually the opposite way around. For example:
+     A        B              Result
+     "1.0RC2" "1.0"          B us newer (A is an "RC" version)
+     "1.5"    "1.5I3656"     A is newer (B is an "I"/intgration version)
+     "1.5"    "1.5M3656"     A is newer (B is an "M"/milestone version)
+     but (still)
+     "1.5"    "1.5u3656"     B is newer (B is an update version)
+
+Changes 2009-06-14, v1.1.1-RC3 by Rainer Meier <r.meier (at) wpkg.org>
+MOD: The comparison of of version strings the same way how a human would read
+     it is quite difficult. Up to now WPKG supported only versions containing a
+     sequence of colon-separated digits. The algorithm has been re-worked to
+     support much more complicated version strings. Some examples include:
+     A        B              Result
+     "1"      "2"            B is newer        
+     "1"      "15"           B is newer        
+     "1.0"    "1.2.b"        B is newer        
+     "1.35"   "1.35-2"       B is newer        
+     "1.35-2" "1.36"         B is newer        
+     "1.35R3" "1.36"         B is newer        
+     "1"      "1.0.00.0000"  Versions are equal
+     "1"      "1.0"          Versions are equal
+     "1.35"   "1.35-2"       B is newer        
+     "1.35-2" "1.35"         A is newer        
+     "1.35R3" "1.36R4"       B is newer        
+     "1.35-2" "1.35-2.0"     Versions are equal
+     "1.35.1" "1.35.1.0"     Versions are equal
+     Thanks to Jens Geile for asking an improved algorithm.
+
+Changes 2009-06-09, v1.1.1-RC2 by Rainer Meier <r.meier (at) wpkg.org>
+NEW: Added a new switch: /noUpgradeBeforeRemove.
+     This switch allows to disable the upgrade-before-remove feature.
+     Usually WPKG upgrades a package to the latest available version before it
+	 removes the package. This allows administrators to fix bugs in the package
+	 and assure proper removal.
+	 However this feature can lead to (sometimes unexpected) re-execution of
+	 packages. For example if execution=always is used the package will run
+	 once again before it is finally removed.
+	 It's advised to leave this option on default unless you really know what
+	 you're doing.
+	 Thanks to Simon.
+NEW: Unfortunately the %COMSPEC%-wrapping introduced in WPKG 1.1.0 to allow
+     STDOUT/STDERR flushing (see Bug 155) does not work in any case as
+     expected. Therefore I decided to revert the change and fall back to the
+     default execution behavior of WPKG 1.0. This should solve execution and
+     return code problems for the moment.
+     However the issue that commands which print > 4k to STDOUT/STDERR will
+     block and not finish until the timeout has been reached. So make sure
+     your installers are (quite-) silent on STDOUT/STDERR or to redirect the
+     output to a file or NUL by appending ">NUL 2>&1" to commands which are
+     using verbose printing.
+MOD: Updated README.TXT in tools/ folder to reflect the truth that the tools
+     put into the tools folder are not automatically added to the PATH.
+     Thanks to Chris Allen.
+MOD: Fixed typo in in database-inconsistency message. Thanks to Gerd Ott.
+MOD: Changed Wording after successful installation of a package.
+     Thanks to Simon.
+MOD: Enhanced variable expansion within <variable /> nodes. If the value
+     contains shell variables they are expanded immediately.
+     Thanks to Chris Allen for reporting and Stefan Pendl for fix suggestion.
+
 Changes 2009-05-23, v1.1.0 by Rainer Meier <r.meier (at) wpkg.org>
 NEW: WPKG 1.1.0 is finally released!
      WPKG 1.1.0 now becomse the stable branch and WPKG 1.0 releases are marked

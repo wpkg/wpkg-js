@@ -306,6 +306,59 @@
 
 	<!--
 		****************************************************************************
+		* Usually WPKG upgrades a package to the latest available version before it
+		* removes the package. This allows administrators to fix bugs in the package
+		* and assure proper removal.
+		* However this feature can lead to (sometimes unexpected) re-execution of
+		* packages. For example if execution=always is used the package will run
+		* once again before it is finally removed.
+		* It's advised to leave this option on default unless you really know what
+		* you're doing.
+		*
+		* True : Disables the upgrade-before-remove feature
+		* False: Leave the upgrade-before-remove feature enabled
+		*
+		* Default value      : false
+		* Command-line switch: /noUpgradeBeforeRemove
+		****************************************************************************
+	-->
+	<!--
+		<param name='noUpgradeBeforeRemove' value='false' />
+	-->
+
+
+	<!--
+		****************************************************************************
+		* Marks volatile releases and "inverts" the algorithm that a longer
+		* version number is newer. For example 1.0RC2 would be newer than 1.0 because
+		* it appends characters to the version. Using "rc" as a volatile release
+		* marker the algorithm ignores the appendix and assumes that the string which
+		* omits the marker is newer.
+		* Resulting in 1.0 to be treated as newer than 1.0RC2.
+		* Caution: Be careful defining volatile release markers because it could have
+		* undesired effects. For example specifying "b" would also make 1.0b5 appear
+		* to be older than 1.0 (where "b" is usually a build number appended to the
+		* version).
+		* So please change this parameter only if you really know what you're doing.
+		*
+		* Currently the built-in list contains the following appendices:
+		* "rc", "i", "m", "alpha", "beta", "pre", "prerelease"
+		*
+		* The parameter might be defined as many times as you like. Each entry will
+		* add another entry to the list of volatile version markers.
+		*
+		* Default value      : [built-in]
+		* Command-line switch: -
+		****************************************************************************
+	-->
+	<!--
+		<param name='volatileReleaseMarker' value='gamma' />
+		<param name='volatileReleaseMarker' value='delta' />
+		<param name='volatileReleaseMarker' value='testing' />
+	-->
+
+	<!--
+		****************************************************************************
 		****************************************************************************
 		*
 		*  Logging properties

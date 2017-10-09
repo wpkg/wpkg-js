@@ -29,8 +29,6 @@
     				<xsd:annotation>
     					<xsd:documentation>Assigns a package to the profile.</xsd:documentation>
     				</xsd:annotation></xsd:element>
-    		</xsd:choice>
-    		<xsd:choice minOccurs="0" maxOccurs="unbounded">
     			<xsd:element ref="depends">
     				<xsd:annotation>
     					<xsd:documentation>Dependency definition. Allows to refer to another profile which is "included".</xsd:documentation>
