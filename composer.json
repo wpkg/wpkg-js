@@ -1,0 +1,12 @@
+{
+  "name": "wpkg/wpkg-js",
+  "type": "library",
+  "license": "GPL-2.0",
+  "minimum-stability": "stable",
+  "description": "This utility executes commands for installing/update/remove of programs on remote Windows stations.",
+  "keywords": [
+    "wpkg",
+    "js",
+    "vbscript"
+  ],
+}
