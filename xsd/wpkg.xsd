@@ -580,6 +580,27 @@ format:
 				</xsd:documentation>
 			</xsd:annotation>
         </xsd:attribute>
+        <xsd:attribute name="makemodel" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Regular expression which matches host make
+and model. e.g. 'hewlett-packard, probook 4550b' Host
+makemodel description string will have the following
+format:
+
+'[CS-Manufacturer], [CS-Model]'
+				</xsd:documentation>
+			</xsd:annotation>
+        </xsd:attribute>
+        <xsd:attribute name="serial" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Regular expression which matches host serial number.
+Host serial description string will have the following
+format:
+
+'[BIOS-SerialNumber]'
+				</xsd:documentation>
+			</xsd:annotation>
+        </xsd:attribute>
 		<xsd:attribute name="ipaddresses" type="xsd:string">
 			<xsd:annotation>
 				<xsd:documentation>Regular expression matching machine IP address. Any
@@ -696,6 +717,7 @@ http://www.microsoft.com/globaldev/reference/lcid-all.mspx
 							<xsd:enumeration value="hostname"></xsd:enumeration>
 							<xsd:enumeration value="architecture"></xsd:enumeration>
 							<xsd:enumeration value="os"></xsd:enumeration>
+							<xsd:enumeration value="makemodel"></xsd:enumeration>
 							<xsd:enumeration value="ipaddresses"></xsd:enumeration>
 							<xsd:enumeration value="domainname"></xsd:enumeration>
 							<xsd:enumeration value="groups"></xsd:enumeration>

@@ -75,6 +75,22 @@
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
+		<xsd:attribute name="makemodel" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					Make and model on host where the settings have
+					been generated.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="serial" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>
+					Serial number on host where the settings have
+					been generated.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
 		<xsd:attribute name="ipaddresses" type="xsd:string">
 			<xsd:annotation>
 				<xsd:documentation>
