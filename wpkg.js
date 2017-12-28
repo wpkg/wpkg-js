@@ -175,6 +175,14 @@ var message = "" +
 "	Use the specified operating system string instead of reading it from the \n" +
 "	executing host. \n" +
 "\n" +
+"/makemodel:<hostmakemodel> \n" +
+"	Use the specified make and model string instead of reading it from the \n" +
+"	executing host. \n" +
+"\n" +
+"/serial:<hostserial> \n" +
+"	Use the specified serial number string instead of reading it from the \n" +
+"	executing host. \n" +
+"\n" +
 "/ip:<ip-address-1,ip-address-2,...,ip-address-n> \n" +
 "	Use the specified ipaddresses instead of reading it from the executing host. \n" +
 "\n" +
@@ -543,6 +551,8 @@ var packagesRemoved = new Array();
 /** host properties used within script */
 var hostName = null;
 var hostOs = null;
+var hostMakeModel = null;
+var hostSerial = null;
 var domainName = null;
 var ipAddresses = null;
 var hostGroups = null;
@@ -2709,6 +2719,85 @@ function getHostOS() {
 }
 
 /**
+ * Returns the make and model of the machine running this script. The return
+ * format is:
+ * 
+ * <pre>
+ * <CS-Manufacturer>, <CS-Model>
+ * example output:
+ * lenovo, 10b5000tus
+ * hewlett-packard, probook 4550b
+ * </pre>
+ * 
+ * It might be overwritten by the /makemodel:<hostmakemodel> switch.
+ * 
+ * Note: Some values might be empty.
+ * 
+ * @returns Host computer system specification as a plain string converted to
+ *          lower case letters to ease parsing
+ */
+function getHostMakeModel() {
+    if (hostMakeModel == null) {
+        var strComputer = ".";
+        var strQuery = "Select * from Win32_ComputerSystem";
+			try {
+				var objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}!\\\\" +
+												strComputer + "\\root\\cimv2");
+				var colComputerSystem = objWMIService.ExecQuery(strQuery,"WQL",48);
+				var csEnum = new Enumerator(colComputerSystem);
+				for (; !csEnum.atEnd(); csEnum.moveNext()) {
+					var csItem = csEnum.item();
+					var strMakeModel = trim(csItem.Manufacturer) + ", " + trim(csItem.Model);
+                    hostMakeModel = strMakeModel.toLowerCase();
+                    dinfo("Host make and model: " + hostMakeModel);
+				}
+			} catch (e) {
+				dinfo("Warning: unable to get computer system information.");
+			}
+	}
+	return hostMakeModel;
+}
+
+/**
+ * Returns the serial number of the machine running this script. The return
+ * format is:
+ * 
+ * <pre>
+ * <BIOS-SerialNumber>
+ * example output:
+ * mj02g9lm
+ * </pre>
+ * 
+ * It might be overwritten by the /serial:<hostserial> switch.
+ * 
+ * Note: Some values might be empty.
+ * 
+ * @returns Host BIOS specification as a plain string converted to lower
+ *          case letters to ease parsing
+ */
+function getHostSerial() {
+    if (hostSerial == null) {
+        var strComputer = ".";
+        var strQuery = "Select * from Win32_BIOS";
+			try {
+				var objWMIService = GetObject("winmgmts:{impersonationLevel=impersonate}!\\\\" +
+												strComputer + "\\root\\cimv2");
+				var colBIOS = objWMIService.ExecQuery(strQuery,"WQL",48);
+				var biosEnum = new Enumerator(colBIOS);
+				for (; !biosEnum.atEnd(); biosEnum.moveNext()) {
+					var biosItem = biosEnum.item();
+					var strSerial = trim(biosItem.SerialNumber);
+                    hostSerial = strSerial.toLowerCase();
+                    dinfo("Host serial: " + hostSerial);
+				}
+			} catch (e) {
+				dinfo("Warning: unable to get computer BIOS information.");
+			}
+	}
+	return hostSerial;
+}
+
+/**
  * Returns name of domain on which the executing host is member of.
  * 
  * @returns Returns domain name string.
@@ -2831,6 +2920,8 @@ function getHostInformation() {
 		hostAttributes.Add("hostname", getHostname());
 		hostAttributes.Add("architecture", getArchitecture());
 		hostAttributes.Add("os", getHostOS());
+		hostAttributes.Add("makemodel", getHostMakeModel());
+		hostAttributes.Add("serial", getHostSerial());
 		hostAttributes.Add("ipaddresses", getIPAddresses());
 		hostAttributes.Add("domainname", getDomainName());
 		hostAttributes.Add("groups", getHostGroups());
@@ -2842,6 +2933,8 @@ function getHostInformation() {
 			+ "hostname='" + hostAttributes.Item("hostname") + "'\n"
 			+ "architecture='" + hostAttributes.Item("architecture") + "'\n"
 			+ "os='" + hostAttributes.Item("os") + "'\n"
+			+ "makemodel='" + hostAttributes.Item("makemodel") + "'\n"
+			+ "serial='" + hostAttributes.Item("serial") + "'\n"
 			+ "ipaddresses='" + hostAttributes.Item("ipaddresses").join(",") + "'\n"
 			+ "domain name='" + hostAttributes.Item("domainname") + "'\n"
 			+ "groups='" + hostAttributes.Item("groups").join(",") + "'\n"
@@ -4928,6 +5021,14 @@ function getSettingHostAttributes() {
 				setHostOS(value);
 				break;
 
+			case "makemodel":
+				setHostMakeModel(value);
+				break;
+
+			case "serial":
+				setHostSerial(value);
+				break;
+
 			case "ipaddresses":
 				var ipList = value.split(",");
 				setIPAddresses(ipList);
@@ -6929,6 +7030,8 @@ function resetHostInformationCache() {
 	// Empty caches.
 	hostName = null;
 	hostOs = null;
+	hostMakeModel = null;
+	hostSerial = null;
 	domainName = null;
 	ipAddresses = null;
 	hostGroups = null;
@@ -7044,6 +7147,26 @@ function setHostname(newHostname) {
  */
 function setHostOS(newHostOS) {
 	hostOs = newHostOS;
+}
+
+/**
+ * Set new host make model variable overwriting automatically-detected value.
+ * 
+ * @param newHostMakeModel
+ *            host make model
+ */
+function setHostMakeModel(newHostMakeModel) {
+	hostMakeModel = newHostMakeModel;
+}
+
+/**
+ * Set new host serial variable overwriting automatically-detected value.
+ * 
+ * @param newHostSerial
+ *            host serial
+ */
+function setHostSerial(newHostSerial) {
+	hostSerial = newHostSerial;
 }
 
 
@@ -8871,6 +8994,16 @@ function parseArguments(argv) {
 	// Parse OS override setting.
 	if (argn.Item("os") != null) {
 		setHostOS(argn("os"));
+	}
+
+	// Parse makemodel override setting.
+	if (argn.Item("makemodel") != null) {
+		setHostMakeModel(argn("makemodel"));
+	}
+
+	// Parse serial override setting.
+	if (argn.Item("serial") != null) {
+		setHostMakeModel(argn("serial"));
 	}
 
 	// Parse IP address override setting.
