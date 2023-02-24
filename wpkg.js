@@ -1648,7 +1648,18 @@ function checkCondition(checkNode) {
 				checkValueExpanded = 0;
 			}
 		}
-
+		// Lookup Downloads in check node
+		var downloadNodes = getDownloads(checkNode, null);
+		// Download all specified downloads.
+		var downloadResult = downloadAll(downloadNodes);
+		if (downloadResult != true) {
+			var failureMessage = "Failed to download all files.";
+			if (isQuitOnError()) {
+				throw new Error(failureMessage);
+			} else {
+				error(failureMessage);
+			}
+		}
 		// use expanded path only
 		checkPath = checkPathExpanded;
 		// execute and catch return code
@@ -1687,7 +1698,9 @@ function checkCondition(checkNode) {
 				executeResult = false;
 				break;
 		}
-
+		// Remove previous downloads
+		downloadsClean(downloadNodes);
+		
 		dinfo("Execute check for program '" + checkPath + "' returned '" +
 				exitCode + "'. Evaluating condition '" + checkCond +
 				"' revealed " + executeResult + " when comparing to expected" +
