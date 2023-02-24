@@ -456,6 +456,9 @@ than the value specified</xsd:documentation>
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:element name="download" type="wpkg:download" />
+				</xsd:choice>
 			</xsd:restriction>
 		</xsd:complexContent>
 	</xsd:complexType>
