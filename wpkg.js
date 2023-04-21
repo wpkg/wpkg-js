@@ -390,6 +390,9 @@ var downloadDir = "%TEMP%";
 /** timeout for downloads */
 var downloadTimeout = 7200;
 
+/** timeout for check execute */
+var checkExecuteTimeout = 600;
+
 /** if set to true logfiles will be appended, otherwise they are overwritten */
 var logAppend = false;
 
@@ -1069,6 +1072,7 @@ function checkCondition(checkNode) {
 	var checkCond = checkNode.getAttribute("condition");
 	var checkPath = checkNode.getAttribute("path");
 	var checkValue = checkNode.getAttribute("value");
+	var checkTimeout = checkNode.getAttribute("timeout");
 
 	// In remote mode try to verify the check using cached check results in
 	// settings database.
@@ -1648,6 +1652,12 @@ function checkCondition(checkNode) {
 				checkValueExpanded = 0;
 			}
 		}
+		// set timeout for execution
+		if (checkTimeout == null) {
+			checkTimeout = checkExecuteTimeout;
+		} else {
+			checkTimeout = parseInt(checkTimeout);
+		}
 		// Lookup Downloads in check node
 		var downloadNodes = getDownloads(checkNode, null);
 		// Download all specified downloads.
@@ -1663,7 +1673,7 @@ function checkCondition(checkNode) {
 		// use expanded path only
 		checkPath = checkPathExpanded;
 		// execute and catch return code
-		var exitCode = exec(checkPath, 3600, null);
+		var exitCode = exec(checkPath, checkTimeout, null);
 
 		var executeResult = false;
 		switch (checkCond) {
