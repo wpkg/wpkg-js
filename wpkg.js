@@ -390,6 +390,9 @@ var downloadDir = "%TEMP%";
 /** timeout for downloads */
 var downloadTimeout = 7200;
 
+/** timeout for check execute */
+var checkExecuteTimeout = 600;
+
 /** if set to true logfiles will be appended, otherwise they are overwritten */
 var logAppend = false;
 
@@ -554,6 +557,7 @@ var hostOs = null;
 var hostMakeModel = null;
 var hostSerial = null;
 var domainName = null;
+var macAddresses = null;
 var ipAddresses = null;
 var hostGroups = null;
 var hostArchitecture = null;
@@ -1069,6 +1073,7 @@ function checkCondition(checkNode) {
 	var checkCond = checkNode.getAttribute("condition");
 	var checkPath = checkNode.getAttribute("path");
 	var checkValue = checkNode.getAttribute("value");
+	var checkTimeout = checkNode.getAttribute("timeout");
 
 	// In remote mode try to verify the check using cached check results in
 	// settings database.
@@ -1648,11 +1653,28 @@ function checkCondition(checkNode) {
 				checkValueExpanded = 0;
 			}
 		}
-
+		// set timeout for execution
+		if (checkTimeout == null) {
+			checkTimeout = checkExecuteTimeout;
+		} else {
+			checkTimeout = parseInt(checkTimeout);
+		}
+		// Lookup Downloads in check node
+		var downloadNodes = getDownloads(checkNode, null);
+		// Download all specified downloads.
+		var downloadResult = downloadAll(downloadNodes);
+		if (downloadResult != true) {
+			var failureMessage = "Failed to download all files.";
+			if (isQuitOnError()) {
+				throw new Error(failureMessage);
+			} else {
+				error(failureMessage);
+			}
+		}
 		// use expanded path only
 		checkPath = checkPathExpanded;
 		// execute and catch return code
-		var exitCode = exec(checkPath, 3600, null);
+		var exitCode = exec(checkPath, checkTimeout, null);
 
 		var executeResult = false;
 		switch (checkCond) {
@@ -1687,7 +1709,9 @@ function checkCondition(checkNode) {
 				executeResult = false;
 				break;
 		}
-
+		// Remove previous downloads
+		downloadsClean(downloadNodes);
+		
 		dinfo("Execute check for program '" + checkPath + "' returned '" +
 				exitCode + "'. Evaluating condition '" + checkCond +
 				"' revealed " + executeResult + " when comparing to expected" +
@@ -2922,6 +2946,7 @@ function getHostInformation() {
 		hostAttributes.Add("os", getHostOS());
 		hostAttributes.Add("makemodel", getHostMakeModel());
 		hostAttributes.Add("serial", getHostSerial());
+		hostAttributes.Add("macaddresses", getMACAddresses());
 		hostAttributes.Add("ipaddresses", getIPAddresses());
 		hostAttributes.Add("domainname", getDomainName());
 		hostAttributes.Add("groups", getHostGroups());
@@ -2935,6 +2960,7 @@ function getHostInformation() {
 			+ "os='" + hostAttributes.Item("os") + "'\n"
 			+ "makemodel='" + hostAttributes.Item("makemodel") + "'\n"
 			+ "serial='" + hostAttributes.Item("serial") + "'\n"
+			+ "macaddresses='" + hostAttributes.Item("macaddresses").join(",") + "'\n"
 			+ "ipaddresses='" + hostAttributes.Item("ipaddresses").join(",") + "'\n"
 			+ "domain name='" + hostAttributes.Item("domainname") + "'\n"
 			+ "groups='" + hostAttributes.Item("groups").join(",") + "'\n"
@@ -9840,7 +9866,26 @@ function getArchitecture() {
 	}
 	return hostArchitecture;
 }
-
+/**
+ * This function retrieves the MAC address from the system.
+ * 
+ * @return array of MAC address strings, array can be of length 0
+ */
+function getMACAddresses() {
+	if (macAddresses == null ) {
+		macAddresses = new Array();
+		var wmi = GetObject("winmgmts:!\\\\.\\root\\cimv2");
+		var win = wmi.ExecQuery("select * from Win32_NetworkAdapter");
+		var e = new Enumerator(win);
+		for (; !e.atEnd(); e.moveNext()) {
+			var item = e.item();
+			if (item.MACAddress != "" && item.MACAddress !== null && item.PhysicalAdapter == true) {
+				macAddresses.push(item.MACAddress)
+			}
+		}
+	}
+	return macAddresses;
+}
 /**
  * This function retrieves the IP address from the registry.
  * 

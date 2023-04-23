@@ -456,6 +456,16 @@ than the value specified</xsd:documentation>
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
+				<xsd:attribute name="timeout" type="xsd:integer" use="optional">
+					<xsd:annotation>
+						<xsd:documentation>
+							Value used as timeout for execution.
+						</xsd:documentation>
+					</xsd:annotation>
+				</xsd:attribute>
+				<xsd:choice minOccurs="0" maxOccurs="unbounded">
+					<xsd:element name="download" type="wpkg:download" />
+				</xsd:choice>
 			</xsd:restriction>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -601,6 +611,15 @@ format:
 				</xsd:documentation>
 			</xsd:annotation>
         </xsd:attribute>
+		<xsd:attribute name="macaddresses" type="xsd:string">
+			<xsd:annotation>
+				<xsd:documentation>Regular expression matching machine MAC address. Any
+MAC address of the host (if it has multiple) will
+have to match this expression. e.g.
+^00:AA:1F:.*
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
 		<xsd:attribute name="ipaddresses" type="xsd:string">
 			<xsd:annotation>
 				<xsd:documentation>Regular expression matching machine IP address. Any
