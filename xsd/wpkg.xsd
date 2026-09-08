@@ -626,6 +626,13 @@ have to match this expression. e.g.
 IP address of the host (if it has multiple) will
 have to match this expression. e.g.
 ^192\.168\.1\..*
+
+Only addresses of network adapters which are
+currently connected are taken into account. Windows
+keeps the last address of an adapter in the registry
+after its link went down, so a disconnected adapter
+would otherwise still report the address it got at
+another site.
 				</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>

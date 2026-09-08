@@ -53,6 +53,8 @@ value of 'name' this host node is applied to the machine.
 IP-Ranges: format has to be specified as follows: 
 start[-end].start[-end].start[-end].start[-end] examples: 192.168.1.1 
 192.168.1.1-254 192.168.1-5.20-50
+Only addresses of currently connected network adapters are matched, the
+address a disconnected adapter used last is ignored.
 
 Regular expressions: example: &quot;test-.*&quot; will match all machines where the 
 hostname is starting with &quot;test-&quot; string.
