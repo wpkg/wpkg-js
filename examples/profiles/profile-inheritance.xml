@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Building profiles out of profiles.
+
+	A profile lists packages and may depend on other profiles, which lets a
+	base set of software be defined once. Package assignments accept the same
+	host attributes as the host nodes, so a profile can stay valid for
+	machines which need a slightly different set.
+-->
+
+<profiles:profiles xmlns:profiles="http://www.wpkg.org/profiles"
+	xmlns:wpkg="http://www.wpkg.org/wpkg"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.wpkg.org/profiles ../../xsd/profiles.xsd">
+
+	<!-- Software every machine of the company gets. -->
+	<profile id="base">
+		<package package-id="7zip" />
+		<package package-id="firefox" />
+		<!-- The agent of the monitoring system runs on servers only. -->
+		<package package-id="monitoring-agent" os="Microsoft Windows Server.+" />
+	</profile>
+
+	<profile id="default">
+		<depends profile-id="base" />
+		<package package-id="office-suite" />
+	</profile>
+
+	<profile id="branch-office">
+		<depends profile-id="default" />
+		<package package-id="printer-drivers" />
+	</profile>
+
+	<profile id="developer">
+		<depends profile-id="default" />
+		<package package-id="git" />
+		<package package-id="vscode" />
+	</profile>
+
+	<!-- A kiosk gets neither the office suite nor the developer tools. -->
+	<profile id="kiosk">
+		<depends profile-id="base" />
+		<package package-id="kiosk-browser" />
+	</profile>
+</profiles:profiles>

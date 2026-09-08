@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	One package definition for different machines.
+
+	There are two ways to make a package adapt itself:
+
+	  - host attributes on a node (architecture, os, ipaddresses, ...), the
+	    node applies only if all of them match;
+	  - a condition sub-node, the node applies only if all of its checks
+	    succeed.
+
+	Both are evaluated for variables, commands, downloads and checks alike.
+-->
+
+<packages:packages xmlns:packages="http://www.wpkg.org/packages"
+	xmlns:wpkg="http://www.wpkg.org/wpkg"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.wpkg.org/packages ../../xsd/packages.xsd">
+
+	<package
+			id="office-suite"
+			name="Office suite"
+			revision="25.2"
+			reboot="false"
+			priority="30">
+
+		<!-- The installation directory differs between the architectures. -->
+		<variable name="PKG_DIR" value="%ProgramFiles%\OfficeSuite"      architecture="x86" />
+		<variable name="PKG_DIR" value="%ProgramFiles(x86)%\OfficeSuite" architecture="x64" />
+
+		<!-- The interface language follows the locale of the machine. -->
+		<variable name="PKG_LANGUAGE" value="en-US" />
+		<variable name="PKG_LANGUAGE" value="ru-RU" lcid="419" />
+		<variable name="PKG_LANGUAGE" value="de-DE" lcid="407,807,c07,1007,1407" />
+
+		<check type="file" condition="versiongreaterorequal"
+			path="%PKG_DIR%\office.exe" value="25.2" />
+
+		<!-- Laptops get the offline help, desktops pull it from the server. -->
+		<install cmd='"%SOFTWARE%\office\setup.exe" /silent /lang %PKG_LANGUAGE% /offlinehelp'>
+			<condition>
+				<check type="registry" condition="exists"
+					path="HKLM\SYSTEM\CurrentControlSet\Control\Power\Battery" />
+			</condition>
+		</install>
+
+		<install cmd='"%SOFTWARE%\office\setup.exe" /silent /lang %PKG_LANGUAGE%'>
+			<condition>
+				<check type="logical" condition="not">
+					<check type="registry" condition="exists"
+						path="HKLM\SYSTEM\CurrentControlSet\Control\Power\Battery" />
+				</check>
+			</condition>
+		</install>
+
+		<!-- The branch office installs from its own file server. -->
+		<install cmd='"\\branch-server\software\office\setup.exe" /silent /lang %PKG_LANGUAGE%'
+			ipaddresses="10\.20\..+" />
+
+		<upgrade include="install" />
+
+		<remove cmd='"%PKG_DIR%\uninstall.exe" /silent' />
+	</package>
+</packages:packages>

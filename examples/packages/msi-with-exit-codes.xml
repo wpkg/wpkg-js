@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Installing an MSI package.
+
+	Shows the parts every package definition needs: a revision WPKG compares
+	against the installed one, checks which tell whether the software is
+	present, and the exit codes the installer is allowed to return.
+-->
+
+<packages:packages xmlns:packages="http://www.wpkg.org/packages"
+	xmlns:wpkg="http://www.wpkg.org/wpkg"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.wpkg.org/packages ../../xsd/packages.xsd">
+
+	<package
+			id="7zip"
+			name="7-Zip"
+			revision="%PKG_VERSION%"
+			reboot="false"
+			priority="50">
+
+		<!--
+			Bumping the version is the only edit needed for an update: the
+			revision changes with it, so WPKG upgrades every host on its next
+			synchronization.
+		-->
+		<variable name="PKG_VERSION" value="24.09" />
+		<variable name="PKG_MSI"     value="%SOFTWARE%\7zip\7z2409-x64.msi" architecture="x64" />
+		<variable name="PKG_MSI"     value="%SOFTWARE%\7zip\7z2409.msi"     architecture="x86" />
+
+		<!--
+			The check decides whether the package counts as installed. Without
+			a check WPKG would only trust its own database and would never
+			notice a manual uninstall.
+		-->
+		<check type="uninstall" condition="versiongreaterorequal" path="7-Zip .+" value="%PKG_VERSION%" />
+
+		<install cmd='msiexec /i "%PKG_MSI%" /qn /norestart ALLUSERS=1'>
+			<!-- 3010 means "installed, reboot required". -->
+			<exit code="3010" reboot="postponed" />
+			<!-- 1641 means "installed, the installer triggered the reboot". -->
+			<exit code="1641" reboot="true" />
+		</install>
+
+		<!-- The MSI handles the upgrade itself, no need to remove first. -->
+		<upgrade include="install" />
+
+		<remove cmd='msiexec /x "%PKG_MSI%" /qn /norestart'>
+			<exit code="3010" reboot="postponed" />
+			<!-- 1605 means "this product is not installed", nothing to do. -->
+			<exit code="1605" />
+		</remove>
+	</package>
+</packages:packages>
