@@ -1,0 +1,13 @@
+# wpkg.js is executed by the Windows Script Host and the configuration files
+# are edited on Windows workstations: they are stored with CRLF line endings
+# and no client may convert them, whatever core.autocrlf says locally.
+wpkg.js -text
+tools/**/*.js -text
+*.xml -text
+
+# Everything which is only read by the tests, the CI and the repository
+# itself stays with LF.
+tests/*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf

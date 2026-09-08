@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Assigning profiles to machines.
+
+	The host nodes are evaluated from top to bottom and the first one whose
+	attributes all match wins, unless applyMultiple is switched on in
+	config.xml. Every attribute is a regular expression, anchor it with ^ and
+	$ if it has to match the whole value.
+
+	Run "cscript wpkg.js /query:l" on a machine to see the values it reports.
+-->
+
+<hosts:wpkg xmlns:hosts="http://www.wpkg.org/hosts"
+	xmlns:wpkg="http://www.wpkg.org/wpkg"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.wpkg.org/hosts ../../xsd/hosts.xsd">
+
+	<!-- A single machine, identified by the serial number of its board. -->
+	<host name=".+" serial="^PF1A2B3C$" profile-id="test-bench" />
+
+	<!-- Every machine of one model, for example to ship its drivers. -->
+	<host name=".+" makemodel="^LENOVO, ThinkPad T480$" profile-id="thinkpad-t480" />
+
+	<!--
+		A machine identified by its hardware address. Useful for hosts which
+		are renamed or re-imaged regularly.
+	-->
+	<host name=".+" macaddresses="^00:1A:2B:3C:4D:5E$" profile-id="kiosk" />
+
+	<!-- Everything in the branch office network. -->
+	<host name=".+" ipaddresses="^10\.20\..+" profile-id="branch-office" />
+
+	<!-- Every 64 bit server of the domain which is in the group "Servers". -->
+	<host name=".+" os="Microsoft Windows Server.+" architecture="x64"
+		domainname="^example\.local$" groups="^Servers$" profile-id="server" />
+
+	<!-- Machines which announce themselves through an environment variable. -->
+	<host name=".+" environment="WPKG_ROLE=^developer$" profile-id="developer" />
+
+	<!-- Anything which was not matched before. -->
+	<host name=".+" profile-id="default" />
+</hosts:wpkg>

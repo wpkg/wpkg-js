@@ -1,12 +1,22 @@
 {
   "name": "wpkg/wpkg-js",
   "type": "library",
-  "license": "GPL-2.0",
-  "description": "This utility executes commands for installing/update/remove of programs on remote Windows stations.",
+  "license": "GPL-2.0-or-later",
+  "description": "WPKG, the software deployment tool for Windows workstations: installs, upgrades and removes packages described in XML.",
   "homepage": "https://wpkg.org/",
   "keywords": [
     "wpkg",
-    "js",
-    "vbscript"
-  ]
+    "windows",
+    "software-deployment",
+    "package-management",
+    "unattended-installation",
+    "jscript",
+    "windows-script-host",
+    "msi"
+  ],
+  "support": {
+    "issues": "https://github.com/wpkg/wpkg-js/issues",
+    "source": "https://github.com/wpkg/wpkg-js",
+    "docs": "https://wpkg.org/Documentation"
+  }
 }

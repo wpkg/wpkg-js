@@ -41,6 +41,16 @@ For example you might add a condition to check for specific OS version. So the
 check will only be applied if the OS version matches the condition.</xsd:documentation>
 					</xsd:annotation></xsd:element>
 			</xsd:sequence>
+			<xsd:sequence maxOccurs="unbounded" minOccurs="0">
+				<xsd:element name="download" type="download">
+					<xsd:annotation>
+						<xsd:documentation>Download a file which is needed by the check itself. Downloads defined on 
+package level are executed right before the first command and therefore too 
+late for a check.
+
+Only checks of type 'execute' evaluate their downloads.</xsd:documentation>
+					</xsd:annotation></xsd:element>
+			</xsd:sequence>
 		</xsd:sequence>
 		<xsd:attribute name="type" type="xsd:string" use="required">
 			<xsd:annotation>
@@ -119,6 +129,12 @@ converted to its decimal representation.
 REG_BINARY= '11 22 33 44'
 value = '17 34 51 68' will match.
 </xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="timeout" type="xsd:integer" use="optional">
+			<xsd:annotation>
+				<xsd:documentation>Timeout of the check in seconds. Evaluated by checks of type 'execute' 
+only.</xsd:documentation>
 			</xsd:annotation>
 		</xsd:attribute>
 		<xsd:attributeGroup ref="HostMatch"></xsd:attributeGroup>
@@ -402,6 +418,14 @@ within Control Panel, Add/Remove software.
 		</xsd:annotation>
 		<xsd:complexContent>
 			<xsd:restriction base="check">
+				<xsd:sequence minOccurs="0" maxOccurs="1">
+					<xsd:sequence maxOccurs="unbounded" minOccurs="0">
+						<xsd:element name="download" type="download">
+							<xsd:annotation>
+								<xsd:documentation>Download the script which is executed by this check.</xsd:documentation>
+							</xsd:annotation></xsd:element>
+					</xsd:sequence>
+				</xsd:sequence>
 				<xsd:attribute name="type" use="required" fixed="execute" type="xsd:string">
 					<xsd:annotation>
 						<xsd:documentation> Execute checks need to specify 'execute' here.
@@ -463,9 +487,6 @@ than the value specified</xsd:documentation>
 						</xsd:documentation>
 					</xsd:annotation>
 				</xsd:attribute>
-				<xsd:choice minOccurs="0" maxOccurs="unbounded">
-					<xsd:element name="download" type="wpkg:download" />
-				</xsd:choice>
 			</xsd:restriction>
 		</xsd:complexContent>
 	</xsd:complexType>
@@ -760,4 +781,74 @@ http://www.microsoft.com/globaldev/reference/lcid-all.mspx
 			</xsd:restriction>
 		</xsd:complexContent>
 	</xsd:complexType>
+	<xsd:complexType name="download">
+		<xsd:annotation>
+			<xsd:documentation>
+				Specifies how a download node looks like, including all
+				attributes.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence minOccurs="0">
+			<xsd:element name="condition" type="condition"></xsd:element>
+		</xsd:sequence>
+
+		<xsd:attribute name="url" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					URL where the file is downloaded:
+					'http://server.example.org/path/to/file.exe'
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="expandURL" type="xsd:boolean">
+			<xsd:annotation>
+				<xsd:documentation>
+					Defines whether the url attribute is expanded (ie.
+					environment variables are replaced).
+
+					Note: As URLs are used to contain some percentage
+					characters (like '%20' for spaces) these might be
+					expanded too if the URL matches an environment
+					variable which is defined. For example downloading
+					from an URL like
+					url='http://host/softwareX%20release%20.exe' would
+					try to expand the environment'20release' as well.
+					It's very unlikely that this collides with an
+					environment variable you have actually defined but
+					keep it in mind when defining download URLs. If you
+					really need to disable expansion because the URL
+					collides with existing environment variables then
+					use the expandURL='false' attribute:
+
+					&lt;download expandURL='false'
+					url='http://host/softwareX%20release%20.exe'
+					target='release.exe' /&gt;
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="target" type="xsd:string" use="required">
+			<xsd:annotation>
+				<xsd:documentation>
+					Target path to store the file to. The path has to be
+					specified relative to the downloadDir property
+					within config.xml. By default relative to %TEMP%.
+					For example specify 'pidgin\pidgin.exe' to download
+					the file at the specified URL to
+					'%TEMP%\pidgin\pigin.exe'. The file is removed after
+					the commands are executed.
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+		<xsd:attribute name="timeout" type="xsd:string"
+			use="optional">
+			<xsd:annotation>
+				<xsd:documentation>
+					Optional download timeout (specified in seconds).
+				</xsd:documentation>
+			</xsd:annotation>
+		</xsd:attribute>
+
+		<xsd:attributeGroup ref="HostMatch"></xsd:attributeGroup>
+	</xsd:complexType>
+
 </xsd:schema>

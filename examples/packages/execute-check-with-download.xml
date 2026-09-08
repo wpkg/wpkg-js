@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+	Deciding about a package with a script.
+
+	Some software cannot be recognized by a file version or an uninstall
+	entry, for example a driver or a service configuration. A check of type
+	"execute" runs a script and evaluates its exit code.
+
+	The script itself is fetched by the download element of the check.
+	Downloads defined on package level run right before the first command and
+	are therefore too late for a check.
+-->
+
+<packages:packages xmlns:packages="http://www.wpkg.org/packages"
+	xmlns:wpkg="http://www.wpkg.org/wpkg"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.wpkg.org/packages ../../xsd/packages.xsd">
+
+	<package
+			id="printer-drivers"
+			name="Printer drivers of the branch office"
+			revision="2026-02-11"
+			reboot="false"
+			priority="20">
+
+		<variable name="PKG_CHECK" value="%TEMP%\wpkg\verify-printer-drivers.cmd" />
+
+		<check type="execute" condition="exitcodeequalto" value="0"
+				path='cmd.exe /c "%PKG_CHECK%"' timeout="60">
+			<!--
+				The check script is downloaded before it is executed, the
+				target is relative to the downloadDir of config.xml.
+			-->
+			<download url="http://wpkg.example.local/checks/verify-printer-drivers.cmd"
+				target="wpkg\verify-printer-drivers.cmd" timeout="60" />
+		</check>
+
+		<install cmd='pnputil.exe /add-driver "%SOFTWARE%\drivers\printers\*.inf" /install'>
+			<!-- 259 means "no more items", every driver was up to date. -->
+			<exit code="259" />
+		</install>
+
+		<upgrade include="install" />
+
+		<remove cmd='cmd.exe /c "echo Drivers stay installed"' />
+	</package>
+</packages:packages>

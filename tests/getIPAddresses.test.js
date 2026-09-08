@@ -11,22 +11,10 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 
-const { loadWpkg } = require("./harness.js");
+const { loadWpkg, safeArray } = require("./harness.js");
 
 const NET_CARDS = "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\NetworkCards\\";
 const NET_INTERFACES = "HKLM\\SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\";
-
-/**
- * Emulates a SAFEARRAY as returned by WScript.Shell.RegRead for REG_MULTI_SZ
- * values.
- */
-function multiString(values) {
-	return {
-		toArray: function () {
-			return values;
-		},
-	};
-}
 
 /**
  * Builds a fake machine.
@@ -63,7 +51,7 @@ function fakeMachine(adapters, options) {
 			registry[regBase + "DhcpIPAddress"] = adapter.dhcp;
 		} else {
 			registry[regBase + "EnableDHCP"] = 0;
-			registry[regBase + "IPAddress"] = multiString(adapter.fixed || []);
+			registry[regBase + "IPAddress"] = safeArray(adapter.fixed || []);
 		}
 	});
 
@@ -220,4 +208,38 @@ test("getIPAddresses() caches its result until the host information cache is res
 	wpkg.resetHostInformationCache();
 	wpkg.getIPAddresses();
 	assert.equal(wpkg.wmiQueries.length, 2, "reset cache has to re-read the adapter state");
+});
+
+test("getConnectedInterfaceGUIDs() reports the GUIDs of the connected adapters", function () {
+	const wpkg = fakeMachine([
+		{ name: "Ethernet", guid: "{lan}", connected: true, dhcp: "10.0.1.15" },
+		{ name: "Wireless", guid: "{wifi}", connected: false, dhcp: "192.168.50.20" },
+	]);
+
+	// The GUIDs are upper-cased, the registry and WMI do not agree on the
+	// case they report.
+	assert.deepEqual(Array.from(wpkg.getConnectedInterfaceGUIDs()), ["{LAN}"]);
+});
+
+test("getConnectedInterfaceGUIDs() reports an empty list if no adapter is connected", function () {
+	const wpkg = fakeMachine([
+		{ name: "Wireless", guid: "{WIFI}", connected: false, dhcp: "192.168.50.20" },
+	]);
+
+	// An empty list means "no adapter has a link", which is different from
+	// "the state is unknown".
+	assert.deepEqual(Array.from(wpkg.getConnectedInterfaceGUIDs()), []);
+});
+
+test("getConnectedInterfaceGUIDs() reports an unknown state as null", function () {
+	const withoutWmi = fakeMachine(
+		[{ name: "Ethernet", guid: "{LAN}", connected: true, dhcp: "10.0.1.15" }],
+		{ wmiAvailable: false }
+	);
+	assert.equal(withoutWmi.getConnectedInterfaceGUIDs(), null);
+
+	const withoutGuid = fakeMachine([
+		{ name: "Ethernet", guid: null, registered: "{LAN}", connected: true, dhcp: "10.0.1.15" },
+	]);
+	assert.equal(withoutGuid.getConnectedInterfaceGUIDs(), null);
 });

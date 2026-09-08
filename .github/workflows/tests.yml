@@ -1,0 +1,40 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  unit-tests:
+    name: Unit tests on Node.js ${{ matrix.node-version }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version:
+          - '20'
+          - '22'
+          - '24'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Run the test suite
+        run: node --test
+
+  schema:
+    name: Configuration files against the schemas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install xmllint
+        run: sudo apt-get update && sudo apt-get install --yes libxml2-utils
+      - name: Validate the sample and example configuration
+        run: |
+          xmllint --noout --schema xsd/config.xsd config.xml
+          xmllint --noout --schema xsd/hosts.xsd hosts.xml hosts/*.xml examples/hosts/*.xml
+          xmllint --noout --schema xsd/profiles.xsd profiles.xml profiles/*.xml examples/profiles/*.xml
+          xmllint --noout --schema xsd/packages.xsd packages.xml packages/*.xml packages/Templates/*.xml examples/packages/*.xml
