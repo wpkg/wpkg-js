@@ -4,6 +4,53 @@
 
 Change notes
 ============
+WPKG Version: 1.3.2
+Author:     : Pavel Rykov <paul (at) drteam.rocks>
+Date        : 2026-09-08
+Status      : released
+
+Changes/fixes visible to the user:
+- Extended host attribute matching by makemodel and serial.
+- Added download element to checks of type execute.
+- Added timeout attribute to checks of type execute.
+- Added macaddresses extended host attribute.
+- Report IP addresses of connected network adapters only.
+- Ignore the DHCP placeholder address 0.0.0.0.
+- Added a Node.js based test harness for wpkg.js.
+
+
+NEW: Extended host attribute matching now supports the makemodel and serial
+     attributes. Host definitions can select machines by the model and the
+     serial number reported by the BIOS.
+     Thanks to Shannon Brooks.
+NEW: Checks of type "execute" accept a download element. This allows to
+     download the script used by the check. Global package downloads are done
+     just before the first command and therefore too late for a check.
+     Thanks to Kunzol.
+NEW: Checks of type "execute" accept a timeout attribute. It works the same
+     way as the timeout of an install command.
+     Thanks to Marco Schmidt.
+NEW: Added the macaddresses extended host attribute. It lists the MAC
+     addresses of the physical network adapters and is used like the other
+     extended host attributes.
+     Thanks to Kunzol.
+FIX: Only addresses of network adapters which are currently connected are
+     reported as addresses of the host. Windows keeps the last address of an
+     adapter within the registry after its link went down, so a machine which
+     had been connected at another site kept matching the host definition of
+     that site. The connection state is read from WMI. Machines where the
+     state cannot be determined keep the previous behavior and report all
+     addresses found in the registry.
+     Fixes issue 5. Thanks to InformatiqueOLLN for reporting.
+FIX: The DHCP placeholder address 0.0.0.0 is no longer reported as an address
+     of the host. It was already ignored for statically configured addresses.
+NEW: Added a test harness which loads wpkg.js into a Node.js VM context with
+     stubbed Windows Script Host globals, so single functions can be tested on
+     any platform. Run the suite with "node --test tests/*.test.js".
+
+
+Change notes
+============
 WPKG Version: 1.3.1
 Author:     : Rainer Meier <skybeam (at) users.sourceforge.net>
 Date        : 2014-05-14
