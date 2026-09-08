@@ -7059,6 +7059,7 @@ function resetHostInformationCache() {
 	hostMakeModel = null;
 	hostSerial = null;
 	domainName = null;
+	macAddresses = null;
 	ipAddresses = null;
 	hostGroups = null;
 	hostArchitecture = null;
@@ -10275,7 +10276,7 @@ function getRegistryValue(registryPath) {
  * but JScript does not.
  */
 function hex(nmb) {
-	if (nmb > 0) {
+	if (nmb >= 0) {
 		return nmb.toString(16);
 	} else {
 		return (nmb + 0x100000000).toString(16);
@@ -10837,7 +10838,7 @@ function searchArray(array, element) {
  */
 function trim(string) {
 	if(string != null) {
-		return(string.replace(new RegExp("(^\\s+)|(\\s+$)"),""));
+		return(string.replace(new RegExp("(^\\s+)|(\\s+$)", "g"),""));
 	} else {
 		return null;
 	}
