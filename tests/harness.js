@@ -50,6 +50,100 @@ class EnumeratorStub {
 }
 
 /**
+ * Replacement for the "Scripting.Dictionary" automation object. wpkg.js uses
+ * it for host attributes and for variable lists, so the stub has to behave
+ * like the original one on the points the script relies on:
+ *
+ *   - Add() raises an error if the key is already present,
+ *   - Remove() raises an error if the key is unknown,
+ *   - Item() of an unknown key returns undefined (Empty in WSH),
+ *   - keys() returns a SAFEARRAY, which is unwrapped by toArray().
+ */
+class DictionaryStub {
+	constructor() {
+		this.entries = new Map();
+	}
+
+	Add(key, value) {
+		if (this.entries.has(key)) {
+			throw new Error("This key is already associated with an element of this collection: " + key);
+		}
+		this.entries.set(key, value);
+	}
+
+	Remove(key) {
+		if (!this.entries.has(key)) {
+			throw new Error("Element not found: " + key);
+		}
+		this.entries.delete(key);
+	}
+
+	Exists(key) {
+		return this.entries.has(key);
+	}
+
+	Item(key) {
+		return this.entries.get(key);
+	}
+
+	get Count() {
+		return this.entries.size;
+	}
+
+	keys() {
+		const keys = Array.from(this.entries.keys());
+		return { toArray: () => keys };
+	}
+
+	items() {
+		const values = Array.from(this.entries.values());
+		return { toArray: () => values };
+	}
+}
+
+/**
+ * Replacement for the parts of "WScript.Shell" which are used outside of the
+ * command execution and registry code: environment expansion.
+ *
+ * Undefined variables are left untouched, exactly like the original object
+ * does, wpkg.js depends on this to detect missing variables.
+ *
+ * @param {object} environment map of environment variable names to values.
+ */
+function createShellStub(environment) {
+	return {
+		environment: environment,
+		ExpandEnvironmentStrings: function (value) {
+			if (value === null || value === undefined) {
+				return value;
+			}
+			return String(value).replace(/%([^%]+)%/g, function (placeholder, name) {
+				const defined = Object.prototype.hasOwnProperty.call(environment, name);
+				return defined ? environment[name] : placeholder;
+			});
+		},
+		LogEvent: function () {
+			// The event log is not part of any test.
+		},
+	};
+}
+
+/**
+ * Creates the automation objects the harness knows about. Returns undefined
+ * for every other ProgID so that the caller can decide what to do.
+ */
+function createDefaultActiveXObject(progID, environment) {
+	switch (String(progID)) {
+		case "Scripting.Dictionary":
+			return new DictionaryStub();
+		case "WScript.Shell":
+			return createShellStub(environment);
+		default:
+			return undefined;
+	}
+}
+
+/**
  * Reads wpkg.js, strips the bootstrap call and evaluates the remaining
  * declarations in a fresh context.
  *
@@ -57,12 +151,19 @@ class EnumeratorStub {
  * @param {function} [options.getObject] replacement for the WSH GetObject
  *        function, receives the moniker string.
  * @param {function} [options.activeXObject] factory called with the ProgID
- *        whenever the script does "new ActiveXObject(...)".
+ *        whenever the script does "new ActiveXObject(...)". Returning
+ *        undefined falls back to the objects the harness provides itself
+ *        ("Scripting.Dictionary" and "WScript.Shell").
+ * @param {object} [options.environment] environment variables visible to
+ *        ExpandEnvironmentStrings().
+ * @param {Array} [options.arguments] command line arguments, exposed as
+ *        WScript.Arguments.
  * @returns {object} the vm context. It carries every wpkg.js global plus a
  *        "logMessages" array collecting everything the script logged.
  */
 function loadWpkg(options) {
 	const opts = options || {};
+	const environment = opts.environment || {};
 
 	const source = fs.readFileSync(WPKG_PATH, "utf8");
 	if (!BOOTSTRAP_PATTERN.test(source)) {
@@ -77,13 +178,21 @@ function loadWpkg(options) {
 
 	const context = {
 		logMessages: logMessages,
+		environment: environment,
 		Enumerator: EnumeratorStub,
 		GetObject: opts.getObject || function (moniker) {
 			throw new Error("Unexpected GetObject call: " + moniker);
 		},
 		ActiveXObject: function (progID) {
 			if (opts.activeXObject) {
-				return opts.activeXObject(progID);
+				const custom = opts.activeXObject(progID);
+				if (custom !== undefined) {
+					return custom;
+				}
+			}
+			const builtin = createDefaultActiveXObject(progID, environment);
+			if (builtin !== undefined) {
+				return builtin;
 			}
 			throw new Error("Unexpected ActiveXObject: " + progID);
 		},
@@ -94,7 +203,10 @@ function loadWpkg(options) {
 			Quit: function (code) {
 				throw new Error("WScript.Quit(" + code + ")");
 			},
-			Arguments: [],
+			CreateObject: function (progID) {
+				return context.ActiveXObject(progID);
+			},
+			Arguments: opts.arguments || [],
 			ScriptFullName: "C:\\wpkg\\wpkg.js",
 			Interactive: false,
 		},
@@ -112,4 +224,43 @@ function loadWpkg(options) {
 	return context;
 }
 
-module.exports = { loadWpkg, EnumeratorStub };
+/**
+ * Builds an argument vector which behaves like WScript.Arguments: the
+ * arguments are read by calling the collection itself, argv(0), and not by
+ * indexing it.
+ *
+ * @param {Array<string>} args
+ * @returns {function} callable argument vector with a length property.
+ */
+function argumentVector(args) {
+	const argv = function (index) {
+		return args[index];
+	};
+	// The length of a function is read-only by default, it has to be
+	// redefined to report the number of arguments.
+	Object.defineProperty(argv, "length", { value: args.length });
+	argv.Count = function () {
+		return args.length;
+	};
+	return argv;
+}
+
+/**
+ * Emulates a SAFEARRAY as returned by WScript.Shell.RegRead for REG_MULTI_SZ
+ * values.
+ */
+function safeArray(values) {
+	return {
+		toArray: function () {
+			return values;
+		},
+	};
+}
+
+module.exports = {
+	loadWpkg,
+	argumentVector,
+	safeArray,
+	DictionaryStub,
+	EnumeratorStub,
+};
