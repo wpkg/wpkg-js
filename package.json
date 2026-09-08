@@ -1,6 +1,6 @@
 {
   "name": "wpkg-js",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "private": true,
   "description": "WPKG, the software deployment tool for Windows workstations: installs, upgrades and removes packages described in XML.",
   "keywords": [

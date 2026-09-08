@@ -1,4 +1,36 @@
 ===============================================================================
+= CHANGES FOR 1.4.0 release
+===============================================================================
+Changes 2026-09-08, v1.4.0 by Pavel Rykov <paul (at) drteam.rocks>
+NEW: Final release of WPKG 1.4.0.
+FIX: The XML schemas did not compile since the download element was added to
+     the execute check. Within a restriction the content model has to be
+     declared before the attributes, and the element referenced a type which
+     does not exist in that schema. As a result no configuration file could
+     be validated against xsd/packages.xsd, xsd/profiles.xsd, xsd/hosts.xsd
+     or xsd/config.xsd. The download type moved from packages.xsd to
+     wpkg.xsd, the generic check type learned the download element and the
+     timeout attribute, and the execute check restricts them properly now.
+FIX: trim() removed the leading whitespace only, its regular expression was
+     missing the global flag. The operating system caption, the make and
+     model and the serial number are reported by WMI with trailing spaces, so
+     host definitions matching them with an anchored expression such as
+     serial="^PF1A2B3C$" did not match.
+FIX: hex() printed 0 as "100000000". The value is used in the error messages
+     which report the number of a failed operation.
+FIX: resetHostInformationCache() kept the cached MAC addresses while it
+     dropped every other host attribute.
+NEW: The test suite covers the version comparison, the ISO date parsing, the
+     host attribute matching, the filtering of conditional nodes, the package
+     and command accessors, the checks of type registry, execute, host and
+     logical, the network adapter queries and the string and list helpers.
+     Run it with "node --test" or "npm test".
+NEW: Added an examples/ directory with commented package, profile and host
+     definitions, all of them validated against the schemas.
+NEW: Added a GitHub Actions workflow which runs the test suite on Node.js 20,
+     22 and 24 and validates the configuration files against the schemas.
+
+===============================================================================
 = CHANGES FOR 1.3.2 release
 ===============================================================================
 Changes 2026-09-08, v1.3.2 by Pavel Rykov <paul (at) drteam.rocks>
