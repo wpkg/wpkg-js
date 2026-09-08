@@ -1,15 +1,16 @@
 ===============================================================================
-= CHANGES FOR 1.3 release
+= CHANGES FOR 1.4 release
 ===============================================================================
 
 Change notes
 ============
-WPKG Version: unreleased
+WPKG Version: 1.4.0
 Author:     : Pavel Rykov <paul (at) drteam.rocks>
 Date        : 2026-09-08
-Status      : development
+Status      : released
 
 Changes/fixes visible to the user:
+- Final release of WPKG 1.4.0.
 - Fixed the XML schemas, they did not compile at all.
 - Trailing whitespace is stripped from the host attributes again.
 - Extended the test suite and added configuration examples.
@@ -41,6 +42,10 @@ NEW: Added an examples/ directory with commented package, profile and host
 NEW: Added a GitHub Actions workflow which runs the test suite on Node.js 20,
      22 and 24 and validates the configuration files against the schemas.
 
+
+===============================================================================
+= CHANGES FOR 1.3 release
+===============================================================================
 
 Change notes
 ============
