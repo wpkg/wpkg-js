@@ -9887,7 +9887,69 @@ function getMACAddresses() {
 	return macAddresses;
 }
 /**
+ * Returns the interface GUIDs of all network adapters which are currently
+ * connected to a network.
+ * 
+ * Windows keeps the last address of an adapter within the registry even after
+ * its link went down. Without this list a notebook would still report the
+ * address it received at another site as long as its wireless adapter is
+ * disabled or out of range.
+ * 
+ * @return array of upper-case interface GUID strings or null in case the
+ *         connection state could not be determined. An empty array means that
+ *         there is no connected adapter at all while null has to be treated as
+ *         "state unknown" which means that no address may be dropped.
+ */
+function getConnectedInterfaceGUIDs() {
+	var connectedGUIDs = new Array();
+	var adapterCount = 0;
+
+	try {
+		var wmi = GetObject("winmgmts:!\\\\.\\root\\cimv2");
+		// NetConnectionStatus 2 means "Connected".
+		var win = wmi.ExecQuery("select * from Win32_NetworkAdapter " +
+			"where NetConnectionStatus = 2");
+		var e = new Enumerator(win);
+		for (; !e.atEnd(); e.moveNext()) {
+			adapterCount++;
+
+			var guid = null;
+			try {
+				guid = e.item().GUID;
+			} catch (guidError) {
+				// The GUID property is not available on all Windows versions.
+				guid = null;
+			}
+
+			if (guid != null && guid != "") {
+				dinfo("Found connected network adapter with interface GUID " +
+					guid + ".");
+				connectedGUIDs.push(("" + guid).toUpperCase());
+			}
+		}
+	} catch (queryError) {
+		dinfo("Unable to query the connection state of the network adapters. " +
+			"Addresses of all known adapters will be used.");
+		return null;
+	}
+
+	if (adapterCount > 0 && connectedGUIDs.length == 0) {
+		// There are connected adapters but none of them exposes its interface
+		// GUID. The addresses cannot be assigned to an adapter in this case so
+		// none of them may be dropped.
+		dinfo("Connected network adapters do not expose their interface GUID. " +
+			"Addresses of all known adapters will be used.");
+		return null;
+	}
+
+	return connectedGUIDs;
+}
+
+/**
  * This function retrieves the IP address from the registry.
+ * 
+ * Only addresses of adapters which are currently connected are reported, see
+ * getConnectedInterfaceGUIDs() for the reason.
  * 
  * @return array of IP address strings, array can be of length 0
  */
@@ -9898,6 +9960,11 @@ function getIPAddresses() {
 		var netCards = "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\NetworkCards\\";
 		var netInterfaces = "SYSTEM\\CurrentControlSet\\Services\\Tcpip\\Parameters\\Interfaces\\";
 
+		// Interface GUIDs of the adapters which currently have a link. It is
+		// null if the state could not be determined, no address is dropped
+		// then.
+		var connectedGUIDs = getConnectedInterfaceGUIDs();
+
 		var subKeys = getRegistrySubkeys(netCards, 0);
 		if (subKeys != null) {
 			for (var i=0; i < subKeys.length; i++) {
@@ -9905,6 +9972,13 @@ function getIPAddresses() {
 				var service = getRegistryValue("HKLM\\" + netCards + subKeys[i] + "\\ServiceName");
 				 if (service != null && service != "") {
 					dinfo("Found network service: " + service);
+
+					if (connectedGUIDs != null &&
+						!searchArray(connectedGUIDs, ("" + service).toUpperCase())) {
+						dinfo("Network service " + service + " is not " +
+							"connected, skipping its cached address(es).");
+						continue;
+					}
 
 					var regBase = "HKLM\\" + netInterfaces + service + "\\";
 					var isInterface = getRegistryValue(regBase);
@@ -9917,7 +9991,8 @@ function getIPAddresses() {
 							dinfo("Reading DHCP address.");
 							// read DHCP address
 							var dhcpIP = getRegistryValue(regBase + "DhcpIPAddress");
-							if (dhcpIP != null && dhcpIP != "") {
+							if (dhcpIP != null && dhcpIP != "" &&
+								dhcpIP != "0.0.0.0") {
 								ipAddresses.push(dhcpIP);
 								dinfo("Found DHCP address: " + dhcpIP);
 							}
